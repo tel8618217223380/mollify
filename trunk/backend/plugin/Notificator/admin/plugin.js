@@ -225,7 +225,7 @@
 						actions: [
 							{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddEvents },
 							{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
-								mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: mollify.helpers.extractValue(sel, "id") }).done(update);
+								mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: sel }).done(update);
 							}}
 						],
 						table: {
@@ -237,9 +237,9 @@
 								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle'), valueMapper: function(i) { return i; } },
 								{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 							],
-							onRowAction: function(id, f) {
+							onRowAction: function(id, e) {
 								if (id == "remove") {
-									mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: [f.id] }).done(update);
+									mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: [e] }).done(update);
 								}
 							}
 						}

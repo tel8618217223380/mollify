@@ -13,7 +13,7 @@
 		protected function isAdminRequired() { return TRUE; }
 		
 		protected function isValidPath($method, $path) {
-			return count($path) == 1 or count($path) == 2;
+			return TRUE;
 		}
 
 		public function processGet() {
@@ -44,7 +44,7 @@
 		}
 
 		public function processDelete() {
-			if (count($this->path) < 2 or count($this->path) > 3 or $this->path[0] != 'list') throw $this->invalidRequestException();
+			if (count($this->path) < 2 or count($this->path) > 3 or $this->path[0] != 'list') throw $this->invalidRequestException("Invalid path");
 			
 			$id = $this->path[1];
 			$dao = $this->getDao();
@@ -55,8 +55,9 @@
 			
 			$key = $this->path[2];
 			$data = $this->request->data;
-			if (isset($data["ids"]) or !is_array($data["ids"])) throw $this->invalidRequestException("no ids");			
+			if (!isset($data["ids"]) or !is_array($data["ids"])) throw $this->invalidRequestException("no ids");
 			$ids = $data["ids"];
+			if (count($ids) == 0) throw $this->invalidRequestException("no ids");
 			
 			if ($key == "users") {
 				$this->response()->success($dao->removeNotificationUsers($id, $ids));
