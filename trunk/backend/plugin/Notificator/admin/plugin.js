@@ -257,6 +257,7 @@
 							id: "plugin-notificator-notificationeventusers",
 							key: "id",
 							narrow: true,
+							emptyHint: mollify.ui.texts.get('pluginNotificatorNotificationNoEventUsersMsg'),
 							columns: [
 								{ type:"selectrow" },
 								{ id: "icon", title:"", valueMapper: function(i, v) { if (i.is_group == 1) return "<i class='icon-user'></i><i class='icon-user'></i>"; return "<i class='icon-user'></i>"; } },
