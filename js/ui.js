@@ -821,6 +821,8 @@
 			updateSort();
 
 			var $l = $("<tbody></tbody>").appendTo($e);
+			var $eh = false;
+			if (o.emptyHint) $eh = $("<span class='mollify-table-empty-hint'>"+o.emptyHint+"</span>").hide().appendTo($e);
 			$e.delegate(".mollify-tableselect", "change", function(e) { selectionChangedCb.fire(); return false; });
 			$e.delegate("a.mollify-tableaction", "click", function(e) {
 				var $cell = $(this).parent();
@@ -919,6 +921,12 @@
 					setCellValue($cell, o.columns[index], $row[0].data);
 				});
 			};
+			var updateList = function() {
+				if (!$eh) return;
+				var count = $l.find("tr").length;
+				if (count == 0) $eh.show();
+				else $eh.hide();
+			};
 			
 			var api = {
 				findByKey : function(k) {
@@ -957,6 +965,7 @@
 				set : function(items) {
 					$l.empty();
 					$.each(items, function(i, item) { addItem(item); });
+					updateList();
 					selectionChangedCb.fire();
 				},
 				add : function(item) {
@@ -966,7 +975,8 @@
 						for (var i=0,j=item.length; i<j; i++) addItem(item[i]);
 					} else {
 						addItem(item);
-					}	
+					}
+					updateList();
 				},
 				update : function(item) {
 					if (!item) return;
@@ -979,6 +989,7 @@
 					var $row = findRow(item);
 					if (!$row) return;
 					$row.remove();
+					updateList();
 				},
 				refresh: function() {
 					if (!o.remote || !o.remote.path) return;

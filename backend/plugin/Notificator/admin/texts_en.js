@@ -19,5 +19,6 @@ pluginNotificatorNotificationEditMessageVariablesTitle: "Variables",
 pluginNotificatorNotificationEditMessageVariablesTxt: "For list of variables, see https://code.google.com/p/mollify/wiki/NotificatorPlugin",
 pluginNotificatorNotificationEventUsersTitle: "Users that trigger the event",
 pluginNotificatorNotificationAddEventUserTitle: "Add event users",
-pluginNotificatorNotificationAddEventUserMessage: "Select user(s) to be added as notification trigger:"
+pluginNotificatorNotificationAddEventUserMessage: "Select user(s) to be added as notification trigger:",
+pluginNotificatorNotificationNoEventUsersMsg: "Empty list will trigger the notification for any user"
 })})();

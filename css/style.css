@@ -1078,6 +1078,12 @@ li#mollify-folder-hierarchy-item-root > a {
 	border-radius: 4px;
 }
 
+.mollify-slidepanel-container button.close {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+
 .mollify-slidepanel-content-container {
 	float: left;
 	width: 100%;
