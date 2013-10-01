@@ -229,7 +229,7 @@
 		this.onActivate = function($c) {
 			var users = false;
 			var listView = false;
-			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
+			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 
 			var updateUsers = function() {
 				that._details.hide();
@@ -610,7 +610,7 @@
 		this.onActivate = function($c) {
 			var groups = false;
 			var listView = false;
-			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
+			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 
 			var updateGroups = function() {
 				that._details.hide();
@@ -888,7 +888,7 @@
 		this.onActivate = function($c) {
 			var folders = false;
 			var listView = false;
-			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
+			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 
 			var updateFolders = function() {
 				$c.addClass("loading");

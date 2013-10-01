@@ -30,7 +30,7 @@
 			this.onActivate = function($c) {
 				var list = false;
 				var listView = false;
-				that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
+				that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 							
 				var updateList = function() {
 					$c.addClass("loading");

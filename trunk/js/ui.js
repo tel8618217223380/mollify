@@ -692,6 +692,7 @@
 			if ($e.length === 0 || !o.columns) return false;
 
 			var selectionChangedCb = $.Callbacks();
+			$e.addClass("mollify-table");
 			if (o.id) $e.addClass("mollify-table-" + o.id);
 			if (o.onSelectionChanged) selectionChangedCb.add(o.onSelectionChanged);
 			$e.addClass("table");
@@ -822,7 +823,7 @@
 
 			var $l = $("<tbody></tbody>").appendTo($e);
 			var $eh = false;
-			if (o.emptyHint) $eh = $("<span class='mollify-table-empty-hint'>"+o.emptyHint+"</span>").hide().appendTo($e);
+			if (o.emptyHint) $eh = $("<tr class='mollify-table-empty-hint'><td colspan='"+o.columns.length+"'>"+o.emptyHint+"</td></tr>");
 			$e.delegate(".mollify-tableselect", "change", function(e) { selectionChangedCb.fire(); return false; });
 			$e.delegate("a.mollify-tableaction", "click", function(e) {
 				var $cell = $(this).parent();
@@ -905,6 +906,7 @@
 				}
 			};
 			var addItem = function(item) {
+				if ($eh) $eh.detach();
 				var $row = $("<tr></tr>").appendTo($l);
 				$row[0].data = item;
 				if (o.onRow) o.onRow($row, item);
@@ -921,10 +923,10 @@
 					setCellValue($cell, o.columns[index], $row[0].data);
 				});
 			};
-			var updateList = function() {
+			var updateHint = function() {
 				if (!$eh) return;
 				var count = $l.find("tr").length;
-				if (count == 0) $eh.show();
+				if (count == 0) $eh.appendTo($l);
 				else $eh.hide();
 			};
 			
@@ -963,9 +965,10 @@
 					return values;	
 				},
 				set : function(items) {
+					if ($eh) $eh.detach();
 					$l.empty();
 					$.each(items, function(i, item) { addItem(item); });
-					updateList();
+					updateHint();
 					selectionChangedCb.fire();
 				},
 				add : function(item) {
@@ -976,7 +979,7 @@
 					} else {
 						addItem(item);
 					}
-					updateList();
+					updateHint();
 				},
 				update : function(item) {
 					if (!item) return;
@@ -989,7 +992,7 @@
 					var $row = findRow(item);
 					if (!$row) return;
 					$row.remove();
-					updateList();
+					updateHint();
 				},
 				refresh: function() {
 					if (!o.remote || !o.remote.path) return;
@@ -1221,6 +1224,13 @@
 			if (!$e) return;
 			var $p = mollify.dom.template("mollify-tmpl-slidepanel").appendTo($e);//.css("position", "relative"));
 			var $content = $p.find(".mollify-slidepanel-content");
+			if (o.resizable) {
+				$p.resizable({
+					handles: "n"
+				}).bind("resize", function (e, ui) {
+					$(this).css("top", "auto");
+				});
+			}
 			
 			var api = {
 				getContentElement : function() { return $content; },
