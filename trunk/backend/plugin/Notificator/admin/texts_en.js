@@ -16,5 +16,8 @@ pluginNotificatorNotificationAddEventMessage: "Select event(s) to be added as no
 pluginNotificatorNotificationAddUserTitle: "Add receiver",
 pluginNotificatorNotificationAddUserMessage: "Select user(s) to be added as notification receiver:",
 pluginNotificatorNotificationEditMessageVariablesTitle: "Variables",
-pluginNotificatorNotificationEditMessageVariablesTxt: "For list of variables, see https://code.google.com/p/mollify/wiki/NotificatorPlugin"
+pluginNotificatorNotificationEditMessageVariablesTxt: "For list of variables, see https://code.google.com/p/mollify/wiki/NotificatorPlugin",
+pluginNotificatorNotificationEventUsersTitle: "Users that trigger the event",
+pluginNotificatorNotificationAddEventUserTitle: "Add event users",
+pluginNotificatorNotificationAddEventUserMessage: "Select user(s) to be added as notification trigger:"
 })})();
