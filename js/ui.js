@@ -1225,6 +1225,7 @@
 				},
 				remove: function() { $p.remove(); }
 			};
+			$p.find(".close").click(api.hide);
 			return api;
 		}
 	};
