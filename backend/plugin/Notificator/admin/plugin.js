@@ -215,7 +215,7 @@
 							],
 							list: selectable,
 							onSelect: function(sel, o) {
-								mollify.service.put("notificator/list/"+nd.id, {users: nd.recipients.concat(mollify.helpers.extractValue(sel, "id"))}).done(update);
+								mollify.service.put("notificator/list/"+nd.id, {users: nd.users.concat(mollify.helpers.extractValue(sel, "id"))}).done(update);
 							}
 						});
 					}
