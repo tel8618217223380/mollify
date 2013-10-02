@@ -37,13 +37,15 @@
 					<span class="uneditable-input">${username}</span>
 				</div>
 			</div>
-
+			
+			{{if features['change_password']}}
 			<div class="control-group">
 				<label class="control-label localized" text-key="configUserAccountPasswordTitle"></label>
 				<div class="controls">
 					<a id="user-account-change-password-btn" class="btn localized" href="javascript: void(0);" text-key="configUserAccountPasswordAction"></a>
 				</div>
 			</div>
+			{{/if}}
 		</form>
 	</div>
 </script>
