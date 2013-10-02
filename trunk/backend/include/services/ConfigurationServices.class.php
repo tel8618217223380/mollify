@@ -223,6 +223,8 @@
 				switch ($this->path[2]) {
 					// users/xx/password
 					case 'password':
+						$this->env->features()->assertFeature("change_password");
+						
 						$pw = $this->request->data;
 						if (!isset($pw['new'])) throw $this->invalidRequestException();
 						
