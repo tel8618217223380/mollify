@@ -1222,7 +1222,8 @@
 		
 		slidePanel : function($e, o) {
 			if (!$e) return;
-			var $p = mollify.dom.template("mollify-tmpl-slidepanel").appendTo($e);//.css("position", "relative"));
+			var $p = mollify.dom.template("mollify-tmpl-slidepanel").appendTo($e);
+			if (o.relative) $p.addClass("relative");
 			var $content = $p.find(".mollify-slidepanel-content");
 			if (o.resizable) {
 				$p.resizable({

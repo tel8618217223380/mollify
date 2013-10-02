@@ -1460,7 +1460,7 @@
 			$("#share-item-name").html(item.name);
 			$("#share-dialog-content").removeClass("loading");
 			$("#share-new").click(function() { that.onAddShare(item); } );
-			that._context = mollify.ui.controls.slidePanel($("#share-list"));
+			that._context = mollify.ui.controls.slidePanel($("#share-list"), { relative: true });
 			
 			that.updateShareList(item);
 		};
