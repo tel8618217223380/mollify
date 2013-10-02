@@ -1079,6 +1079,10 @@ li#mollify-folder-hierarchy-item-root > a {
 	border-radius: 4px;
 }
 
+.mollify-slidepanel-container.relative {
+	position: absolute;
+}
+
 .mollify-slidepanel-container button.close {
 	position: absolute;
 	right: 5px;
