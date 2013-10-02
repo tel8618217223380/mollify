@@ -693,6 +693,7 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-iconview-item {
+	position: relative;
 	clear: none;
 	display: block;
 	float: left;
@@ -745,6 +746,25 @@ li#mollify-folder-hierarchy-item-root > a {
 	padding-top: 6px;
 	overflow: hidden;
 	pointer-events: none;
+}
+
+.mollify-iconview-item-sel {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	display: none;
+}
+
+.mollify-iconview.select .mollify-iconview-item-sel {
+	display: block;
+}
+
+.mollify-iconview-item.selected .mollify-iconview-item-sel-option.unselected {
+	display: none;
+}
+
+.mollify-iconview-item .mollify-iconview-item-sel-option.selected {
+	display: none;
 }
 
 .mollify-iconview-item.item-folder .mollify-iconview-item-icon {
