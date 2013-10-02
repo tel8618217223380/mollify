@@ -1226,7 +1226,19 @@
 		};
 		
 		this.setSelectMode = function(sm) {
-			//TODO	
+			t.$l.find(".mollify-iconview-item.selected").removeClass("selected");
+			if (sm) {
+				t.$l.addClass("select");
+			} else {
+				t.$l.removeClass("select");
+			}
+		};
+		
+		this.setSelection = function(items) {
+			t.$l.find(".mollify-iconview-item.selected").removeClass("selected");
+			$.each(items, function(i, itm) {
+				t.$l.find("#mollify-iconview-item-"+itm.id).addClass("selected");
+			});
 		};
 	};
 		

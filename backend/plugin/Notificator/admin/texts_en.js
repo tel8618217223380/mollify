@@ -20,5 +20,5 @@ pluginNotificatorNotificationEditMessageVariablesTxt: "For list of variables, se
 pluginNotificatorNotificationEventUsersTitle: "Users that trigger the event",
 pluginNotificatorNotificationAddEventUserTitle: "Add event users",
 pluginNotificatorNotificationAddEventUserMessage: "Select user(s) to be added as notification trigger:",
-pluginNotificatorNotificationNoEventUsersMsg: "Notification is applied to events from any user"
+pluginNotificatorNotificationNoEventUsersMsg: "No event users, notification is applied to events from any user"
 })})();
