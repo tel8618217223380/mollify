@@ -410,6 +410,7 @@ a.mollify-login-link {
 
 #mollify-folderview-header-items {
 	float: left;
+	width: 100%;
 }
 
 .mollify-filelist {
@@ -688,6 +689,14 @@ li#mollify-folder-hierarchy-item-root > a {
 	visibility: visible;
 }
 
+.mollify-iconview-header {
+	float: left;
+	width: 70%;
+	height: 10px;
+	border-bottom: 1px solid #dedede;
+	display: none;
+}
+
 .mollify-iconview {
 	float: left;
 }
@@ -706,6 +715,10 @@ li#mollify-folder-hierarchy-item-root > a {
 .mollify-iconview-item.hover {
 	margin: 4px;
 	border: 2px solid #eeeeee;
+}
+
+.mollify-iconview-item.selected {
+	background-color: #fafafa;
 }
 
 .mollify-iconview-item.ui-draggable-dragging {
@@ -759,11 +772,19 @@ li#mollify-folder-hierarchy-item-root > a {
 	display: block;
 }
 
-.mollify-iconview-item.selected .mollify-iconview-item-sel-option.unselected {
+.mollify-iconview-item-sel-option.selected {
 	display: none;
 }
 
-.mollify-iconview-item .mollify-iconview-item-sel-option.selected {
+.mollify-iconview-item-sel-option.unselected {
+	display: block;
+}
+
+.mollify-iconview-item.selected .mollify-iconview-item-sel-option.selected {
+	display: block;
+}
+
+.mollify-iconview-item.selected .mollify-iconview-item-sel-option.unselected {
 	display: none;
 }
 
@@ -1222,6 +1243,11 @@ a.mollify-tableaction {
 		background-color: #ffffff;
 		margin-top: -20px;
 		padding-top: 20px;
+		z-index: 10;
+	}
+	
+	#mollify-folderview.detached .mollify-iconview-header {
+		display: block;
 	}
 		
 	#mollify-folderview.detached #mollify-folderview-detachholder {
