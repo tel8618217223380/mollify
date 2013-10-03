@@ -1,0 +1,19 @@
+#summary Client resource map
+
+
+Client resource map helps customizing the app, as any client resource can be mapped into custom location. For example any template file, css file or html file can be overridden to your custom version.
+
+{{{
+mollify.App.init({
+	"resource-map" : {
+		"templates/mainview.html" : "custom/mainview.html"
+	},
+	...
+})
+}}}
+
+This example overrides loading "mainview.html" template file to be loaded from folder "custom".
+
+To get the resource path, open for example Chrome Dev Tools and Network Inspector. There you can see all loaded resources. Copy the url starting from the mollify root level.
+
+For example, if the loaded resource is "http://yourhost/mollify/backend/plugins/Notificator/admin/texts_en.js", use resource path "backend/plugins/Notificator/admin/texts_en.js".
