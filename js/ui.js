@@ -926,7 +926,7 @@
 			var updateHint = function() {
 				if (!$eh) return;
 				var count = $l.find("tr").length;
-				if (count == 0) $eh.appendTo($l);
+				if (count === 0) $eh.appendTo($l);
 				else $eh.hide();
 			};
 			
@@ -1683,8 +1683,8 @@
 					
 					if (t.dragObj.type == 'filesystemitem') {
 						var pl = t.dragObj.payload;
-						if (!isArray(pl) || pl.length == 1) {
-							var item = isArray(pl) ? pl[0] : pl;
+						if (!window.isArray(pl) || pl.length == 1) {
+							var item = window.isArray(pl) ? pl[0] : pl;
 							
 							if (!item.is_file) dragImageType = "filesystemitem-folder";
 							else dragImageType = "filesystemitem-file";

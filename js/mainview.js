@@ -702,8 +702,8 @@
 
 		this.dropType = function(to, i) {
 			var single = false;	
-			if (!isArray(i)) single = i;
-			else if (i.length == 0) single = i[0];
+			if (!window.isArray(i)) single = i;
+			else if (i.length === 0) single = i[0];
 			
 			var copy = (!single || to.root_id != single.root_id);
 			return copy ? "copy" : "move";
@@ -711,8 +711,8 @@
 					
 		this.canDragAndDrop = function(to, itm) {
 			var single = false;	
-			if (!isArray(itm)) single = itm;
-			else if (itm.length == 0) single = itm[0];
+			if (!window.isArray(itm)) single = itm;
+			else if (itm.length === 0) single = itm[0];
 			
 			if (single)
 				return that.dropType(to, single) == "copy" ? mollify.filesystem.canCopyTo(single, to) : mollify.filesystem.canMoveTo(single, to);

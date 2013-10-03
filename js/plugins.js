@@ -560,8 +560,8 @@
 			getDownloadCompressedUrl : function(i) {
 				var single = false;
 		
-				if (!isArray(i)) single = i;
-				else if (i.length == 0) single = i[0];
+				if (!window.isArray(i)) single = i;
+				else if (i.length === 0) single = i[0];
 				
 				if (single)
 					return mollify.service.url("archiver/download?item="+single.id, true);
@@ -1305,7 +1305,7 @@
 		this.onAddItem = function(i) {
 			that.openDropbox(true);
 			var list = i;
-			if (!isArray(i))
+			if (!window.isArray(i))
 				list = [i];
 			$.each(list, function(ind, item) {
 				if (that.items.indexOf(item) >= 0) return;
