@@ -905,7 +905,14 @@ var mollifyDefaults = {
 		
 		mapByKey : function(list, key) {
 			var byKey = {};
-			for (var i=0,j=list.length; i<j; i++) { var r = list[i]; byKey[r[key]] = r; }
+			if (!list) return byKey;
+			for (var i=0,j=list.length; i<j; i++) {
+				var r = list[i];
+				if (!window.def(r)) continue;
+				var v = r[key];
+				if (!window.def(v)) continue;
+				byKey[v] = r;
+			}
 			return byKey;
 		},
 		
