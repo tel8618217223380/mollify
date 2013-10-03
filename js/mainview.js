@@ -636,10 +636,11 @@
 				if (that._customFolderTypes[that._currentFolder.type].onFolderDeselect)
 					that._customFolderTypes[that._currentFolder.type].onFolderDeselect(that._currentFolder);
 			}
+			window.scrollTo(0, 0);
 			that._selectedItems = [];
 			that._currentFolder = f;
 			that._currentFolderInfo = false;
-			that.rootNav.setActive(false);
+			that.rootNav.setActive(false);			
 			that.refresh();
 		}
 		
@@ -916,7 +917,7 @@
 			else
 				that._selectModeBtn.removeClass("active");
 			that.itemWidget.setSelectMode(that._selectMode);
-			that.itemWidget.setSelection(that._selectedItems);
+			if (that._selectMode) that.itemWidget.setSelection(that._selectedItems);
 		};
 					
 		this.setupHierarchy = function(h, $t) {
@@ -973,11 +974,12 @@
 		this.isListView = function() { return that._viewStyle === 0; };
 		
 		this.initList = function() {
+			var $h = $("#mollify-folderview-header-items").empty();
 			if (that.isListView()) {
 				var cols = mollify.settings["list-view-columns"];
-				that.itemWidget = new FileList('mollify-folderview-items', 'mollify-folderview-header-items', 'main', this._filelist, cols);
+				that.itemWidget = new FileList('mollify-folderview-items', $h, 'main', this._filelist, cols);
 			} else {
-				that.itemWidget = new IconView('mollify-folderview-items', 'mollify-folderview-header-items', 'main', that._viewStyle == 1 ? 'iconview-small' : 'iconview-large');
+				that.itemWidget = new IconView('mollify-folderview-items', $h, 'main', that._viewStyle == 1 ? 'iconview-small' : 'iconview-large');
 			}
 			
 			that.itemWidget.init({
@@ -993,7 +995,20 @@
 							return;
 						}
 					}
-					var showContext = (!that.isListView() || t=='name');
+					var showContext = false;
+					if (that.isListView()) {
+						if (!item.is_file) {
+							// folder click goes into the folder, icon opens context
+							if (t=='name') that.changeToFolder(item);
+							else if (t=='icon') showContext = true;
+						} else {
+							if (t=='name' || t=='icon') showContext = true;
+						}
+					} else {
+						// icon view shows always context
+						showContext = true;
+					}
+					
 					if (showContext) {
 						that.itemContext.open({
 							item: item,
@@ -1058,7 +1073,7 @@
 			}
 			//$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
 			that.itemWidget.content(items, data);
-			that.itemWidget.setSelection(that._selectedItems);
+			if (that._selectMode) that.itemWidget.setSelection(that._selectedItems);
 		};
 		
 		this.showActionMenu = function(item, c) {
@@ -1118,7 +1133,7 @@
 		}
 	};
 	
-	var IconView = function(container, headerContainer, id, cls) {
+	var IconView = function(container, $headerContainer, id, cls) {
 		var t = this;
 		t.$c = $("#"+container);
 		t.viewId = 'mollify-iconview-'+id;
@@ -1242,11 +1257,11 @@
 		};
 	};
 		
-	var FileList = function(container, headerContainer, id, filelistSpec, columns) {
+	var FileList = function(container, $headerContainer, id, filelistSpec, columns) {
 		var t = this;
 		t.minColWidth = 25;
 		t.$c = $("#"+container);
-		t.$hc = $("#"+headerContainer);
+		t.$hc = $headerContainer;
 		t.listId = 'mollify-filelist-'+id;
 		t.cols = [];
 		t.sortCol = false;
