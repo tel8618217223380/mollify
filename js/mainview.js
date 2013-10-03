@@ -1141,6 +1141,8 @@
 		this.init = function(p) {
 			t.p = p;
 			
+			$headerContainer.append("<div class='mollify-iconview-header'></div>");
+			
 			mollify.dom.template("mollify-tmpl-iconview", {viewId: t.viewId}).appendTo(t.$c.empty());
 			t.$l = $("#"+t.viewId);
 			if (cls) t.$l.addClass(cls);
@@ -1168,9 +1170,15 @@
 				var $t = $(this);
 				t.p.onRightClick($t.tmplItem().data, "", $t);
 				return false;
-			}).single_double_click(function() {
+			}).single_double_click(function(e) {
 				var $t = $(this);
-				t.p.onClick($t.tmplItem().data, "", $t);
+				var itm = $t.tmplItem().data;
+				if ($(e.target).hasClass("mollify-iconview-item-sel-option")) {
+					t.p.onSelectUnselect(itm);
+					return;
+				}
+
+				t.p.onClick(itm, "", $t);
 			},function() {
 				t.p.onDblClick($(this).tmplItem().data);
 			}).attr('unselectable', 'on').css({
