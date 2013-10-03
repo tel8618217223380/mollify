@@ -53,7 +53,7 @@ var mollifyDefaults = {
 	/* APP */
 
 	mollify.App.init = function(s, p) {
-		Modernizr.testProp("touch");
+		window.Modernizr.testProp("touch");
 		
 		mollify.App.pageUrl = window.location.href;
 		mollify.App.pageUrl = mollify.App.pageUrl.substring(0, mollify.App.pageUrl.lastIndexOf('/')+1);
@@ -117,8 +117,8 @@ var mollifyDefaults = {
 		if (!i) return false;
 		var single = false;
 
-		if (!isArray(i)) single = i;
-		else if (i.length == 0) single = i[0];
+		if (!window.isArray(i)) single = i;
+		else if (i.length === 0) single = i[0];
 
 		if (single && single.is_file) {
 			return {
@@ -129,7 +129,7 @@ var mollifyDefaults = {
 			if (!single) return false;
 			
 			if (mollify.plugins.exists("plugin-archiver")) return {
-				name: name = single.name + ".zip",	//TODO get extension from plugin
+				name: single.name + ".zip",	//TODO get extension from plugin
 				url: mollify.plugins.get("plugin-archiver").getDownloadCompressedUrl(i)
 			};
 		}
