@@ -119,6 +119,23 @@
 			return $this->db->query(sprintf("SELECT id, name, password, email, auth FROM ".$this->db->table("user")." WHERE id='%s'".$expirationCriteria, $this->db->string($id)))->firstRow();
 		}
 		
+		public function userQuery($rows, $start, $criteria, $sort = NULL) {
+			$db = $this->env->db();
+			$query = "from ".$db->table("user")." where 1=1";
+			
+			$query .= ' order by ';
+			if ($sort != NULL) {				
+				$query .= $sort["id"].' '.($sort["asc"] == TRUE ? "asc" : "desc");
+			} else {
+				$query .= ' id asc';
+			}
+			
+			$count = $db->query("select count(id) ".$query)->value(0);
+			$result = $db->query("select id, name, email, auth, permission_mode, expiration, is_group ".$query." limit ".$rows." offset ".$start)->rows();
+			
+			return array("start" => $start, "count" => count($result), "total" => $count, "data" => $result);
+		}
+		
 		public function addUser($name, $pw, $email, $permission, $expiration, $auth = NULL) {
 			if (isset($email) and strlen($email) > 0)
 				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value();

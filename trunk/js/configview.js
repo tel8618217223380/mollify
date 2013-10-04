@@ -232,14 +232,31 @@
 			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 
 			var updateUsers = function() {
-				that._details.hide();
+				/*that._details.hide();
 				$c.addClass("loading");
 				mollify.service.get("configuration/users/").done(function(l) {
 					$c.removeClass("loading");
 					users = l;
 					listView.table.set(users);
-				});
+				});*/
 			};
+			
+			var getQueryParams = function(i) {
+				/*var start = $optionStart.get();
+				var end = $optionEnd.get();
+				var tp = $optionType.get();
+				if (tp == "custom") tp = $("#eventlogging-event-type-custom").val();
+				if (!tp || tp.length === 0) tp = null;
+				var user = $optionUser.get();
+				
+				var params = {};
+				if (start) params.start_time = mollify.helpers.formatInternalTime(start);
+				if (end) params.end_time = mollify.helpers.formatInternalTime(end);
+				if (user) params.user = user.name;
+				if (tp) params.type = tp;*/
+				
+				return {};
+			}
 						
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
@@ -258,15 +275,21 @@
 					key: "id",
 					narrow: true,
 					hilight: true,
+					remote: {
+						path : "configuration/users/query",
+						paging: { max: 50 },
+						queryParams: getQueryParams,
+						onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
+					},
 					columns: [
 						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
-						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), valueMapper: function(item, pk) {
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle'), sortable: true },
+						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), sortable: true, valueMapper: function(item, pk) {
 							var pkl = pk.toLowerCase();
 							return that._permissionTexts[pkl] ? that._permissionTexts[pkl] : pk;
 						} },
-						{ id: "email", title: mollify.ui.texts.get('configAdminUsersEmailTitle') },
+						{ id: "email", title: mollify.ui.texts.get('configAdminUsersEmailTitle'), sortable: true },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
 						{ id: "pw", title:"", type: "action", content:'<i class="icon-key"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
@@ -294,7 +317,6 @@
 					}
 				}
 			});
-			updateUsers();
 
 			$c.addClass("loading");
 			var gp = mollify.service.get("configuration/usergroups").done(function(g) {
@@ -303,7 +325,10 @@
 			var fp = mollify.service.get("configuration/folders").done(function(f) {
 				that._allFolders = f;
 			});
-			$.when(gp, fp).done(function(){$c.removeClass("loading");});
+			$.when(gp, fp).done(function(){
+				$c.removeClass("loading");
+				listView.table.refresh();
+			});
 		}
 		
 		this.onChangePassword = function(u, cb) {
