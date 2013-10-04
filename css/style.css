@@ -319,8 +319,8 @@ a.mollify-login-link {
 }
 
 #mollify-mainview-progress {
-	position: absolute;
-	bottom: 30px;
+	position: fixed;
+	bottom: -30px;
 	height: 30px;
 	width: 300px;
 	z-index: 95;
@@ -1188,6 +1188,16 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-table-pager {
 	float: left;
+}
+
+.pagination ul > li.page-break {
+	float: left;
+	padding: 4px 12px;
+	line-height: 20px;
+	text-decoration: none;
+	background-color: #ffffff;
+	border: 1px solid #dddddd;
+	border-left-width: 0;
 }
 
 .table.hilight {

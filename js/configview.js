@@ -268,7 +268,7 @@
 							callback: function() { that._removeUsers(sel).done(updateUsers); }
 						});
 					}},
-					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateUsers }
+					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: function() { listView.table.refresh() } }
 				],
 				table: {
 					id: "config-admin-users",

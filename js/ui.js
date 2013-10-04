@@ -701,14 +701,42 @@
 			var dataInfo = false;
 			var $pagingControls = false;
 			var perPageMax = (o.remote && o.remote.paging ? o.remote.paging.max || 50 : 50);
+			
 			var refreshPagingControls = function() {
 				var $p = $pagingControls.find("ul").empty();
 				var pages = dataInfo ? Math.ceil(dataInfo.total / perPageMax) : 0;
 				var current = dataInfo ? (Math.floor(dataInfo.start / perPageMax) + 1) : 0;
+				var mid = current + Math.floor((pages-current) / 2);
+				var getNrBtn = function(nr) {
+					return $('<li class="page-btn page-nr'+((current == nr) ? ' active' : '')+'"><a href="javascript:void(0);">'+nr+'</a></li>');
+				};
 				
 				$p.append($('<li class="page-btn page-prev'+((current <= 1) ? ' disabled' : '')+'"><a href="javascript:void(0);">&laquo;</a></li>'));
-				for (var i=1; i<=pages; i++) {
-					$p.append($('<li class="page-btn page-nr'+((current == i) ? ' active' : '')+'"><a href="javascript:void(0);">'+i+'</a></li>'));
+				if (pages <= 10) {
+					for (var i=1; i<=pages; i++) {
+						$p.append(getNrBtn(i));
+					}
+				} else {
+					if (current != 1) $p.append(getNrBtn(1));
+					if (current > 2) $p.append(getNrBtn(2));					
+					if (current > 3) $p.append("<li class='page-break'>...</li>");
+
+					if (current > 4) $p.append(getNrBtn(current-2));					
+					if (current > 3) $p.append(getNrBtn(current-1));
+					$p.append(getNrBtn(current));
+					if (current < (pages-2)) $p.append(getNrBtn(current+1));
+					if (current < (pages-1)) $p.append(getNrBtn(current+2));
+					
+					/*if (current > 4 && current < (pages-3)) {
+						$p.append("<li class='page-break'>...</li>");
+						$p.append(getNrBtn(mid-1));
+						$p.append(getNrBtn(mid));
+						$p.append(getNrBtn(mid+1));
+					}*/
+					
+					if (current < (pages-2)) $p.append("<li class='page-break'>...</li>");					
+					if (current < (pages-1)) $p.append(getNrBtn(pages-1));
+					if (current != pages) $p.append(getNrBtn(pages));
 				}
 				$p.append($('<li class="page-btn page-next'+((current >= pages) ? ' disabled' : '')+'"><a href="javascript:void(0);">&raquo;</a></li>'));
 			};

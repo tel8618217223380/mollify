@@ -123,6 +123,10 @@
 			$db = $this->env->db();
 			$query = "from ".$db->table("user")." where 1=1";
 			
+			foreach($criteria as $k => $v) {
+				$query .= " and ".$k."=".$this->db->string($v);
+			}
+			
 			$query .= ' order by ';
 			if ($sort != NULL) {				
 				$query .= $sort["id"].' '.($sort["asc"] == TRUE ? "asc" : "desc");
