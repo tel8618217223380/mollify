@@ -134,7 +134,40 @@
 						return;
 			}
 			throw $this->invalidRequestException();
-		}		
+		}
+		
+		private function processUserQuery() {
+			$data = $this->request->data;
+			$rows = isset($data["count"]) ? $data["count"] : 50;
+			$start = isset($data["start"]) ? $data["start"] : 0;
+			
+			$sort = NULL;
+			$allowedFields = array("id", "name", "email", "auth", "permission_mode");
+
+			if (isset($data["sort"]) and isset($data["sort"]["id"])) {
+				$sort = $data["sort"];
+				
+				if (!in_array($sort["id"], $allowedFields))
+					throw $this->invalidRequestException();
+				
+				if (isset($sort["asc"]) and $sort["asc"]) {
+					$sort["asc"] = TRUE;	
+				} else {
+					$sort["asc"] = FALSE;
+				}
+			}
+			$criteria = array();
+			if (isset($data["criteria"]) and is_array($data["criteria"])) {
+				foreach($data["criteria"] as $k => $v) {
+					if (!isset($k) or !isset($v)) continue;
+					if (!in_array($k, $allowedFields)) continue;
+					$criteria[$k] = $v;
+				}
+			}
+			$criteria["is_group"] = 0;
+			
+			return $this->env->configuration()->userQuery($rows, $start, $criteria, $sort);
+		}
 		
 		private function processPostUsers() {
 			if (!$this->request->hasData()) throw $this->invalidRequestException();
@@ -161,6 +194,12 @@
 				$this->response()->success(TRUE);
 				return;
 			}
+			
+			if (count($this->path) == 2 and $this->path[1] == "query") {
+				$this->response()->success($this->processUserQuery());
+				return;
+			}
+			
 			if (count($this->path) == 3) {
 				$userId = $this->path[1];
 				
