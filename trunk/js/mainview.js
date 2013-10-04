@@ -507,7 +507,7 @@
 						that.uploadProgress.show(ready);
 					},
 					progress: function(pr) {
-						that.uploadProgress.set(pr);
+						that.uploadProgress.set(pr, "TODO");
 					},
 					finished: function() {
 						that.uploadProgress.hide();
@@ -787,7 +787,7 @@
 											that.uploadProgress.show(ready);
 										},
 										progress: function(pr) {
-											that.uploadProgress.set(pr);
+											that.uploadProgress.set(pr, "TODO");
 										},
 										finished: function() {
 											b.hide();
@@ -1110,21 +1110,24 @@
 	
 	var UploadProgress = function($e) {
 		var t = this;
-		t.$bar = $e.find(".bar");
+		this._h = $e.height();
+		t._$title = $e.find(".title");
+		t._$bar = $e.find(".bar");
 		
 		return {
 			show : function(cb) {
-				$e.css("bottom", "0px");
-				t.$bar.css("width", "0%");
-				$e.show().animate({"bottom": "30px"}, 500, cb);
+				$e.css("bottom", (0 - t._h)+"px");
+				t._$bar.css("width", "0%");
+				$e.show().animate({"bottom": "0"}, 500, cb);
 			},
-			set : function(progress, file) {
-				t.$bar.css("width", progress+"%");
+			set : function(progress, title) {
+				t._$bar.css("width", progress+"%");
+				t._$title.text(title ? title : "");
 			},
 			hide : function(cb) {
 				setTimeout(function() {
-					$e.animate({"bottom": "0px"}, 500, function() {
-						t.$bar.css("width", "0%");
+					$e.animate({"bottom": (0 - t._h) + "px"}, 500, function() {
+						t._$bar.css("width", "0%");
 						$e.hide();
 						if (cb) cb();
 					});
