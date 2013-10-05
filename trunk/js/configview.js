@@ -319,13 +319,18 @@
 			});
 
 			$c.addClass("loading");
+						
+			var $options = $c.find(".mollify-configlistview-options");
+			mollify.dom.template("mollify-tmpl-config-admin-user-searchoptions").appendTo($options);
+			mollify.ui.process($options, ["localize"]);
+
 			var gp = mollify.service.get("configuration/usergroups").done(function(g) {
 				that._allGroups = g;
 			});
 			var fp = mollify.service.get("configuration/folders").done(function(f) {
 				that._allFolders = f;
 			});
-			$.when(gp, fp).done(function(){
+			$.when(gp, fp).done(function() {
 				$c.removeClass("loading");
 				listView.table.refresh();
 			});
