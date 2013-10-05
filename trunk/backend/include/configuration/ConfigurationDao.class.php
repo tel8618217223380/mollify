@@ -120,11 +120,23 @@
 		}
 		
 		public function userQuery($rows, $start, $criteria, $sort = NULL) {
+			$strFields = array("name", "email", "auth");
+			$likeFields = array("name", "email");
+			
 			$db = $this->env->db();
 			$query = "from ".$db->table("user")." where 1=1";
 			
 			foreach($criteria as $k => $v) {
-				$query .= " and ".$k."=".$this->db->string($v);
+				if (!in_array($k, $strFields)) {
+					$query .= " and ".$k."=".$this->db->string($v);
+				} else {
+					if (!in_array($k, $likeFields)) {
+						$query .= " and ".$k."=".$this->db->string($v, TRUE);
+					} else {
+						$query .= " and ".$k." like ".$this->db->string($v, TRUE);
+					}
+				}
+
 			}
 			
 			$query .= ' order by ';

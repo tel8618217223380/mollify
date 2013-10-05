@@ -161,14 +161,11 @@
 				foreach($data["criteria"] as $k => $v) {
 					if (!isset($k) or !isset($v)) continue;
 					if (!in_array($k, $allowedFields)) continue;
-					$criteria[$k] = $v;
+					$criteria[$k] = str_replace("*", "%", $v);
 				}
 			}
 			$criteria["is_group"] = 0;
 			
-			/*return array("start" => 61, "count" => 533, "total" => 533, "data" => array(
-				array("id" => 1, "name" => "a", "email" => "", "permission_mode" => "a", "auth" => NULL)
-			));*/
 			return $this->env->configuration()->userQuery($rows, $start, $criteria, $sort);
 		}
 		

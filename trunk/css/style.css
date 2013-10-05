@@ -1156,16 +1156,18 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-configlistview-actions {
 	float: left;
-	clear: both;
 }
 
 .mollify-configlistview-options {
 	float: left;
-	clear: both;
 }
 
-.mollify-configlistview-options .accordion {
-	margin-top: 10px;
+.mollify-configlistview-options .accordion-heading {
+	line-height: 12px;
+}
+
+.mollify-configlistview-options .accordion-body label, .mollify-configlistview-options .accordion-body input, .mollify-configlistview-options .accordion-body button, .mollify-configlistview-options .accordion-body select, .mollify-configlistview-options .accordion-body textarea {
+	font-size: 12px;
 }
 
 .mollify-configlistview-action {

@@ -242,20 +242,15 @@
 			};
 			
 			var getQueryParams = function(i) {
-				/*var start = $optionStart.get();
-				var end = $optionEnd.get();
-				var tp = $optionType.get();
-				if (tp == "custom") tp = $("#eventlogging-event-type-custom").val();
-				if (!tp || tp.length === 0) tp = null;
-				var user = $optionUser.get();
+				var params = { criteria: {} };
 				
-				var params = {};
-				if (start) params.start_time = mollify.helpers.formatInternalTime(start);
-				if (end) params.end_time = mollify.helpers.formatInternalTime(end);
-				if (user) params.user = user.name;
-				if (tp) params.type = tp;*/
+				var name = $("#mollify-admin-user-searchoptions-name").val();
+				if (name && name.length > 0) params.criteria.name = name;
+
+				var email = $("#mollify-admin-user-searchoptions-email").val();
+				if (email && email.length > 0) params.criteria.email = email;
 				
-				return {};
+				return params;
 			}
 						
 			listView = new mollify.view.ConfigListView($c, {
