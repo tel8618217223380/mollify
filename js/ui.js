@@ -703,8 +703,10 @@
 			var perPageMax = (o.remote && o.remote.paging ? o.remote.paging.max || 50 : 50);
 			
 			var refreshPagingControls = function() {
-				var $p = $pagingControls.find("ul").empty();
+				var $p = $pagingControls.find("ul").empty();				
 				var pages = dataInfo ? Math.ceil(dataInfo.total / perPageMax) : 0;
+				if (pages < 2) return;
+				
 				var current = dataInfo ? (Math.floor(dataInfo.start / perPageMax) + 1) : 0;
 				var mid = current + Math.floor((pages-current) / 2);
 				var getNrBtn = function(nr) {

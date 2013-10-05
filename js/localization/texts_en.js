@@ -276,6 +276,9 @@ configAdminUsersRemoveUsersConfirmationMessage: "Are you sure you want to remove
 configAdminUsersRemoveUserConfirmationTitle: "Remove User",
 configAdminUsersRemoveUserConfirmationMessage: "Are you sure you want to remove user \"{0}\"?",
 configAdminUsersChangePasswordDialogTitle: "Change Password for \"{0}\"",
+configAdminUserSearchOptionsTitle: "Result Options",
+configAdminUserSearchOptionsNameTitle: "Name",
+configAdminUserSearchOptionsEmailTitle: "Email",
 
 configAdminFoldersNavTitle: "Folders",
 configAdminFoldersNameTitle: "Folder name",
