@@ -23,8 +23,6 @@
 			"enable_file_upload" => TRUE,
 			"enable_folder_actions" => TRUE,
 			"enable_file_upload_progress" => FALSE,
-			//"enable_zip_download" => FALSE,
-			//"zipper" => "ZipArchive",
 			"enable_change_password" => TRUE,
 			"enable_descriptions" => FALSE,
 			"enable_mail_notification" => FALSE,
@@ -49,7 +47,8 @@
 			"guest_user_id" => FALSE,
 			"debug" => FALSE,
 			"debug_log" => NULL,
-			"mail_smtp" => NULL
+			"mail_smtp" => NULL,
+			"published_folders_root" => NULL
 		);
 		
 		function __construct($settings) {

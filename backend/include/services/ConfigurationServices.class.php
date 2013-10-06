@@ -433,7 +433,19 @@
 
 		private function processGetFolders() {
 			if (count($this->path) == 1) {
-				$this->response()->success($this->env->configuration()->getFolders());
+				$list = $this->env->configuration()->getFolders();
+				$root = $this->env->settings()->setting("published_folders_root", TRUE);				
+				if ($root != NULL) {
+					$root = rtrim($root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+					$i = 0;
+					foreach($list as $f) {
+						if (strpos($f["path"], $root) == 0)
+							$list[$i]["path"] = substr($f["path"], strlen($root));
+						$i++;
+					}
+				}
+					
+				$this->response()->success($list);
 				return;
 			}
 			$folderId = $this->path[1];
@@ -454,6 +466,14 @@
 			
 			if (count($this->path) == 1) {
 				$folder = $this->request->data;
+				
+				$root = $this->env->settings()->setting("published_folders_root", TRUE);
+				if ($root != NULL) {
+					if (strpos($folder['path'], "/") === 0 or strpos($folder['path'], ":\\") == 1)
+						throw $this->invalidRequestException("Published folders root defined, absolute paths not allowed");
+					$folder['path'] = rtrim($root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$folder['path'];
+				}
+				
 				if (!isset($folder['name']) or !isset($folder['path'])) throw $this->invalidRequestException();
 				$createNonExisting = (isset($folder['create']) and ($folder['create'] == "1" or strcasecmp("true", $folder['create']) == 0));
 				
@@ -497,6 +517,12 @@
 			$id = $this->path[1];
 			$folder = $this->request->data;
 			if (!isset($folder['name']) or !isset($folder['path'])) throw $this->invalidRequestException();
+			$root = $this->env->settings()->setting("published_folders_root", TRUE);
+			if ($root != NULL) {
+				if (strpos($folder['path'], "/") == 0 or strpos($folder['path'], ":\\") == 1)
+					throw $this->invalidRequestException("Published folders root defined, absolute paths not allowed");
+				$folder['path'] = rtrim($root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$folder['path'];
+			}
 			
 			$this->env->filesystem()->assertFilesystem($folder);
 			$this->env->configuration()->updateFolder($id, $folder['name'], $folder['path']);
