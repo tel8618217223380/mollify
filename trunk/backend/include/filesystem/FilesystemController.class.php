@@ -509,10 +509,7 @@
 			$this->assertRights($parent, Authentication::RIGHTS_WRITE, "create folder");
 
 			$new = $parent->createFolder($name);
-			$this->env->events()->onEvent(FileEvent::createFolder($new));
-			
-			//if (!$this->env->authentication()->isAdmin() and !in_array("permission_inheritance", $this->env->configuration()->getSupportedFeatures()))
-			//	$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->session()->userId());
+			$this->env->events()->onEvent(FileEvent::createFolder($new));			
 		}
 
 		public function download($file, $mobile, $range = NULL) {
@@ -583,8 +580,26 @@
 			
 			//if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
 			
-			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-html5']))
-				throw new ServiceException("NO_UPLOAD_DATA");
+			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-html5'])) {
+				if (!isset($_SERVER['HTTP_CONTENT_DISPOSITION']))
+					throw new ServiceException("NO_UPLOAD_DATA");
+					
+				// stream uploading
+		        $name = isset($_SERVER['HTTP_CONTENT_DISPOSITION']) ? rawurldecode(preg_replace('/(^[^"]+")|("$)/', '', $_SERVER['HTTP_CONTENT_DISPOSITION'])) : null;
+		        $type = isset($_SERVER['HTTP_CONTENT_DESCRIPTION']) ? $_SERVER['HTTP_CONTENT_DESCRIPTION'] : null;
+		        $range = isset($_SERVER['HTTP_CONTENT_RANGE']) ? preg_split('/[^0-9]+/', $_SERVER['HTTP_CONTENT_RANGE']) : null;
+		        $size =  $range ? $range[3] : null;
+				
+                $info[] = $this->upload(
+                	$folder,
+                	$name,
+                    FALSE,	// read from stream
+                    $size,
+                    $type,
+                    $range
+                );				
+				return;
+			}
 			
 			// html5 uploader
 			if (isset($_FILES['uploader-html5'])) {
@@ -650,9 +665,8 @@
 			}
 			
 			//if ($target->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
-			Logging::logDebug('uploading to ['.$target.'] file ['.$name.'],size='.$size.',type='.$type.',range='.$range);
+			Logging::logDebug('uploading to ['.$target.'] file ['.$name.'],size='.$size.',type='.$type.',range='.Util::array2str($range));
 			$fromFile = ($origin && is_uploaded_file($origin));
-            
             
 			if ($fromFile) {
 				$src = @fopen($origin, "rb");
@@ -668,8 +682,9 @@
 			// is finished?
 			//if ($size != NULL && $target->size() == $size) {
 			//}
-						
-			$this->env->events()->onEvent(FileEvent::upload($target));
+			
+			if (!$append)
+				$this->env->events()->onEvent(FileEvent::upload($target));
 		}
 		
 		private function findFreeFileWithIndex($folder, $name) {

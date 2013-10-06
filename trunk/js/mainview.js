@@ -504,14 +504,18 @@
 					container: $("#mollify"),
 					dropElement: $("#mollify-folderview"),
 					start: function(files, ready) {
-						that.uploadProgress.show(ready);
+						that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), ready);
 					},
 					progress: function(pr) {
-						that.uploadProgress.set(pr, "TODO");
+						that.uploadProgress.set(pr);
 					},
 					finished: function() {
 						that.uploadProgress.hide();
 						that.refresh();
+					},
+					failed: function() {
+						that.uploadProgress.hide();
+						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed')});
 					}
 				});
 			}
@@ -546,7 +550,7 @@
 				} else that.openInitialFolder();
 			}
 			
-			that.onResize();
+			that.onResize();			
 		}
 		
 		this._updateScroll = function() {
@@ -569,6 +573,8 @@
 		
 		this.onDeactivate = function() {
 			$(window).unbind('scroll');
+			
+			if (mollify.ui.uploader && mollify.ui.uploader.destroyMainViewUploader) mollify.ui.uploader.destroyMainViewUploader();
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
 				if (p.fileViewHandler.onDeactivate)
@@ -784,15 +790,20 @@
 									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that._currentFolder, {
 										start: function(files, ready) {
 											b.hide(true);
-											that.uploadProgress.show(ready);
+											that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), ready);
 										},
-										progress: function(pr) {
-											that.uploadProgress.set(pr, "TODO");
+										progress: function(pr, f) {
+											that.uploadProgress.set(pr);
 										},
 										finished: function() {
 											b.hide();
 											that.uploadProgress.hide();
 											that.refresh();
+										},
+										failed: function() {
+											b.hide();
+											that.uploadProgress.hide();
+											mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed')});
 										}
 									});
 									if (!mollify.features.hasFeature('retrieve_url')) {
@@ -1115,14 +1126,14 @@
 		t._$bar = $e.find(".bar");
 		
 		return {
-			show : function(cb) {
+			show : function(title, cb) {
 				$e.css("bottom", (0 - t._h)+"px");
+				t._$title.text(title ? title : "");
 				t._$bar.css("width", "0%");
 				$e.show().animate({"bottom": "0"}, 500, cb);
 			},
 			set : function(progress, title) {
 				t._$bar.css("width", progress+"%");
-				t._$title.text(title ? title : "");
 			},
 			hide : function(cb) {
 				setTimeout(function() {
