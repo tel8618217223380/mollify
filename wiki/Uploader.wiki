@@ -1,6 +1,6 @@
 #summary File uploader
 
-Mollify has HTML5 uploader (based on BlueImp [https://github.com/blueimp/jQuery-File-Upload JQuery-File-Upload]).
+Mollify has HTML5 uploader (based on [https://github.com/blueimp/jQuery-File-Upload JQuery-File-Upload]).
 
 Uploader settings are defined in Mollify app init:
 
