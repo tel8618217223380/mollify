@@ -1,0 +1,11 @@
+#summary File uploader
+
+Following client setting enables chunked upload:
+{{{
+mollify.App.init({
+	… ,
+	"html5-uploader": {
+		maxChunkSize: 100000
+	}
+}, [ … ]);
+}}}
