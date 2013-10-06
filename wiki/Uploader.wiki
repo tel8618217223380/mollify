@@ -1,13 +1,28 @@
 #summary File uploader
 
-To avoid server upload size restrictions, add following client setting that enables chunked upload:
+Mollify has HTML5 uploader (based on BlueImp [https://github.com/blueimp/jQuery-File-Upload JQuery-File-Upload]).
+
+Uploader settings are defined in Mollify app init:
+
 {{{
 mollify.App.init({
 	… ,
 	"html5-uploader": {
-		maxChunkSize: 100000
+		...
 	}
 }, [ … ]);
+}}}
+
+JQuery-File-Upload options are available at [https://github.com/blueimp/jQuery-File-Upload/wiki/Options]
+
+== Chunked upload ==
+
+To avoid server upload size restrictions, add following client setting that enables chunked upload:
+{{{
+...,
+"html5-uploader": {
+	maxChunkSize: 100000
+}
 }}}
 
 Use chunk size as big as possible (but smaller than the server max upload size).
