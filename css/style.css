@@ -303,9 +303,9 @@ a.mollify-login-link {
 }
 
 .mollify-mainview-notification {
-	position: absolute;
-	top: 20px;
-	left: 0;
+	position: fixed;
+	top: 90px;
+	left: 40px;
 	right: 0;
 	margin: auto;
 	width: 50%;
