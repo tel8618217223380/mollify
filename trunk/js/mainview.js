@@ -511,11 +511,12 @@
 					},
 					finished: function() {
 						that.uploadProgress.hide();
+						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadComplete'), type: "success"});
 						that.refresh();
 					},
 					failed: function() {
 						that.uploadProgress.hide();
-						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed')});
+						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed'), type: "error"});
 					}
 				});
 			}
@@ -550,7 +551,7 @@
 				} else that.openInitialFolder();
 			}
 			
-			that.onResize();			
+			that.onResize();
 		}
 		
 		this._updateScroll = function() {
@@ -798,12 +799,13 @@
 										finished: function() {
 											b.hide();
 											that.uploadProgress.hide();
+											mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadComplete'), type: "success"});
 											that.refresh();
 										},
 										failed: function() {
 											b.hide();
 											that.uploadProgress.hide();
-											mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed')});
+											mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed'), type: "error"});
 										}
 									});
 									if (!mollify.features.hasFeature('retrieve_url')) {
