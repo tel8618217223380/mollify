@@ -35,6 +35,7 @@ build:
 	@echo "Compiling and minifying javascript...       ${CHECK} Done"
 	
 	./node_modules/.bin/recess --compress css/style.css > out/mollify/css/mollify.css
+	./node_modules/.bin/recess --compress css/libs.css > out/mollify/css/libs.css
 	./node_modules/.bin/recess --compress css/bootstrap.css > out/mollify/css/bootstrap.css
 	./node_modules/.bin/recess --compress css/bootstrap-responsive.css > out/mollify/css/bootstrap-responsive.css
 	./node_modules/.bin/recess --compress css/font-awesome.css > out/mollify/css/font-awesome.css
