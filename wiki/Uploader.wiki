@@ -1,6 +1,6 @@
 #summary File uploader
 
-Following client setting enables chunked upload:
+To avoid server upload size restrictions, add following client setting that enables chunked upload:
 {{{
 mollify.App.init({
 	… ,
@@ -9,3 +9,5 @@ mollify.App.init({
 	}
 }, [ … ]);
 }}}
+
+Use chunk size as big as possible (but smaller than the server max upload size).
