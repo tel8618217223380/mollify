@@ -95,7 +95,7 @@
 			var $dropZone = $("#mollify-uploader-widget");
 			
 			var $input = $d.find("input").fileupload($.extend({
-				url: mollify.service.url("filesystem/"+folder.id+'/files/'),
+				url: mollify.service.url("filesystem/"+folder.id+'/files/') + "?format=binary",
 				dataType: 'json',
 				dropZone: $dropZone,
 				/*add: function (e, data) {
@@ -125,6 +125,9 @@
 				},
 				done: function(e, data) {
 					if (l.finished) l.finished();
+				},
+				fail: function(e, data) {
+					if (l.failed) l.failed();
 				}
 			}, t._getUploaderSettings()));
 			
@@ -165,9 +168,16 @@
 					},
 					done: function(e, data) {
 						if (h.finished) h.finished();
+					},
+					fail: function(e, data) {
+						if (h.failed) h.failed();
 					}
 				}, t._getUploaderSettings())).fileupload('disable');
 				t._initDropZoneEffects(h.dropElement);
+			},
+			destroyMainViewUploader : function() {
+				if (t.$mainViewInput) t.$mainViewInput.fileupload("destroy");
+				t.$mainViewInput = false;
 			},
 			setMainViewUploadFolder : function(f) {
 				if (!t.$mainViewInput) return;
@@ -175,7 +185,7 @@
 					t.$mainViewInput.fileupload('disable');
 					return;
 				}
-				t.$mainViewInput.fileupload('enable').fileupload('option', 'url', mollify.service.url("filesystem/"+f.id+'/files/'));
+				t.$mainViewInput.fileupload('enable').fileupload('option', 'url', mollify.service.url("filesystem/"+f.id+'/files/') + "?format=binary");
 			}
 		};
 	}

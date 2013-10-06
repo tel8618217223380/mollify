@@ -17,18 +17,6 @@
 		}
 		
 		public function processGet() {
-			if ($this->path[0] === 'upload') {
-				$this->processGetUpload();
-				return;
-			}
-						
-			/*if ($this->path[0] === 'zip' and count($this->path) == 2) {		
-				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
-				$id = $this->path[1];
-				$this->env->filesystem()->downloadStoredZip($id, $mobile);
-				return;
-			}*/
-
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())
 				$this->processGetFile($item);
@@ -118,17 +106,6 @@
 					$this->env->filesystem()->deleteItems($items);
 					$this->response()->success(TRUE);
 					return;
-				/*case 'zip':
-					$itemIds = $data['items'];
-					if (count($itemIds) < 1) throw $this->invalidRequestException();
-				
-					$items = array();
-					foreach($itemIds as $id)
-						$items[] = $this->item($id);
-
-					$zipId = $this->env->filesystem()->storeZip($items);
-					$this->response()->success(array("id" => $zipId));
-					return;*/
 				default:
 					throw $this->invalidRequestException();
 			}
@@ -164,10 +141,6 @@
 					
 					$this->env->filesystem()->view($item);
 					return;
-				/*case 'zip':
-					$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
-					$this->env->filesystem()->downloadAsZip($item, $mobile);
-					return;*/
 				case 'view':
 					$this->env->filesystem()->view($item);
 					die();
@@ -248,10 +221,6 @@
 			if (count($this->path) != 2) throw invalidRequestException();
 			
 			switch (strtolower($this->path[1])) {
-				/*case 'zip':
-					$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
-					$this->env->filesystem()->downloadAsZip($item, $mobile);
-					return;*/
 				case 'info':
 					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
 					$this->response()->success($this->getFolderInfo($item, $includeHierarchy));
@@ -442,14 +411,6 @@
 			}
 			$result = $this->getFolderInfo($current, TRUE, $data["data"]);
 			$this->response()->success($result);
-		}
-		
-		private function processGetUpload() {
-			if (count($this->path) != 3 or $this->path[2] != 'status') throw invalidRequestException();
-			$this->env->features()->assertFeature("file_upload_progress");
-			
-			Logging::logDebug('upload status '.$this->path[1]);
-			$this->response()->success(apc_fetch('upload_'.$this->path[1]));
 		}
 		
 		public function __toString() {
