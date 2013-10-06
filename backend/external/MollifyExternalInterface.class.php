@@ -47,7 +47,7 @@
 			$this->session = new Session(TRUE);
 			
 			$f = new DBConnectionFactory();
-			$db = $f->createConnection($settings);
+			$db = $f->createConnection($this->settings);
 			$this->configuration = new ConfigurationDao($db);
 
 			$env = new ServiceEnvironment($db, $this->session, new VoidResponseHandler(), $this->configuration, $this->settings);
