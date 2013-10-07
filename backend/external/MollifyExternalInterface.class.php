@@ -84,8 +84,8 @@
 			return $this->configuration->getUser($id);
 		}
 		
-		public function addUser($name, $pw, $email, $defaultPermission = "RO") {
-			return $this->configuration->addUser($name, $pw, $email, $defaultPermission);
+		public function addUser($name, $pw, $email, $defaultPermission = "RO", $expiration = NULL) {
+			return $this->configuration->addUser($name, $pw, $email, $defaultPermission, $expiration);
 		}
 		
 		public function removeUser($id) {
