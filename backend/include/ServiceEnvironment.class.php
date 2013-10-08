@@ -55,12 +55,12 @@
 		}
 		
 		private function createMailSender() {
-			require_once($this->settings->setting("mail_sender_class", TRUE));
+			require_once($this->settings->setting("mail_sender_class"));
 			return new Mollify_MailSender($this);
 		}
 		
 		private function createUrlRetriever() {
-			require_once($this->settings->setting("url_retriever_class", TRUE));
+			require_once($this->settings->setting("url_retriever_class"));
 			return new UrlRetriever($this);
 		}
 		

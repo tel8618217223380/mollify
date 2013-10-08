@@ -52,20 +52,17 @@
 		);
 		
 		function __construct($settings) {
-			$settingsExist = (isset($settings) and $settings != NULL);
+			$def = (isset($settings) and $settings != NULL and is_array($settings));
+			if (!$def) return;
 			
 			foreach(self::$VALUES as $s=>$v) {
-				if (!$settingsExist or !array_key_exists($s, $settings)) continue;
+				if (!array_key_exists($s, $settings)) continue;
 				$this->settings[$s] = $settings[$s];
 			}
 		}
 
-		public function setting($setting, $allowDefaultIfNotDefined = FALSE) {
-			if (!$this->hasSetting($setting)) {
-				if (!$allowDefaultIfNotDefined) return NULL;
-				if (!isset(self::$VALUES[$setting])) throw new ServiceException("Invalid setting: ".$setting);
-				return self::$VALUES[$setting];
-			}
+		public function setting($setting) {
+			if (!$this->hasSetting($setting)) return self::$VALUES[$setting];
 			return $this->settings[$setting];
 		}
 		

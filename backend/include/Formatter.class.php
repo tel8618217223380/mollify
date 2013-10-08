@@ -17,7 +17,7 @@
 		}
 		
 		public function formatDateTime($t) {
-			return date($this->settings->setting("datetime_format", TRUE), $t);
+			return date($this->settings->setting("datetime_format"), $t);
 		}
 	}
 ?>

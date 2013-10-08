@@ -1351,6 +1351,22 @@
 	dh.showError = function(error) {
 		var msg = 'errorDialogMessage_'+error.code;
 		if (!mollify.ui.texts.has(msg)) msg = 'errorDialogUnknownError';
+		if (mollify.session.admin && error.debug) {
+			dh.custom({
+				title: spec.title,
+				content: $("#mollify-tmpl-dialog-error-debug").tmpl({
+					title: mollify.ui.texts.get('errorDialogTitle'),
+					message: mollify.ui.texts.get(msg),
+					debug: error.debug}
+				),
+				buttons: [
+					{ id: "ok", "title-key": "ok" }
+				],
+				"on-button": function(btn, d) {
+					d.close();
+				}
+			});
+		}
 		mollify.ui.dialogs.error({
 			title: mollify.ui.texts.get('errorDialogTitle'),
 			message: mollify.ui.texts.get(msg)

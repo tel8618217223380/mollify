@@ -280,7 +280,7 @@ configAdminUsersRemoveUsersConfirmationMessage: "Are you sure you want to remove
 configAdminUsersRemoveUserConfirmationTitle: "Remove User",
 configAdminUsersRemoveUserConfirmationMessage: "Are you sure you want to remove user \"{0}\"?",
 configAdminUsersChangePasswordDialogTitle: "Change Password for \"{0}\"",
-configAdminUserSearchOptionsTitle: "Result Options",
+configAdminUserSearchOptionsTitle: "Filter",
 configAdminUserSearchOptionsNameTitle: "Name",
 configAdminUserSearchOptionsEmailTitle: "Email",
 

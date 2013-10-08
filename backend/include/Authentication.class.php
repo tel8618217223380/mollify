@@ -47,7 +47,7 @@
 			}
 			
 			Logging::logDebug("No authenticated session active");
-			$methods = $this->env->settings()->setting("authentication_methods",TRUE);
+			$methods = $this->env->settings()->setting("authentication_methods");
 			if (in_array("remote", $methods) and $this->checkRemoteAuth()) return;
 			if ($this->checkStoredCookieAuth()) return;
 		}
@@ -110,7 +110,7 @@
 		public function authenticate($userId, $pw) {
 			$password = md5($pw);
 			
-			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings()->setting("email_login", TRUE), time());
+			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings()->setting("email_login"), time());
 			if (!$user) {
 				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
 				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
@@ -133,7 +133,7 @@
 		}
 		
 		public function getDefaultAuthenticationMethod() {
-			$m = $this->env->settings()->setting("authentication_methods",TRUE);
+			$m = $this->env->settings()->setting("authentication_methods");
 			return $m[0];
 		}
 		

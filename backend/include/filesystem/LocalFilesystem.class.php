@@ -283,10 +283,10 @@
 			
 			$path = self::folderPath(self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE)));
 			if (file_exists($path)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
-			if (!mkdir($path, $this->filesystemInfo->setting("new_folder_permission_mask", TRUE))) {
+			if (!mkdir($path, $this->filesystemInfo->setting("new_folder_permission_mask"))) {
 				throw new ServiceException("CANNOT_CREATE_FOLDER", $folder->id()."/".$name);
 			} else {
-				chmod($path, $this->filesystemInfo->setting("new_folder_permission_mask", TRUE));
+				chmod($path, $this->filesystemInfo->setting("new_folder_permission_mask"));
 			}
 			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
 		}

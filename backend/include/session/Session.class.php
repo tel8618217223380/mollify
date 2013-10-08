@@ -45,7 +45,7 @@
 			
 			// initialize guest mode
 			if ($id === "guest" and $this->env->features()->isFeatureEnabled("guest_mode")) {
-				$user = $this->env->settings()->setting("guest_user_id", TRUE);
+				$user = $this->env->settings()->setting("guest_user_id");
 				if (!$user) throw new ServiceException("INVALID_REQUEST", "No guest user defined");
 				Logging::logDebug("Guest session: ".$user);
 				$this->session = array("user_id" => $user);
@@ -123,7 +123,7 @@
 		}
 
 		private function getLastValidSessionTime($from = NULL) {
-			$removed = $this->env->settings()->setting("session_time", TRUE);
+			$removed = $this->env->settings()->setting("session_time");
 			if (!$from) return time() - $removed;
 			return $from - $removed;
 		}
