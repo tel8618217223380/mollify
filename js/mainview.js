@@ -1018,8 +1018,8 @@
 							if (t=='name' || t=='icon') showContext = true;
 						}
 					} else {
-						// icon view shows always context
-						showContext = true;
+						if (t=='info' || item.is_file) showContext = true;
+						else that.changeToFolder(item); 
 					}
 					
 					if (showContext) {
@@ -1189,12 +1189,15 @@
 			}).single_double_click(function(e) {
 				var $t = $(this);
 				var itm = $t.tmplItem().data;
-				if ($(e.target).hasClass("mollify-iconview-item-sel-option")) {
+				var $trg = $(e.target);
+				if ($trg.hasClass("mollify-iconview-item-sel-option")) {
 					t.p.onSelectUnselect(itm);
 					return;
 				}
+				var col = "";
+				if ($trg.parent().hasClass("mollify-iconview-item-info")) col = "info";
 
-				t.p.onClick(itm, "", $t);
+				t.p.onClick(itm, col, $t);
 			},function() {
 				t.p.onDblClick($(this).tmplItem().data);
 			}).attr('unselectable', 'on').css({
