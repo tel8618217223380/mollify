@@ -99,8 +99,8 @@
 
 		private function processGetSettings() {
 			$this->response()->success(array(
-				"authentication_methods" => $this->env->settings()->setting("authentication_methods", TRUE),
-				"published_folders_root" => $this->env->settings()->setting("published_folders_root", TRUE)
+				"authentication_methods" => $this->env->settings()->setting("authentication_methods"),
+				"published_folders_root" => $this->env->settings()->setting("published_folders_root")
 			));
 		}	
 		
@@ -435,7 +435,7 @@
 		private function processGetFolders() {
 			if (count($this->path) == 1) {
 				$list = $this->env->configuration()->getFolders();
-				$root = $this->env->settings()->setting("published_folders_root", TRUE);				
+				$root = $this->env->settings()->setting("published_folders_root");				
 				if ($root != NULL) {
 					$root = rtrim($root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 					$i = 0;
@@ -468,7 +468,7 @@
 			if (count($this->path) == 1) {
 				$folder = $this->request->data;
 				
-				$root = $this->env->settings()->setting("published_folders_root", TRUE);
+				$root = $this->env->settings()->setting("published_folders_root");
 				if ($root != NULL) {
 					if (strpos($folder['path'], "/") === 0 or strpos($folder['path'], ":\\") == 1)
 						throw $this->invalidRequestException("Published folders root defined, absolute paths not allowed");

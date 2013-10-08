@@ -39,7 +39,7 @@
 			$this->env = $env;
 			$this->idProvider = new ItemIdProvider($env);
 			
-			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
+			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types');
 			$this->registerSearcher(new FileSystemSearcher($this->env));
 			
 			$coreData = new CoreFileDataProvider($this->env);
@@ -812,7 +812,7 @@
 			return $result;
 		}
 		
-		public function zipper() {
+		/*public function zipper() {
 			require_once('zip/MollifyZip.class.php');
 			$zipper = $this->setting("zipper", TRUE);
 			
@@ -828,10 +828,10 @@
 			}
 			
 			throw new ServiceException("INVALID_CONFIGURATION", "Unsupported zipper configured: ".$zipper);
-		}
+		}*/
 		
-		public function setting($setting, $allowDefaultIfNotDefined = FALSE) {
-			return $this->env->settings()->setting($setting, $allowDefaultIfNotDefined);
+		public function setting($setting) {
+			return $this->env->settings()->setting($setting);
 		}
 
 		public function log() {
