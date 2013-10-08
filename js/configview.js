@@ -87,7 +87,7 @@
 		this._loadAdminPlugins = function(ids) {
 			var df = $.Deferred();
 			var l = [];
-			l.push(mollify.service.get("configuration/options").done(function(opt) { that._options = opt; }));			
+			l.push(mollify.service.get("configuration/settings").done(function(s) { that._settings = s; }));			
 			for (var i=0,j=ids.length;i<j;i++) {
 				l.push($.getScript("backend/plugin/"+ids[i]+"/admin/plugin.js"));
 			}
@@ -115,7 +115,7 @@
 			if (!mollify.session.admin || that._adminViews.length === 0) return;
 
 			$.each(that._adminViews, function(i, v) {
-				if (v.init) v.init(that._options);
+				if (v.init) v.init(that._settings);
 			});
 
 			var navBarItems = [];
@@ -628,7 +628,7 @@
 	mollify.view.config.admin.GroupsView = function() {
 		var that = this;
 		
-		this.init = function(opt) {
+		this.init = function(s) {
 			this.title = mollify.ui.texts.get("configAdminGroupsNavTitle");	
 		}
 		
@@ -906,7 +906,8 @@
 	mollify.view.config.admin.FoldersView = function() {
 		var that = this;
 		
-		this.init = function(opt) {
+		this.init = function(s) {
+			that._settings = s;
 			that.title = mollify.ui.texts.get("configAdminFoldersNavTitle");
 		}
 		
@@ -1056,6 +1057,16 @@
 			return mollify.service.del("configuration/folders", {ids: mollify.helpers.extractValue(f, "id")});
 		}
 		
+		this._isValidPath = function(p) {
+			if (!p) return false;
+			if (p.indexOf("..") >= 0) return false;
+			if (that._settings.published_folders_root) {
+				// if root setting is defined, prevent using absolute paths
+				if (p.indexOf("/") === 0 || p.indexOf(":\\") === 0) return false;	
+			}
+			return true;
+		}
+		
 		this.onAddEditFolder = function(f, cb) {
 			var $content = false;
 			var $name = false;
@@ -1076,11 +1087,22 @@
 						return;
 					}
 					$content.find(".control-group").removeClass("error");
-					var name = $name.val();
-					var path = $path.val();
+					
+					var name = $name.val();					
 					if (!name) $name.closest(".control-group").addClass("error");
-					if (!path) $path.closest(".control-group").addClass("error");
-					if (!name || !path) return;
+					
+					var path = $path.val();
+					var pathValid = that._isValidPath(path);
+					if (!pathValid) $path.closest(".control-group").addClass("error");
+					
+					if (!name) {
+						$name.focus();
+						return;
+					}
+					if (!pathValid) {
+						$path.focus();
+						return;
+					}
 					
 					var folder = {name: name, path: path};
 					var onFail = function(e){

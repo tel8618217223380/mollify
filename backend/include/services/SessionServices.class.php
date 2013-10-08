@@ -85,13 +85,6 @@
 					$this->env->filesystem()->getSessionInfo()
 				);
 			}
-			if ($this->env->request()->hasParam("type")) {
-				if (strcasecmp($this->env->request()->param("type"), "admin") === 0 and $this->env->authentication()->isAdmin()) {
-					$info["script_location"] = dirname($_SERVER['SCRIPT_FILENAME']);
-					$info["authentication_methods"] = $this->env->settings()->setting("authentication_methods", TRUE);
-					$info["published_folders_root"] = $this->env->settings()->setting("published_folders_root", TRUE);
-				}
-			}
 			include_once("include/Version.info.php");
 			global $VERSION, $REVISION;
 			$info["version"] = $VERSION;

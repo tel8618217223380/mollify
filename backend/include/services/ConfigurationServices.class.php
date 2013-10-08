@@ -10,7 +10,7 @@
 	 */
 
 	class ConfigurationServices extends ServicesBase {
-		private static $ITEMS = array("options", "users", "usergroups", "usersgroups", "folders");
+		private static $ITEMS = array("settings", "users", "usergroups", "usersgroups", "folders");
 				
 		protected function isValidPath($method, $path) {
 			if (count($path) == 0) return FALSE;
@@ -22,8 +22,8 @@
 			$this->env->authentication()->assertAdmin();
 			
 			switch($this->path[0]) {
-				case 'options':
-					$this->processGetOptions();
+				case 'settings':
+					$this->processGetSettings();
 					break;
 				case 'users':
 					$this->processGetUsers();
@@ -97,9 +97,10 @@
 			}
 		}
 
-		private function processGetOptions() {
+		private function processGetSettings() {
 			$this->response()->success(array(
-				"authentication_methods" => $this->env->settings()->setting("authentication_methods", TRUE)
+				"authentication_methods" => $this->env->settings()->setting("authentication_methods", TRUE),
+				"published_folders_root" => $this->env->settings()->setting("published_folders_root", TRUE)
 			));
 		}	
 		
