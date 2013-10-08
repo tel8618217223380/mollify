@@ -777,6 +777,21 @@ li#mollify-folder-hierarchy-item-root > a {
 	display: none;
 }
 
+.mollify-iconview-item-info {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	display: none;
+}
+
+.mollify-iconview-item.item-folder.hover .mollify-iconview-item-info {
+	display: block;
+}
+
+.mollify-iconview-item.item-folder.hover .mollify-iconview-item-info:hover {
+	font-size: 120%;
+}
+
 .mollify-iconview.select .mollify-iconview-item-sel {
 	display: block;
 }
