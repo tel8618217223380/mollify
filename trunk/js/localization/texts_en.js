@@ -253,6 +253,9 @@ configAdminGroupsNavTitle: "Groups",
 configAdminUsersPermissionModeAdmin: "Administrator",
 configAdminTableIdTitle: "Id",
 
+configAdminActionRemoveTitle: "Remove",
+configAdminActionEditTitle: "Edit",
+
 configAdminUsersNameTitle: "Username",
 configAdminUsersPermissionTitle: "Default permission",
 configAdminUsersEmailTitle: "Email",
@@ -283,6 +286,7 @@ configAdminUsersChangePasswordDialogTitle: "Change Password for \"{0}\"",
 configAdminUserSearchOptionsTitle: "Filter",
 configAdminUserSearchOptionsNameTitle: "Name",
 configAdminUserSearchOptionsEmailTitle: "Email",
+configAdminUsersActionChangePasswordTitle: "Change Password",
 
 configAdminFoldersNavTitle: "Folders",
 configAdminFoldersNameTitle: "Folder name",

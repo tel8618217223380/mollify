@@ -817,7 +817,7 @@
 				if (col.type == 'selectrow') {
 					$th = $('<input class="mollify-tableselect-header" type="checkbox"></input>').click(thClick);
 				} else {
-					$th = $("<th>"+(col.title ? col.title : "")+"</th>");
+					$th = $("<th>"+(col.type == 'action' ? "" : (col.title ? col.title : ""))+"</th>");
 					$th[0].colId = col.id;
 					if (col.sortable) {
 						$th.append("<span class='mollify-tableheader-sort'></span>").addClass("sortable");
@@ -894,13 +894,9 @@
 				if (col.type == 'selectrow') {
 					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell);
 				} else if (col.type == 'action') {
-					var html = col.content || col.title;
+					var html = col.content;
 					if (col.valueMapper) html = col.valueMapper(item, v);
-					if (html) $("<a class='mollify-tableaction'></a>").html(html).appendTo($cell);
-					/*$action.click(function(e){
-						//TODO delegate click handler
-
-					});*/
+					if (html) $("<a class='mollify-tableaction' title='"+col.title+"'></a>").html(html).appendTo($cell);
 				} else if (col.type == "input") {
 					var $s = $('<input type="text"></input>').appendTo($cell).change(function() {
 						var v = $s.val();
