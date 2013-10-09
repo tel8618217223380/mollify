@@ -4,5 +4,6 @@ pluginRegistrationAdminAddRegistrationTitle: "Add Registration",
 pluginRegistrationAdminNameTitle: "Name",
 pluginRegistrationAdminEmailTitle: "Email",
 pluginRegistrationAdminKeyTitle: "Registration Key",
-pluginRegistrationAdminTimeTitle: "Time"
+pluginRegistrationAdminTimeTitle: "Time",
+pluginRegistrationAdminConfirmTitle: "Confirm"
 })})();

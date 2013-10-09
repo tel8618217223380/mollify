@@ -50,8 +50,8 @@
 							{ id: "email", title: mollify.ui.texts.get('pluginRegistrationAdminEmailTitle') },
 							{ id: "key", title: mollify.ui.texts.get('pluginRegistrationAdminKeyTitle') },
 							{ id: "time", title: mollify.ui.texts.get('pluginRegistrationAdminTimeTitle'), formatter: that._timestampFormatter },
-							{ id: "confirm", title: "", type: "action", content: '<i class="icon-ok"></i>' },
-							{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+							{ id: "confirm", title: mollify.ui.texts.get('pluginRegistrationAdminConfirmTitle'), type: "action", content: '<i class="icon-ok"></i>' },
+							{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 						],
 						onRowAction: function(id, r) {
 							if (id == "remove") {
