@@ -285,9 +285,9 @@
 							return that._permissionTexts[pkl] ? that._permissionTexts[pkl] : pk;
 						} },
 						{ id: "email", title: mollify.ui.texts.get('configAdminUsersEmailTitle'), sortable: true },
-						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
-						{ id: "pw", title:"", type: "action", content:'<i class="icon-key"></i>' },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "edit", title: mollify.ui.texts.get('configAdminActionEditTitle'), type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "pw", title:mollify.ui.texts.get('configAdminUsersActionChangePasswordTitle'), type: "action", content:'<i class="icon-key"></i>' },
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, u) {
 						if (id == "edit") {
@@ -475,7 +475,7 @@
 							return mollify.ui.texts.get('configAdminUsersFolderDefaultName', f.default_name);
 						} },
 						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, f) {
 						if (id == "remove") {
@@ -502,7 +502,7 @@
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersGroupNameTitle') },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, g) {
 						if (id == "remove") {
@@ -669,8 +669,8 @@
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
 						{ id: "description", title: mollify.ui.texts.get('configAdminGroupsDescriptionTitle') },
-						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "edit", title: mollify.ui.texts.get('configAdminActionEditTitle'), type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, g) {
 						if (id == "edit") {
@@ -810,7 +810,7 @@
 							return mollify.ui.texts.get('configAdminUsersFolderDefaultName', f.default_name);
 						} },
 						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, f) {
 						if (id == "remove") {
@@ -836,7 +836,7 @@
 						{ type:"selectrow" },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, u) {
 						if (id == "remove") {
@@ -947,8 +947,8 @@
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
 						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
-						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "edit", title: mollify.ui.texts.get('configAdminActionEditTitle'), type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, f) {
 						if (id == "edit") {
@@ -1040,7 +1040,7 @@
 						{ id: "icon", title:"", valueMapper: function(i, v) { if (i.is_group == 1) return "<i class='icon-user'></i><i class='icon-user'></i>"; return "<i class='icon-user'></i>"; } },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, u) {
 						if (id == "remove") {
