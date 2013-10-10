@@ -1351,8 +1351,8 @@
 				that.itemContext.open({
 					item: item,
 					element: $i,
-					container: $("#mollify"),
-					viewport: $("#mollify")
+					container: mollify.App.getElement(),
+					viewport: mollify.App.getElement()
 				});
 				return false;
 			}).each(function() {

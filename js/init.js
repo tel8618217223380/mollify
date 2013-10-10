@@ -8,7 +8,7 @@
  */
  
 var mollifyDefaults = {
-	"template-url": "templates/",
+	"app-element-id" : "mollify",
 	"service-path": "backend/",
 	"limited-http-methods" : false,
 	"list-view-columns": {
@@ -71,7 +71,7 @@ var mollifyDefaults = {
 			mollify.service.get("session/info/3").done(function(s) {
 				mollify.App.setSession(s);
 			}).fail(function(e) {
-				$("#mollify").html("Failed to initialize Mollify");
+				mollify.App.getElement().html("Failed to initialize Mollify");
 			});
 		};
 		
@@ -94,7 +94,9 @@ var mollifyDefaults = {
 		mollify.plugins.initialize();
 
 		doStart();
-	};	
+	};
+	
+	mollify.App.getElement = function() { return $("#"+mollify.settings["app-element-id"]); };
 	
 	mollify.App.setSession = function(s) {
 		mollify.events.dispatch("session/start", s);
@@ -103,7 +105,7 @@ var mollifyDefaults = {
 	mollify.App._start = function() {
 		mollify.ui.activeView = false;
 		
-		var $c = $("#mollify");
+		var $c = mollify.App.getElement();
 		if (!mollify.session || !mollify.session.authenticated) {
 			mollify.App.mainview = false;
 			new mollify.view.LoginView().init($c);
