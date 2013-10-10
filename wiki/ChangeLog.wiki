@@ -2,7 +2,9 @@
 #labels Phase-Deploy,Featured
 
 === Version 2.1.1 ===
-Released 2013/10/3
+Released 2013/10/7
+  * File uploader improvements
+  * Admin user view paging
 
 === Version 2.1 ===
 Released 2013/10/3
