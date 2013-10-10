@@ -104,7 +104,7 @@
 		
 		if (mollify.ui.texts.locale) {
 			$("html").attr("lang", mollify.ui.texts.locale);
-			$("#mollify").addClass("lang-"+mollify.ui.texts.locale);
+			mollify.App.getElement().addClass("lang-"+mollify.ui.texts.locale);
 		}
 		
 		$(window).click(function(e) {
@@ -544,7 +544,7 @@
 			if (!a.items) $mnu.addClass("loading");
 			$mnu.append(createPopupItems(a.items).css("display", "block"));
 			if (a.style) $mnu.addClass(a.style);
-			$("#mollify").append($mnu);//.on('click', hidePopup);
+			mollify.App.getElement().append($mnu);//.on('click', hidePopup);
 			
 			var api = {
 				hide: hidePopup,
