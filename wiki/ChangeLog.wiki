@@ -9,7 +9,7 @@ Released 2013/10/11
 === Version 2.1.2 ===
 Released 2013/10/7
   * Select multiple files in icon view
-  * Option to restrict published folders inside defined path
+  * Option to restrict published folders inside defined path ([https://code.google.com/p/mollify/wiki/BackendSettings?#Published_folders_root_(_published_folders_root_)])
 
 === Version 2.1.1 ===
 Released 2013/10/7
