@@ -32,7 +32,8 @@ $CONFIGURATION = array(
 	"ldap_conn_string" => NULL,					// LDAP connection string
 	"upload_temp_dir" => NULL,					
 	"enable_thumbnails" => TRUE,
-	"enable_folder_protection" => FALSE,				// enable folder protection
+	"enable_folder_protection" => FALSE,				// enable folder protection,
+	"published_folders_root" => NULL				// published folders root
 );
 }}}
 
@@ -63,7 +64,7 @@ File downloads may require special MIME type in order to be processed correctly.
 Mime types are defined by the file extension, for example:
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
 		"mime_types" => array("avi" => "video/divx", "wav" => "audio/x-wav")
 	);
 }}}
@@ -115,7 +116,7 @@ Option "`ZipArchive`" uses PHP zip library called `ZipArchive`, "`Native`" uses 
 Define the file types that are allowed to upload. By default, all types are allowed.
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
 		"allowed_file_upload_types" => array("gif", "png", "jpg")
 	);
 }}}
@@ -130,14 +131,14 @@ Mollify uses UTF-8 internally, and filesystems that support this charset work fi
 
 With value TRUE, Mollify will try to guess the conversion needed:
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
 		"convert_filenames" => TRUE
 	);
 }}}
 
 Otherwise the OS charset has to be defined here:
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
 		"convert_filenames" => "CP1252"
 	);
 }}}
@@ -153,7 +154,7 @@ Define supported authentication methods. By default, Mollify expects users to be
 In admin section, you can set user authentication method. If user has "default" method selected, the first method listed in this setting will be used.
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
 		"authentication_methods" => array("pw", "ldap")
 	);
 }}}
@@ -175,7 +176,7 @@ For example, if user "john.doe" is logging in
   * connection string "`uid=[USER],ou=organization,dc=domain,dc=net`" would authenticate with "`uid=john.doe,ou=organization,dc=domain,dc=net`"
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
 		"ldap_server" => "ldap://your.ldapserver.com",
 		"ldap_conn_string" => "uid=[USER],ou=organization,dc=domain,dc=net"
 	);
@@ -188,3 +189,7 @@ Define the temporary directory used for custom file uploaders. By default the OS
 == Enable thumbnails (`enable_thumbnails`) ==
 
 Enable thumbnails support. This feature is used by, for example, icon view and image preview to show smaller image preview.
+
+== Published folders root (`published_folders_root`) ==
+
+With this setting, all the published folders can be restricted into specified filesystem location. For example value "/data/folders" would mean that all folders must be under this folder, and for example publishing folder with path "Test" would mean path "/data/folders/Test"
