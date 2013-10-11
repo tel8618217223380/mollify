@@ -23,7 +23,6 @@ $CONFIGURATION = array(
 	"enable_retrieve_url" => FALSE,					// enable URL retrieve
 	"url_retriever_class" => "UrlRetriever.class.php",		// URL retriever implementation
 	"enable_zip_download" => FALSE,					// enable zip downloads
-	"zipper" => "ZipArchive",					// zip implementation
 	"allowed_file_upload_types" => array(),				// allowed file upload types
 	"new_folder_permission_mask" => 0755,				// new folder permission mask
 	"convert_filenames" => FALSE,					// convert filesystem filenames
@@ -104,12 +103,6 @@ Define the URL retriever implementation. If default implementation is not suffic
 == Enable zip downloads (`enable_zip_downloads`) ==
 
 Enable zip downloads, which allows downloading entire folders or file collections (by default disabled).
-
-== Zipper implementation (`zipper`) ==
-
-Define the zipper implementation, possible values are "`ZipArchive`" (default), "`Native`" and "`Raw`". 
-
-Option "`ZipArchive`" uses PHP zip library called `ZipArchive`, "`Native`" uses underlying OS functions (gzip, bzip, rar etc) and "`Raw`" uses pure PHP zip implementation.
 
 == Allowed file upload types (`allowed_file_upload_types`) ==
 
