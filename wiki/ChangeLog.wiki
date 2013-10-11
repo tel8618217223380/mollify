@@ -3,7 +3,7 @@
 
 === Version 2.1.3 ===
 Released 2013/10/11
-  * Fixed date picker z-index issue (issue #427)
+  * Fixed date picker z-index issue (issue #472)
   * Dialogs are now modal
 
 === Version 2.1.2 ===
