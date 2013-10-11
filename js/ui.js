@@ -1286,6 +1286,11 @@
 	dh._dialogDefaults = {
 		title: "Mollify"
 	};
+	
+	dh.closeActiveDialog = function() {
+		if (!dh._activeDialog) return;
+		dh._activeDialog.close();
+	};
 			
 	dh.info = function(spec) {
 		dh.custom({
@@ -1347,9 +1352,9 @@
 	dh.showError = function(error) {
 		var msg = 'errorDialogMessage_'+error.code;
 		if (!mollify.ui.texts.has(msg)) msg = 'errorDialogUnknownError';
-		if (mollify.session.admin && error.debug) {
+		/*if (mollify.session.admin && error.debug) {
 			dh.custom({
-				title: spec.title,
+				title: mollify.ui.texts.get('errorDialogTitle'),
 				content: $("#mollify-tmpl-dialog-error-debug").tmpl({
 					title: mollify.ui.texts.get('errorDialogTitle'),
 					message: mollify.ui.texts.get(msg),
@@ -1362,7 +1367,7 @@
 					d.close();
 				}
 			});
-		}
+		}*/
 		mollify.ui.dialogs.error({
 			title: mollify.ui.texts.get('errorDialogTitle'),
 			message: mollify.ui.texts.get(msg)
@@ -1508,13 +1513,14 @@
 		
 		mollify.ui.handlers.localize($dlg);
 		$dlg.on('hidden', function() { $dlg.remove(); }).modal({
-			backdrop: !!spec.backdrop,
+			backdrop: 'static', //!!spec.backdrop,
 			show: true,
 			keyboard: true
 		});
 		var h = {
 			close: function() {
 				$dlg.modal('hide');
+				dh._activeDialog = false;
 			},
 			center: function() {
 				center($dlg);
@@ -1558,6 +1564,7 @@
 			onResize();
 		}
 		if (spec["on-show"]) spec["on-show"](h, $dlg);
+		dh._activeDialog = h;
 		return h;
 	};
 	
