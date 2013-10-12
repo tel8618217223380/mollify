@@ -1248,6 +1248,8 @@ a.mollify-tableaction {
 .mollify-config-admin-userdetails-section, .mollify-notificator-notificationdetails-section {
 	float: left;
 	width: 45%;
+	overflow: hidden;
+	min-width: 350px;
 }
 
 .mollify-notificator-notificationdetails-message-title, .mollify-notificator-notificationdetails-message-title > *, .mollify-notificator-notificationdetails-messagetitle, .mollify-notificator-notificationdetails-message {
