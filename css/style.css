@@ -764,6 +764,8 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-iconview-item-label {
 	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	text-align: center;
 	padding-top: 6px;
 	overflow: hidden;
