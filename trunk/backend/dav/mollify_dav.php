@@ -6,11 +6,11 @@
 	require_once("include/Logging.class.php");
 	require_once("include/Util.class.php");
 		
-	global $SETTINGS, $CONFIGURATION_TYPE;
-	Logging::initialize($SETTINGS);
+	global $CONFIGURATION;
+	Logging::initialize($CONFIGURATION);
 
 	require_once("include/MollifyBackend.class.php");
-	require_once("include/ConfigurationFactory.class.php");
+	require_once("include/configuration/ConfigurationDao.class.php");
 	require_once("include/Settings.class.php");
 	require_once("include/Request.class.php");
 	require_once("Sabre.includes.php");
@@ -192,10 +192,11 @@
 	}
 	
 	try {
-		$settings = new Settings($SETTINGS);
-		$factory = new ConfigurationFactory();
-		$conf = $factory->createConfiguration($CONFIGURATION_TYPE, $settings);
-		$env = new ServiceEnvironment(new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
+		$settings = new Settings($CONFIGURATION);
+		$db = getDB($settings);
+		$conf = new ConfigurationDao($db);
+		$env = new ServiceEnvironment($db, new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
+		//$env = new ServiceEnvironment(new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
 		$env->initialize(new Mollify_DAV_Request());
 		
 		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
@@ -251,5 +252,11 @@
 	} catch (Exception $e) {
 		Logging::logException($e);
 		throw new Sabre_DAV_Exception_BadRequest();
+	}
+	
+	function getDB($settings) {
+		require_once("db/DBConnectionFactory.class.php");
+		$f = new DBConnectionFactory();
+		return $f->createConnection($settings);
 	}
 ?>
