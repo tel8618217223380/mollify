@@ -1352,13 +1352,13 @@
 	dh.showError = function(error) {
 		var msg = 'errorDialogMessage_'+error.code;
 		if (!mollify.ui.texts.has(msg)) msg = 'errorDialogUnknownError';
-		/*if (mollify.session.admin && error.debug) {
+		if (mollify.session.admin && error.trace) {
 			dh.custom({
 				title: mollify.ui.texts.get('errorDialogTitle'),
 				content: $("#mollify-tmpl-dialog-error-debug").tmpl({
 					title: mollify.ui.texts.get('errorDialogTitle'),
 					message: mollify.ui.texts.get(msg),
-					debug: error.debug}
+					debug: error.trace.join("<br/>")}
 				),
 				buttons: [
 					{ id: "ok", "title-key": "ok" }
@@ -1367,11 +1367,12 @@
 					d.close();
 				}
 			});
-		}*/
-		mollify.ui.dialogs.error({
-			title: mollify.ui.texts.get('errorDialogTitle'),
-			message: mollify.ui.texts.get(msg)
-		});
+		} else {
+			mollify.ui.dialogs.error({
+				title: mollify.ui.texts.get('errorDialogTitle'),
+				message: mollify.ui.texts.get(msg)
+			});
+		}
 	};
 	
 	dh.select = function(spec) {
