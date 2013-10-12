@@ -89,7 +89,7 @@
 			var l = [];
 			l.push(mollify.service.get("configuration/settings").done(function(s) { that._settings = s; }));			
 			for (var i=0,j=ids.length;i<j;i++) {
-				l.push($.getScript("backend/plugin/"+ids[i]+"/admin/plugin.js"));
+				l.push($.getScript(mollify.resourceUrl("backend/plugin/"+ids[i]+"/admin/plugin.js")));
 			}
 			
 			$.when.apply($, l).done(function() {
@@ -102,7 +102,7 @@
 					var p = mollify.admin.plugins[pk];
 					if (!p || !p.views) continue;
 
-					if (p.hasTexts) o.push($.getScript("backend/plugin/"+pk+"/admin/texts_"+mollify.ui.texts.locale+".js"));
+					if (p.hasTexts) o.push($.getScript(mollify.resourceUrl("backend/plugin/"+pk+"/admin/texts_"+mollify.ui.texts.locale+".js")));
 					$.each(p.views, addView);
 				}
 
@@ -232,13 +232,8 @@
 			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 
 			var updateUsers = function() {
-				/*that._details.hide();
-				$c.addClass("loading");
-				mollify.service.get("configuration/users/").done(function(l) {
-					$c.removeClass("loading");
-					users = l;
-					listView.table.set(users);
-				});*/
+				that._details.hide();
+				listView.table.refresh();
 			};
 			
 			var getQueryParams = function(i) {

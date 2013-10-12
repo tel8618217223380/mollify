@@ -709,7 +709,7 @@ var mollifyDefaults = {
 	
 	mt.url = function(name) {
 		var base = mollify.settings["template-url"] || 'templates/';
-		return mollify.resourceUrl(mollify.helpers.noncachedUrl(base + name));
+		return mollify.helpers.noncachedUrl(mollify.resourceUrl(base + name));
 	};
 	
 	mt.load = function(name, url, cb) {
@@ -738,7 +738,7 @@ var mollifyDefaults = {
 		link.attr({
 			type: 'text/css',
 			rel: 'stylesheet',
-			href: mollify.resourceUrl(mollify.helpers.noncachedUrl(url))
+			href: mollify.helpers.noncachedUrl(mollify.resourceUrl(url))
 		});
 		$("head").append(link);
 	};
@@ -749,14 +749,14 @@ var mollifyDefaults = {
 			return;
 		}
 		var id = 'mollify-tmp-'+(mollify._hiddenInd++);
-		$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(mollify.resourceUrl(mollify.helpers.noncachedUrl(url)), function() {
+		$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(mollify.helpers.noncachedUrl(mollify.resourceUrl(url)), function() {
 			md._hiddenLoaded.push(contentId);
 			if (cb) cb();
 		});
 	};
 					
 	md.loadContentInto = function($target, url, handler, process) {
-		$target.load(mollify.resourceUrl(mollify.helpers.noncachedUrl(url)), function() {
+		$target.load(mollify.helpers.noncachedUrl(mollify.resourceUrl(url)), function() {
 			if (process) mollify.ui.process($target, process, handler);
 			if (typeof handler === 'function') handler();
 			else if (handler.onLoad) handler.onLoad($target);
