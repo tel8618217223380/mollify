@@ -103,6 +103,10 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 	float: left;
 }
 
+.mollify-dialog p.debug {
+	font-family: monospace;
+}
+
 .mollify-popupmenu-separator:first-child, .mollify-popupmenu-separator:last-child {
 	display: none;
 }

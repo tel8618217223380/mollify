@@ -46,7 +46,7 @@
 			// initialize guest mode
 			if ($id === "guest" and $this->env->features()->isFeatureEnabled("guest_mode")) {
 				$user = $this->env->settings()->setting("guest_user_id");
-				if (!$user) throw new ServiceException("INVALID_REQUEST", "No guest user defined");
+				if (!$user) throw new ServiceException("INVALID_CONFIGURATION", "No guest user defined");
 				Logging::logDebug("Guest session: ".$user);
 				$this->session = array("user_id" => $user);
 			} else {			

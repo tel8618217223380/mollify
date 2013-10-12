@@ -38,6 +38,16 @@
 	}
 	set_exception_handler('globalExceptionHandler');
 	
+	function fatalErrorHandler() {
+		global $responseHandler;
+		$info = "PHP fatal error: ".Util::array2str(error_get_last());
+		Logging::logError($info);
+		if ($responseHandler == NULL) $responseHandler = new ResponseHandler(new OutputHandler());
+		$responseHandler->unknownServerError($info);
+		die();
+	}
+	register_shutdown_function("fatalErrorHandler");
+	
 	require_once("configuration.php");
 	
 	global $CONFIGURATION, $VERSION;
