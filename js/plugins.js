@@ -1950,10 +1950,7 @@
 			initialize: that.initialize,
 
 			show : function() {
-				mollify.templates.load("registration-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Registration", "content.html")), function() {
-					mollify.dom.template("registration-view", {})
-				});
-				mollify.ui.window.open(mollify.plugins.url("Registration"));
+				mollify.App.openPage('registration/new');
 			}
 		};
 	}
