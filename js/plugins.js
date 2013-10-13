@@ -134,7 +134,7 @@
 				
 				data.push({key:k, title:that.getTitle(k, rowSpec), value: that.formatData(k, rowData)});
 			}*/
-			$("#itemdetails-template").tmpl({groups: result}).appendTo(o.element);
+			mollify.dom.template("itemdetails-template", {groups: result}).appendTo(o.element);
 		};
 		
 		this.getGroups = function(s, d) {
@@ -1838,11 +1838,9 @@
 					if (rqParts.length != 2) return false;
 					
 					if (rqParts[1] == "new") {
-						// show new
-						return new that.NewRegistrationView();
+						return new that.NewRegistrationView(urlParams);
 					} else if (rqParts[1] == "confirm") {
-						// show confirm
-						return true;
+						return new that.ConfirmRegistrationView(urlParams);
 					}
 					return false;
 				}
@@ -1853,7 +1851,7 @@
 			var vt = this;
 			
 			this.init = function($c) {
-				mollify.dom.loadContentInto($c, mollify.plugins.url("Registration", "newregistration.html"), function() {
+				mollify.dom.loadContentInto($c, mollify.plugins.url("Registration", "registration_create.html"), function() {
 					$("#register-new-button").click(vt.onRegister);
 				}, ['localize']);
 			};
@@ -1872,36 +1870,78 @@
 					proceed = false;
 				}
 				if (!pw || pw.length == 0) {
+					$("#registration-new-pw").closest(".control-group").addClass("error");
 					proceed = false;
-					$("#password-field").addClass("invalid");
-					$("#password-hint").html("Enter the password");
 				}
 				if (!confirmPw || confirmPw.length == 0) {
+					$("#registration-new-pw-confirm").closest(".control-group").addClass("error");
 					proceed = false;
-					$("#confirm-password-field").addClass("invalid");
-					$("#confirm-password-hint").html("Re-enter the password");
 				}
 				if (!email || email.length == 0) {
+					$("#registration-new-email").closest(".control-group").addClass("error");
 					proceed = false;
-					$("#email-field").addClass("invalid");
-					$("#email-hint").html("Enter your email");
 				}
 				if (!proceed) return;
 				
 				if (pw != confirmPw) {
-					$("#password-field").addClass("invalid");
-					$("#confirm-password-field").addClass("invalid");
-					$("#password-hint").html("The passwords don't match");
+					$("#registration-new-pw").closest(".control-group").addClass("error");
+					$("#registration-new-pw-confirm").closest(".control-group").addClass("error");
 					return;
 				}
+				
+				mollify.service.post("registration/create", {name:name, password:window.Base64.encode(pw), email:email, data: null}).done(function() {
+					$("#mollify-registration-form").hide();
+					$("#mollify-registration-success").show();
+				}).fail(function() {
+					this.handled = true;
+					mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationFailed')});
+				});
 			}
 		};
 		
-		this.ConfirmRegistrationView = function() {
+		this.ConfirmRegistrationView = function(urlParams) {
 			var vt = this;
 			
 			this.init = function($c) {
-				$c.html("confirm registration");
+				if (!urlParams["email"] || urlParams["email"].length == 0) {
+					mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationInvalidConfirm')});
+					return;
+				}
+				vt._email = urlParams["email"];
+				
+				mollify.dom.loadContentInto($c, mollify.plugins.url("Registration", "registration_confirm.html"), function() {
+					if (urlParams["key"] && urlParams["key"].length > 0) {
+						vt._confirm(vt._email, urlParams["key"]);
+					} else {
+						$("#mollify-registration-confirm-form").show();
+						$("#registration-confirm-email").val(vt._email);
+						$("#register-confirm-button").click(vt.onConfirm);
+					}
+				}, ['localize']);
+			};
+			
+			this.onConfirm = function() {
+				$(".control-group").removeClass("error");		
+				var key = $("#registration-confirm-key").val();
+				
+				var proceed = true;
+				if (!key || key.length == 0) {
+					$("#registration-confirm-key").closest(".control-group").addClass("error");
+					proceed = false;
+				}
+				if (!proceed) return;
+
+				vt._confirm(vt._email, key);
+			};
+			
+			this._confirm = function(email, key) {		
+				mollify.service.post("registration/confirm", {email:email, key:key}).done(function() {
+					$("#mollify-registration-confirm-form").hide();
+					$("#mollify-registration-confirm-success").show();
+				}).fail(function() {
+					this.handled = true;
+					mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationConfirmFailed')});
+				});
 			};
 		};
 		
