@@ -327,5 +327,7 @@ registrationNewPw: "Password",
 registrationNewPwConfirm: "Confirm password",
 registrationNewEmail: "Email",
 registrationNewSubmit: "Register",
-registrationFailed: "Registration failed, please try again later"
+registrationFailed: "Registration failed, please try again later",
+registrationNewSuccessTitle: "Registration successful",
+registrationNewSuccessMessage: "Complete the registration by following the instructions sent to your email address."
 })})();

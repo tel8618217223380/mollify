@@ -1892,6 +1892,7 @@
 				
 				mollify.service.post("registration/create", {name:name, password:window.Base64.encode(pw), email:email, data: null}).done(function() {
 					$("#mollify-registration-form").hide();
+					$("#mollify-registration-main").addClass("success");
 					$("#mollify-registration-success").show();
 				}).fail(function() {
 					this.handled = true;
