@@ -1,0 +1,71 @@
+<style>
+	html, body {
+		padding-top: 40px;
+		padding-bottom: 40px;
+		background-color: #f5f5f5;
+		height: 100%;
+	}
+	
+	.mollify-logo {
+		height: 100px;
+		background-image: url(css/images/mollify.png);
+		background-repeat: no-repeat;
+		background-position: center 20px;
+	}
+	
+	form * {
+		text-align: center;
+	}
+	
+	#mollify-registration-main {
+		max-width: 300px;
+		padding: 19px 29px 29px;
+		margin: 0 auto 20px;
+		background-color: #fff;
+		border: 1px solid #e5e5e5;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+		-moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+		box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	}
+	
+	#register-confirm-button {
+		margin-top: 20px;
+	}
+</style>
+
+<div id="mollify-registration-main" class="container">
+	<form id="mollify-registration-confirm-form" class="form" style="display: none">
+		<div class="mollify-logo"></div>
+		
+		<legend class="localized" text-key="registrationConfirmTitle"></legend>
+		
+		<p class="localized" text-key="registrationConfirmMessage"></p>
+		
+		<div class="control-group">
+			<label class="control-label localized" for="registration-confirm-email" text-key="registrationConfirmEmail"></label>
+			<div class="controls">
+				<input type="text" id="registration-confirm-email" class="hintbox" hint-key="registrationConfirmEmail" disabled>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label localized" for="registration-confirm-key" text-key="registrationConfirmKey"></label>
+			<div class="controls">
+				<input type="text" id="registration-confirm-key" class="hintbox" hint-key="registrationConfirmKey">
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<a id="register-confirm-button" class="localized btn btn-large btn-primary" text-key="registrationConfirmSubmit"></a>
+			</div>
+		</div>
+	</form>
+	<div id="mollify-registration-confirm-success" style="display: none">
+		<h1 class="localized" text-key="registrationConfirmSuccessTitle"></h1>
+		<p class="localized"text-key="registrationConfirmSuccessMessage"></p>
+	</div>
+</div>
