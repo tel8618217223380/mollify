@@ -17,6 +17,7 @@
 	require_once("event/EventHandler.class.php");
 	require_once("Formatter.class.php");
 	require_once("Cookie.class.php");
+	require_once("ResourceLoader.class.php");
 	
 	class ServiceEnvironment {
 		const ENTRY_SCRIPT = 'r.php';
@@ -50,6 +51,7 @@
 			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
+			$this->resources = new ResourceLoader($this);
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
@@ -112,6 +114,10 @@
 			return $this->request;
 		}
 
+		public function resources() {
+			return $this->resources;
+		}
+		
 		public function mailer() {
 			if ($this->mailer == NULL)
 				$this->mailer = $this->createMailSender();
@@ -180,7 +186,13 @@
 		public function getPluginUrl($pluginId, $path = NULL, $file = FALSE) {
 			return $this->getPluginBaseUrl().$pluginId."/".($path != NULL ? $path.($file ? "" : "/") : "");
 		}
-		
+
+		public function getClientUrl($path) {
+			$url = $this->getHost().$_SERVER['SCRIPT_NAME'];
+			$url = substr($url, 0, strpos($url, "backend"));
+			return $url.$path;
+		}
+				
 		public function getResourceUrl($path) {
 			return $this->getRootUrl().$path;
 		}
