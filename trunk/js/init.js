@@ -126,7 +126,11 @@ var mollifyDefaults = {
 	
 	mollify.App.registerView = function(id, h) {
 		mollify.App._views[id] = h;
-	}
+	};
+	
+	mollify.App.openPage = function(pageUrl) {
+		mollify.ui.window.open(mollify.App.pageUrl + "?v="+pageUrl);
+	};
 	
 	mollify.getItemDownloadInfo = function(i) {
 		if (!i) return false;
