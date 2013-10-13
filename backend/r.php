@@ -38,7 +38,7 @@
 	}
 	set_exception_handler('globalExceptionHandler');
 	
-	function fatalErrorHandler() {
+	/*function fatalErrorHandler() {
 		global $responseHandler;
 		$info = "PHP fatal error: ".Util::array2str(error_get_last());
 		Logging::logError($info);
@@ -46,7 +46,7 @@
 		$responseHandler->unknownServerError($info);
 		die();
 	}
-	register_shutdown_function("fatalErrorHandler");
+	register_shutdown_function("fatalErrorHandler");*/
 	
 	require_once("configuration.php");
 	
