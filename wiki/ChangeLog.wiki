@@ -8,7 +8,7 @@ Released 2013/10/13
 === Version 2.1.4 ===
 Released 2013/10/13
   * Fixed issue #473
-  * Fixed issue #474
+  * Fixed issue #475
 
 === Version 2.1.3 ===
 Released 2013/10/11
