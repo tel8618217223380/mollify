@@ -30,7 +30,6 @@
 			});
 			
 			that.itemContext = new mollify.ui.itemContext();
-			mollify.ui.activeView = that;
 			mollify.dom.loadContentInto($c, mollify.templates.url("mainview.html"), that, ['localize']);			
 		}
 		

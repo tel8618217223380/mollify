@@ -25,9 +25,11 @@
 			if (mollify.features.hasFeature('lost_password')) $("#mollify-login-forgot-password").show();
 			if (mollify.features.hasFeature('registration')) {
 				$("#mollify-login-register").click(function() {
-					mollify.ui.window.open(mollify.plugins.url("Registration"));
-				});
-				$("#mollify-login-register").show();
+					if (mollify.plugins.exists("plugin-registration"))
+						mollify.plugins.get("plugin-registration").show();
+					else
+						mollify.ui.window.open(mollify.plugins.url("Registration"));
+				}).show();
 			}
 			
 			mollify.ui.process($("#mollify-login-data"), ["center"]);

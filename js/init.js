@@ -55,8 +55,10 @@ var mollifyDefaults = {
 	mollify.App.init = function(s, p) {
 		window.Modernizr.testProp("touch");
 		
+		mollify.App._views = {};
 		mollify.App.pageUrl = window.location.href;
 		mollify.App.pageUrl = mollify.App.pageUrl.substring(0, mollify.App.pageUrl.lastIndexOf('/')+1);
+		mollify.App.pageParams = mollify.request.getParams(window.location.href);
 		
 		mollify.plugins.register(new mollify.plugin.Core());
 		if (p) {
@@ -103,17 +105,28 @@ var mollifyDefaults = {
 	};
 	
 	mollify.App._start = function() {
-		mollify.ui.activeView = false;
+		mollify.App.activeView = false;
 		
-		var $c = mollify.App.getElement();
-		if (!mollify.session || !mollify.session.authenticated) {
-			mollify.App.mainview = false;
-			new mollify.view.LoginView().init($c);
-		} else {
-			mollify.App.mainview = new mollify.view.MainView();
-			mollify.App.mainview.init($c);
+		if (mollify.App.pageParams.v && mollify.App.pageParams.v.length > 0) {
+			var idParts = mollify.App.pageParams.v.split("/");
+			var h = mollify.App._views[idParts[0]];
+			if (h && h.getView)
+				mollify.App.activeView = h.getView(idParts, mollify.App.pageParams);
 		}
+		
+		if (!mollify.App.activeView) {
+			if (!mollify.session || !mollify.session.authenticated) {
+				mollify.App.activeView = new mollify.view.LoginView();
+			} else {
+				mollify.App.activeView = new mollify.view.MainView();
+			}
+		}
+		mollify.App.activeView.init(mollify.App.getElement());
 	};
+	
+	mollify.App.registerView = function(id, h) {
+		mollify.App._views[id] = h;
+	}
 	
 	mollify.getItemDownloadInfo = function(i) {
 		if (!i) return false;

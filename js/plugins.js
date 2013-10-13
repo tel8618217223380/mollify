@@ -1798,6 +1798,8 @@
 	mollify.plugin.SendViaEmailPlugin = function() {
 		var that = this;
 		
+		this.initialize = function() {};
+		
 		return {
 			id: "plugin-sendviaemail",
 			initialize: that.initialize,
@@ -1823,5 +1825,98 @@
 			}
 		};
 	}
+	
+	/**
+	*	Registration -plugin
+	**/
+	mollify.plugin.RegistrationPlugin = function() {
+		var that = this;
+		
+		this.initialize = function() {
+			mollify.App.registerView("registration", {
+				getView : function(rqParts, urlParams) {
+					if (rqParts.length != 2) return false;
+					
+					if (rqParts[1] == "new") {
+						// show new
+						return new that.NewRegistrationView();
+					} else if (rqParts[1] == "confirm") {
+						// show confirm
+						return true;
+					}
+					return false;
+				}
+			});
+		};
+		
+		this.NewRegistrationView = function() {
+			var vt = this;
+			
+			this.init = function($c) {
+				mollify.dom.loadContentInto($c, mollify.plugins.url("Registration", "newregistration.html"), function() {
+					$("#register-new-button").click(vt.onRegister);
+				}, ['localize']);
+			};
+			
+			this.onRegister = function() {
+				$(".control-group").removeClass("error");
+				
+				var name = $("#registration-new-name").val();
+				var pw = $("#registration-new-pw").val();
+				var confirmPw = $("#registration-new-pw-confirm").val();
+				var email = $("#registration-new-email").val();
+				
+				var proceed = true;
+				if (!name || name.length == 0) {
+					$("#registration-new-name").closest(".control-group").addClass("error");
+					proceed = false;
+				}
+				if (!pw || pw.length == 0) {
+					proceed = false;
+					$("#password-field").addClass("invalid");
+					$("#password-hint").html("Enter the password");
+				}
+				if (!confirmPw || confirmPw.length == 0) {
+					proceed = false;
+					$("#confirm-password-field").addClass("invalid");
+					$("#confirm-password-hint").html("Re-enter the password");
+				}
+				if (!email || email.length == 0) {
+					proceed = false;
+					$("#email-field").addClass("invalid");
+					$("#email-hint").html("Enter your email");
+				}
+				if (!proceed) return;
+				
+				if (pw != confirmPw) {
+					$("#password-field").addClass("invalid");
+					$("#confirm-password-field").addClass("invalid");
+					$("#password-hint").html("The passwords don't match");
+					return;
+				}
+			}
+		};
+		
+		this.ConfirmRegistrationView = function() {
+			var vt = this;
+			
+			this.init = function($c) {
+				$c.html("confirm registration");
+			};
+		};
+		
+		return {
+			id: "plugin-registration",
+			initialize: that.initialize,
+
+			show : function() {
+				mollify.templates.load("registration-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Registration", "content.html")), function() {
+					mollify.dom.template("registration-view", {})
+				});
+				mollify.ui.window.open(mollify.plugins.url("Registration"));
+			}
+		};
+	}
+
 
 }(window.jQuery, window.mollify);
