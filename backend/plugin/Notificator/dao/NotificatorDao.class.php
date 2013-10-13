@@ -67,7 +67,7 @@
 			$db = $this->env->db();
 			
 			$userCriteria = "";
-			if ($this->env->session()->isActive()) {
+			if ($userId != NULL and $userId != "" and $this->env->session()->isActive()) {
 				$userIds = array($userId);
 				if ($this->env->session()->hasUserGroups()) {
 					foreach($this->env->session()->userGroups() as $g)

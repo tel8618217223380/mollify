@@ -319,5 +319,13 @@ configAdminGroupAddUserMessage: "Select user(s) to be added:",
 configAdminGroupsRemoveGroupsConfirmationTitle: "Remove Groups",
 configAdminGroupsRemoveGroupsConfirmationMessage: "Are you sure you want to remove {0} groups?",
 configAdminGroupsRemoveGroupConfirmationTitle: "Remove Group",
-configAdminGroupsRemoveGroupConfirmationMessage: "Are you sure you want to remove group \"{0}\"?"
+configAdminGroupsRemoveGroupConfirmationMessage: "Are you sure you want to remove group \"{0}\"?",
+
+registrationNewTitle: "Register",
+registrationNewName: "Name",
+registrationNewPw: "Password",
+registrationNewPwConfirm: "Confirm password",
+registrationNewEmail: "Email",
+registrationNewSubmit: "Register",
+registrationFailed: "Registration failed, please try again later"
 })})();

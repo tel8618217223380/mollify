@@ -48,7 +48,8 @@
 			"debug" => FALSE,
 			"debug_log" => NULL,
 			"mail_smtp" => NULL,
-			"published_folders_root" => NULL
+			"published_folders_root" => NULL,
+			"customizations_folder" => NULL
 		);
 		
 		function __construct($settings) {

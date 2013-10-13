@@ -76,8 +76,8 @@
 			$db->update(sprintf("INSERT INTO ".$db->table("pending_registrations")." (`name`, `password`, `email`, `key`, `time`) VALUES (%s, %s, %s, %s, %s)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
 			$registration["id"] = $db->lastId();
 			
-			if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
-			if (function_exists("onRegisterCustomData")) onRegisterCustomData($registration);
+			//if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
+			//if (function_exists("onRegisterCustomData")) onRegisterCustomData($registration);
 			
 			$this->notify($name, $email, $key, $password);
 			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
@@ -208,12 +208,12 @@
 		}
 		
 		private function notify($name, $email, $key, $password) {
-			require_once("Messages.php");
-			$link = $this->env->getPluginUrl("Registration")."?confirm=".urlencode($email)."&key=".$key;
+			$texts = $this->env->resources()->loadTexts("PluginRegistrationMessages", dirname(__FILE__));
+			$link = $this->env->getClientUrl("?v=registration/confirm&email=".urlencode($email)."&key=".$key);
 			$values = array("name" => $name, "email" => $email, "link" => $link, "password" => $password);
 			
-			$subject = Util::replaceParams($REGISTRATION_NOTIFICATION_SUBJECT, $values);
-			$msg = Util::replaceParams($REGISTRATION_NOTIFICATION_MESSAGE, $values);
+			$subject = Util::replaceParams($texts["registration_notification_subject"], $values);
+			$msg = Util::replaceParams($texts["registration_notification_message"], $values);
 			$recipient = array(array("name" => $name, "email" => $email));
 			
 			$this->env->mailer()->send($recipient, $subject, $msg);

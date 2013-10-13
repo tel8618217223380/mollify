@@ -1853,6 +1853,7 @@
 			this.init = function($c) {
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Registration", "registration_create.html"), function() {
 					$("#register-new-button").click(vt.onRegister);
+					$("#registration-new-name").focus();
 				}, ['localize']);
 			};
 			
@@ -1916,6 +1917,7 @@
 						$("#mollify-registration-confirm-form").show();
 						$("#registration-confirm-email").val(vt._email);
 						$("#register-confirm-button").click(vt.onConfirm);
+						$("#registration-confirm-key").focus();
 					}
 				}, ['localize']);
 			};
