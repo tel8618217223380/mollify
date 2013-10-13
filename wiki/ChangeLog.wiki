@@ -1,6 +1,15 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.1.5 ===
+Released 2013/10/13
+  * Error handling corrections
+
+=== Version 2.1.4 ===
+Released 2013/10/13
+  * Fixed issue #473
+  * Fixed issue #474
+
 === Version 2.1.3 ===
 Released 2013/10/11
   * Fixed date picker z-index issue (issue #472)
