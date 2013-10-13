@@ -1,0 +1,2 @@
+registration_notification_subject==Mollify registration
+registration_notification_message==Thank you %name% for registering to Mollify.\n\nComplete your registration by opening following confirmation link: %link%\n\nThis notification was sent to %email%
