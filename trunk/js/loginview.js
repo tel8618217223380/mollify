@@ -22,7 +22,7 @@
 			$(window).resize(that.onResize);
 			that.onResize();
 		
-			if (mollify.features.hasFeature('lost_password')) $("#login-lost-password").show();
+			if (mollify.features.hasFeature('lost_password')) $("#mollify-login-forgot-password").show();
 			if (mollify.features.hasFeature('registration')) {
 				$("#mollify-login-register").click(function() {
 					mollify.ui.window.open(mollify.plugins.url("Registration"));
