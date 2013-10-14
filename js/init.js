@@ -121,6 +121,8 @@ var mollifyDefaults = {
 				mollify.App.activeView = new mollify.view.MainView();
 			}
 		}
+		
+		
 		mollify.App.activeView.init(mollify.App.getElement());
 	};
 	
@@ -129,7 +131,7 @@ var mollifyDefaults = {
 	};
 	
 	mollify.App.openPage = function(pageUrl) {
-		mollify.ui.window.open(mollify.App.pageUrl + "?v="+pageUrl);
+		window.location = mollify.App.pageUrl + "?v="+pageUrl;
 	};
 	
 	mollify.getItemDownloadInfo = function(i) {
