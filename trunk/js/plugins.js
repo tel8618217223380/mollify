@@ -1934,16 +1934,23 @@
 				}
 				if (!proceed) return;
 
-				vt._confirm(vt._email, key);
+				vt._confirm(vt._email, key, true);
 			};
 			
-			this._confirm = function(email, key) {		
+			this._confirm = function(email, key, fromForm) {
+				$("#mollify-registration-main").addClass("loading");
 				mollify.service.post("registration/confirm", {email:email, key:key}).done(function() {
 					$("#mollify-registration-confirm-form").hide();
+					$("#mollify-registration-main").removeClass("loading").addClass("complete");
 					$("#mollify-registration-confirm-success").show();
-				}).fail(function() {
+				}).fail(function(error) {
+					$("#mollify-registration-main").removeClass("loading");
 					this.handled = true;
-					mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationConfirmFailed')});
+					if (fromForm)
+						mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationConfirmFailed')});
+					else {
+						$("#mollify-registration-main").addClass("complete").empty().append(mollify.dom.template("mollify-tmpl-registration-errormessage", {message: mollify.ui.texts.get('registrationConfirmFailed')}));
+					}
 				});
 			};
 		};

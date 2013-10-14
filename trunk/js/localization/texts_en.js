@@ -329,5 +329,14 @@ registrationNewEmail: "Email",
 registrationNewSubmit: "Register",
 registrationFailed: "Registration failed, please try again later",
 registrationNewSuccessTitle: "Registration successful",
-registrationNewSuccessMessage: "Complete the registration by following the instructions sent to your email address."
+registrationNewSuccessMessage: "Complete the registration by following the instructions sent to your email address.",
+registrationConfirmTitle: "Confirm Registration",
+registrationConfirmMessage: "Complete your registration by entering the confirmation key sent to you via email.",
+registrationConfirmEmail: "Email",
+registrationConfirmKey: "Confirmation key",
+registrationConfirmSubmit: "Confirm",
+registrationConfirmFailed: "Registration could not be confirmed",
+registrationConfirmSuccessTitle: "Registration complete",
+registrationConfirmSuccessMessage: "Your registration is now complete, and you can log into Mollify.",
+registrationContinueButton: "Log into Mollify"
 })})();

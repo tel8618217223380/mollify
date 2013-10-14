@@ -1,5 +1,5 @@
 <style>
-	#mollify-registration-main.success {
+	#mollify-registration-main.complete {
 		max-width: 600px;
 	}
 </style>
@@ -34,8 +34,13 @@
 			</div>
 		</form>
 		<div id="mollify-registration-confirm-success" style="display: none">
-			<h1><i class="icon-ok"></i><span class="localized" text-key="registrationConfirmSuccessTitle"></span></h1>
+			<h1><i class="icon-ok"></i>&nbsp;&nbsp;<span class="localized" text-key="registrationConfirmSuccessTitle"></span></h1>
 			<p class="localized"text-key="registrationConfirmSuccessMessage"></p>
+			<a id="register-login-button" class="localized btn btn-large btn-primary primary-action" text-key="registrationContinueButton" href="?"></a>
 		</div>
 	</div>
 </div>
+
+<script id="mollify-tmpl-registration-errormessage" type="text/x-jquery-tmpl">
+	<h2><i class="icon-exclamation-sign"></i>&nbsp;&nbsp;${message}</h2>
+</script>
