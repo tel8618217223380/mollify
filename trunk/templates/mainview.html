@@ -129,7 +129,12 @@
 
 <script id="mollify-tmpl-fileview-folder-hierarchy" type="text/x-jquery-tmpl">
 	<ul id="mollify-fileview-folder-hierarchy" class="breadcrumb">
-		<li id="mollify-folder-hierarchy-item-root"><a href="javascript: void(0);" class="dropdown-toggle"></a> <span class="divider">/</span></li>
+		<li id="mollify-folder-hierarchy-item-root">
+			<div class="btn-group">
+				<a class="dropdown-toggle" href="javascript: void(0);"></a>
+			</div>
+			<span class="divider">/</span>
+		</li>
 		{{tmpl(items) "#mollify-tmpl-fileview-folder-hierarchy-item"}}
 	</ul>
 </script>

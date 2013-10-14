@@ -931,11 +931,8 @@
 			that.itemWidget.setSelectMode(that._selectMode);
 			if (that._selectMode) that.itemWidget.setSelection(that._selectedItems);
 		};
-					
-		this.setupHierarchy = function(h, $t) {
-			var items = h;
-			var p = $t.append(mollify.dom.template("mollify-tmpl-fileview-folder-hierarchy", {items: items}));
-			
+		
+		this._getRootItems = function() {
 			var rootItems = [];
 			var rootCb = function(r) {
 				return function() { that.changeToFolder(r); };
@@ -947,9 +944,16 @@
 					callback: rootCb(root)
 				});
 			}
+			return rootItems;
+		};
+					
+		this.setupHierarchy = function(h, $t) {
+			var items = h;
+			var p = $t.append(mollify.dom.template("mollify-tmpl-fileview-folder-hierarchy", {items: items}));
+			
 			mollify.ui.controls.dropdown({
 				element: $("#mollify-folder-hierarchy-item-root"),
-				items: rootItems,
+				items: that._getRootItems(),
 				hideDelay: 0,
 				style: 'submenu'
 			});

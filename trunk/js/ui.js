@@ -507,7 +507,13 @@
 				}
 			};
 			if (a.parentPopupId) api.parentPopupId = a.parentPopupId;
-			$e.append(createPopupItems(a.items)).find(".dropdown-toggle").dropdown({
+			
+			var $toggle = $e.find(".dropdown-toggle");
+			if ($toggle.length != 1) return;
+			
+			$toggle.parent().append(createPopupItems(a.items));
+			
+			$toggle.dropdown({
 				onshow: function($p) {
 					if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
 					if (!a.parentPopupId)
