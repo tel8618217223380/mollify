@@ -55,6 +55,7 @@
 				<ul>
 					<li>"<code>mysql</code>" for MySQL</li>
 					<li>"<code>sqlite</code>" for SQLite</li>
+					<li>"<code>sqlite3</code>" for SQLite 3</li>
 					<li>"<code>pdo</code>" for PDO (supports MySQL and SQLite)</li>
 				</ul>
 				
