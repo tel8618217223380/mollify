@@ -262,8 +262,9 @@
 		this._selected = [];
 		this._customFolderTypes = {};
 		this._formatters = {
-			byteSize : new mollify.ui.formatters.ByteSize(new mollify.ui.formatters.Number(2, mollify.ui.texts.get('decimalSeparator'))),
-			timestamp : new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'))
+			byteSize : new mollify.ui.formatters.ByteSize(new mollify.ui.formatters.Number(2, false, mollify.ui.texts.get('decimalSeparator'))),
+			timestamp : new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat')),
+			uploadSpeed : new mollify.ui.formatters.Number(1, mollify.ui.texts.get('dataRateKbps'), mollify.ui.texts.get('decimalSeparator'))
 		};
 		
 		this._filelist = {
@@ -500,23 +501,9 @@
 				//else mollify.ui.uploader.setMainViewUploadFolder(false);
 				if (mollify.ui.uploader && mollify.ui.uploader.initMainViewUploader) mollify.ui.uploader.initMainViewUploader({
 					folder: that._currentFolder,
-					container: $("#mollify"),
+					container: mollify.App.getElement(),
 					dropElement: $("#mollify-folderview"),
-					start: function(files, ready) {
-						that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), ready);
-					},
-					progress: function(pr) {
-						that.uploadProgress.set(pr);
-					},
-					finished: function() {
-						that.uploadProgress.hide();
-						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadComplete'), type: "success"});
-						that.refresh();
-					},
-					failed: function() {
-						that.uploadProgress.hide();
-						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed'), type: "error"});
-					}
+					handler: that._getUploadHandler()
 				});
 			}
 			
@@ -552,6 +539,49 @@
 			
 			that.onResize();
 		}
+		
+		this._getUploadHandler = function(c) {
+			return {
+				start: function(files, ready) {
+					that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), function() {
+						ready();
+						//if (c) c.hide(false);
+					});
+				},
+				progress: function(pr, br) {
+					var speed = "";
+					if (br) speed = that._formatters.uploadSpeed.format(br/1024);
+					that.uploadProgress.set(pr, speed);
+				},
+				finished: function() {
+					if (c) c.close();
+					that.uploadProgress.hide();
+					mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadComplete'), type: "success"});
+					that.refresh();
+				},
+				failed: function() {
+					if (c) c.close();
+					that.uploadProgress.hide();
+					mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed'), type: "error"});
+				}
+			};
+		};
+		/*
+					start: function(files, ready) {
+						that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), ready);
+					},
+					progress: function(pr) {
+						that.uploadProgress.set(pr);
+					},
+					finished: function() {
+						that.uploadProgress.hide();
+						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadComplete'), type: "success"});
+						that.refresh();
+					},
+					failed: function() {
+						that.uploadProgress.hide();
+						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed'), type: "error"});
+					}*/
 		
 		this._updateScroll = function() {
 			var s = $(window).scrollTop();			
@@ -787,26 +817,7 @@
 						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($tb).click(function() {
 							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
 								onRenderBubble: function(b) {
-									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that._currentFolder, {
-										start: function(files, ready) {
-											b.hide(true);
-											that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), ready);
-										},
-										progress: function(pr, f) {
-											that.uploadProgress.set(pr);
-										},
-										finished: function() {
-											b.hide();
-											that.uploadProgress.hide();
-											mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadComplete'), type: "success"});
-											that.refresh();
-										},
-										failed: function() {
-											b.hide();
-											that.uploadProgress.hide();
-											mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed'), type: "error"});
-										}
-									});
+									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that._currentFolder, that._getUploadHandler(b));
 									if (!mollify.features.hasFeature('retrieve_url')) {
 										$("#mollify-mainview-addfile-retrieve").remove();
 									}
@@ -1128,17 +1139,20 @@
 		var t = this;
 		this._h = $e.height();
 		t._$title = $e.find(".title");
+		t._$speed = $e.find(".speed");
 		t._$bar = $e.find(".bar");
 		
 		return {
 			show : function(title, cb) {
 				$e.css("bottom", (0 - t._h)+"px");
 				t._$title.text(title ? title : "");
+				t._$speed.text("");
 				t._$bar.css("width", "0%");
 				$e.show().animate({"bottom": "0"}, 500, cb);
 			},
-			set : function(progress, title) {
+			set : function(progress, speed) {
 				t._$bar.css("width", progress+"%");
+				t._$speed.text(speed ? speed : "");
 			},
 			hide : function(cb) {
 				setTimeout(function() {
