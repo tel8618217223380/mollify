@@ -49,11 +49,11 @@
 		}
 		
 		public function execCreateTables() {
-			$this->db->execSqlFile("include/".$this->db->type()."/sql/create_tables.sql");
+			$this->db->execSqlFile("db/".$this->db->type()."/sql/install/create_tables.sql");
 		}
 		
 		public function execInsertParams() {
-			$this->db->execSqlFile("include/".$this->db->type()."/sql/params.sql");
+			$this->db->execSqlFile("db/".$this->db->type()."/sql/install/params.sql");
 		}
 		
 		public function createAdminUser($name, $pw) {
@@ -62,7 +62,7 @@
 		}
 		
 		public function updateVersionStep($from, $to) {
-			$file = "include/".$this->db->type()."/sql/".$from."-".$to.".sql";
+			$file = "db/".$this->db->type()."/sql/update/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 

@@ -18,7 +18,7 @@
 		}
 		
 		public function getVersionHistory() {
-			return array("1_8_8");
+			return array("1_8_8", "2_0");
 		}
 		
 		public function updateVersionStep($from, $to) {
