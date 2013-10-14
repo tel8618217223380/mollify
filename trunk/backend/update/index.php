@@ -44,6 +44,7 @@
 				require_once("update/mysql/MySQLUpdater.class.php");
 				return new UpdateController(new MySQLUpdater($settings));
 			case 'sqlite':
+			case 'sqlite3':
 				require_once("update/sqlite/SQLiteUpdater.class.php");
 				return new UpdateController(new SQLiteUpdater($settings));
 			default:
@@ -52,7 +53,7 @@
 	}
 	
 	function isValidConfigurationType($type) {
-		return in_array(strtolower($type), array("pdo", "mysql", "sqlite"));
+		return in_array(strtolower($type), array("pdo", "mysql", "sqlite", "sqlite3"));
 	}
 	
 	function showError($e) {
