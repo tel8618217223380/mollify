@@ -11,28 +11,26 @@
 
 	require_once("install/MollifyInstallProcessor.class.php");
 	require_once("include/ServiceEnvironment.class.php");
-	require_once("include/pdo/DatabaseUtil.class.php");
+	require_once("db/pdo/PDODatabase.class.php");
+	require_once("db/pdo/DatabaseUtil.class.php");
 	require_once("install/pdo/PDOInstallUtil.class.php");
 	
 	class PDOInstaller {
 		protected $processor;
 		private $configured;
 		protected $db;
+		private $settings;
 
 		public function __construct($settings, $type = "install") {
-			$this->processor = new MollifyInstallProcessor($type, "pdo", $settings);
-			
-			global $PDO_STRING, $DB_USER, $DB_PASSWORD, $DB_TABLE_PREFIX;
-			$this->configured = isset($PDO_STRING, $DB_USER, $DB_PASSWORD);
-			$this->db = $this->createDB($PDO_STRING, $DB_USER, $DB_PASSWORD, $DB_TABLE_PREFIX);
-			$this->dbUtil = new DatabaseUtil($this->db);
+			$this->settings = $settings;
+			$this->processor = new MollifyInstallProcessor($type, "pdo", $settings);			
+			$this->configured = isset($settings["db"]["str"], $settings["db"]["user"], $settings["db"]["password"]);
 		}
-
-		private function createDB($str, $user, $password, $tablePrefix) {
-			if (!isset($tablePrefix)) $tablePrefix = "";
-			
-			require_once("include/pdo/PDODatabase.class.php");
-			return new PDODatabase($str, $user, $password, $tablePrefix);
+		
+		public function init() {
+			$this->db = PDODatabase::createFromConf($this->settings["db"]);
+			$this->db->connect(FALSE);
+			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 		
 		public function processor() {
@@ -100,7 +98,7 @@
 		}
 
 		public function currentVersion() {
-			return PDOConfiguration::VERSION;
+			return "2_0";
 		}
 		
 		public function db() {
@@ -133,8 +131,19 @@
 
 		public function process() {
 			$this->checkSystem();
+			
+			if (!$this->isConfigured())
+				$this->processor->showPage("configuration");
+			
+			try {
+				$this->init();
+			} catch(ServiceException $e) {
+				$this->processor->setError("Could not connect to database", '<code>'.$e->details().'</code>');
+				$this->processor->showPage("configuration");
+				die();
+			}
+			
 			$this->checkInstalled();
-			$this->checkConfiguration();
 
 			$phase = $this->processor->phase();
 			if ($phase == NULL) $phase = 'db';

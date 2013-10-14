@@ -46,13 +46,26 @@
 				An example configuration when connecting to MySQL server with PDO:
 				<div class="example code">
 					&lt;?php<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION = array(<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;db&quot; => array(<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; => &quot;pdo&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;str&quot; => &quot;<span class="value">mysql:host=localhost;dbname=mollify</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;user&quot; => &quot;<span class="value">[DB_USERNAME]</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;password&quot; => &quot;<span class="value">[DB_PASSWORD]</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;table_prefix&quot; => &quot;<span class="value">mollify_</span>&quot;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;);<br/>
+					?&gt;
+				</div>
+				<!--div class="example code">
+					&lt;?php<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_TYPE = &quot;<span class="value">pdo</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$PDO_STRING = &quot;<span class="value">mysql:host=localhost;dbname=mollify</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[DB_USERNAME]</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PASSWORD = &quot;<span class="value">[DB_PASSWORD]</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_TABLE_PREFIX = &quot;<span class="value">mollify_</span>&quot;;<br/>
 					?&gt;
-				</div>
+				</div-->
 			</p>
 			<p>
 				Edit the configuration and click "Continue".
