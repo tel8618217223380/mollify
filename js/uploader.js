@@ -93,41 +93,56 @@
 			$e.append($d);
 			mollify.ui.handlers.localize($e);
 			var $dropZone = $("#mollify-uploader-widget");
+			var started = false;
 			
 			var $input = $d.find("input").fileupload($.extend({
 				url: mollify.service.url("filesystem/"+folder.id+'/files/') + "?format=binary",
 				dataType: 'json',
 				dropZone: $dropZone,
-				/*add: function (e, data) {
-					$input.attr("disabled", "disabled");
+				add: function (e, data) {
+					if (!started && l.start)
+						l.start(data.originalFiles, function() {
+							data.submit();
+						});
+					else
+						data.submit();
+					started = true;
+					
+					//$input.attr("disabled", "disabled");
 					//alert('Dropped: ' + data.files.length);
-					uploadData.push(data);
-					totalFiles = totalFiles + data.files.length;
-					console.log(totalFiles);
-				},*/
+					//uploadData.push(data);
+					//totalFiles = totalFiles + data.files.length;
+					//console.log(totalFiles);
+				},
 				/*send: function(e, data) {
 					//if (data.files.length == 0) return false;
 					//if (l.start) l.start(data.files);
 				},*/
-				submit: function (e, data) {
+				/*submit: function (e, data) {
 					e.stopPropagation();
 					var $this = $(this);
-					if (l.start) l.start(data.files, function() {
-						$this.fileupload('send', data);
-					});
+					//console.log(data);
+					if (!started && l.start) l.start(data.originalFiles, function() {
+							$this.fileupload('send', data);
+						});
+					//else
+					//	$this.fileupload('send', data);
+					started = true;
 					return false;
-				},
+				},*/
 				progressall: function (e, data) {
 					if (!l.progress) return;
 					
 					var progress = parseInt(data.loaded / data.total * 100, 10);
-					l.progress(progress);
+					l.progress(progress, data.bitrate || false);
 				},
-				done: function(e, data) {
+				done: function(e, data) {					
 					if (l.finished) l.finished();
+					started = false;
 				},
 				fail: function(e, data) {
 					if (l.failed) l.failed();
+					started = false;
 				}
 			}, t._getUploaderSettings()));
 			
@@ -149,28 +164,46 @@
 				var $p = h.container;
 				var $container = $('<div style="width: 0px; height: 0px; overflow: hidden;"></div>').appendTo($p);
 				var $form = $('<form enctype="multipart/form-data"></form>').appendTo($container);
+				var started = false;
 				t.$mainViewInput = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"></input>').appendTo($form).fileupload($.extend({
 					url: '',
 					dataType: 'json',
 					dropZone: h.dropElement,
-					submit: function (e, data) {
+					add: function (e, data) {
+						if (!started && h.handler.start)
+							h.handler.start(data.originalFiles, function() {
+								data.submit();
+							});
+						else
+							data.submit();
+						started = true;
+						
+						//$input.attr("disabled", "disabled");
+						//alert('Dropped: ' + data.files.length);
+						//uploadData.push(data);
+						//totalFiles = totalFiles + data.files.length;
+						//console.log(totalFiles);
+					},
+					/*submit: function (e, data) {
 						var $this = $(this);
-						if (h.start) h.start(data.files, function() {
+						if (h.handler.start) h.handler.start(data.files, function() {
 							$this.fileupload('send', data);
 						});
 						return false;
-					},
+					},*/
 					progressall: function (e, data) {
-						if (!h.progress) return;
+						if (!h.handler.progress) return;
 						
 						var progress = parseInt(data.loaded / data.total * 100, 10);
-						h.progress(progress);
+						h.handler.progress(progress, data.bitrate || false);
 					},
 					done: function(e, data) {
-						if (h.finished) h.finished();
+						if (h.handler.finished) h.handler.finished();
+						started = false
 					},
 					fail: function(e, data) {
-						if (h.failed) h.failed();
+						if (h.handler.failed) h.handler.failed();
+						started = false
 					}
 				}, t._getUploaderSettings())).fileupload('disable');
 				t._initDropZoneEffects(h.dropElement);

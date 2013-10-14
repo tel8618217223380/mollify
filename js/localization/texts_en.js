@@ -21,6 +21,7 @@ sizeOneKilobyte: "1 kB",
 sizeInKilobytes: "{0} kB",
 sizeInMegabytes: "{0} MB",
 sizeInGigabytes: "{0} GB",
+dataRateKbps: "kb/s",
 
 shortDateTimeFormat: "M/d/yyyy h:mm:ss tt",
 shortDateFormat: "M/d/yyyy",

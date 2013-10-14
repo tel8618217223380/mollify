@@ -81,7 +81,7 @@
 				return ts.toString(fmt);
 			};
 		},
-		Number : function(precision, ds) {
+		Number : function(precision, unit, ds) {
 			this.format = function(n) {
 				if (!window.def(n) || typeof(n) !== 'number') return "";
 				
@@ -89,6 +89,7 @@
 				var v = Math.floor(n * s) / s;
 				var sv = v.toString();
 				if (ds) sv = sv.replace(".", ds);
+				if (unit) return sv + " " + unit;
 				return sv;
 			};
 		}
