@@ -32,7 +32,7 @@
 				}).show();
 			}
 			
-			mollify.ui.process($("#mollify-login-data"), ["center"]);
+			//mollify.ui.process($("#mollify-login-data"), ["center"]);
 			//mollify.ui.handlers.bubble($data, that);
 			$("#mollify-login-name, #mollify-login-password").bind('keypress', function(e) {
 				if ((e.keyCode || e.which) == 13) that.onLogin();
@@ -42,11 +42,11 @@
 		}
 		
 		that.onResize = function() {
-			var h = $(window).height();
+			/*var h = $(window).height();
 			$("#mollify-login-main").height(h);
 			
 			var $data = $("#mollify-login-data");
-			$data.css('margin-top', (h / 2) - ($data.height() / 2));
+			$data.css('margin-top', (h / 2) - ($data.height() / 2));*/
 		}
 		
 		that.onRenderBubble = function(id, bubble) {

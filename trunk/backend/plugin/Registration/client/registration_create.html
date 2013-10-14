@@ -1,87 +1,52 @@
-<style>
-	html, body {
-		padding-top: 40px;
-		padding-bottom: 40px;
-		background-color: #f5f5f5;
-		height: 100%;
-	}
-	
-	.mollify-logo {
-		height: 100px;
-		background-image: url(css/images/mollify.png);
-		background-repeat: no-repeat;
-		background-position: center 20px;
-	}
-	
-	form * {
-		text-align: center;
-	}
-	
-	#mollify-registration-main {
-		max-width: 300px;
-		padding: 19px 29px 29px;
-		margin: 0 auto 20px;
-		background-color: #fff;
-		border: 1px solid #e5e5e5;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
-		-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-		-moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-		box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	}
-	
+<style>	
 	#mollify-registration-main.success {
 		max-width: 600px;
 	}
-	
-	#register-new-button {
-		margin-top: 20px;
-	}
 </style>
 
-<div id="mollify-registration-main" class="container">
-	<form id="mollify-registration-form" class="form">
-		<div class="mollify-logo"></div>
-		
-		<legend class="localized" text-key="registrationNewTitle"></legend>
-		
-		<div class="control-group">
-			<label class="control-label localized" for="registration-new-name" text-key="registrationNewName"></label>
-			<div class="controls">
-				<input type="text" id="registration-new-name" class="hintbox" hint-key="registrationNewName">
+<div class="mollify-fullpage-form-bg">
+	<div id="mollify-registration-main" class="container mollify-fullpage-form center">
+		<form id="mollify-registration-form" class="form">
+			<div class="mollify-logo"></div>
+			
+			<legend class="localized" text-key="registrationNewTitle"></legend>
+			
+			<div class="control-group">
+				<label class="control-label localized" for="registration-new-name" text-key="registrationNewName"></label>
+				<div class="controls">
+					<input type="text" id="registration-new-name" class="hintbox" hint-key="registrationNewName">
+				</div>
 			</div>
-		</div>
-		
-		<div class="control-group">
-			<label class="control-label localized" for="registration-new-pw" text-key="registrationNewPw"></label>
-			<div class="controls">
-				<input type="password" id="registration-new-pw" class="hintbox" hint-key="registrationNewPw">
+			
+			<div class="control-group">
+				<label class="control-label localized" for="registration-new-pw" text-key="registrationNewPw"></label>
+				<div class="controls">
+					<input type="password" id="registration-new-pw" class="hintbox" hint-key="registrationNewPw">
+				</div>
 			</div>
-		</div>
-
-		<div class="control-group">
-			<label class="control-label localized" for="registration-new-pw-confirm" text-key="registrationNewPwConfirm"></label>
-			<div class="controls">
-				<input type="password" id="registration-new-pw-confirm" class="hintbox" hint-key="registrationNewPwConfirm">
+	
+			<div class="control-group">
+				<div class="controls">
+					<input type="password" id="registration-new-pw-confirm" class="hintbox" hint-key="registrationNewPwConfirm">
+				</div>
 			</div>
-		</div>
-		
-		<div class="control-group">
-			<label class="control-label localized" for="registration-new-email" text-key="registrationNewEmail"></label>
-			<div class="controls">
-				<input type="text" id="registration-new-email" class="hintbox" hint-key="registrationNewEmail">
+			
+			<div class="control-group">
+				<label class="control-label localized" for="registration-new-email" text-key="registrationNewEmail"></label>
+				<div class="controls">
+					<input type="text" id="registration-new-email" class="hintbox" hint-key="registrationNewEmail">
+				</div>
 			</div>
-		</div>
-
-		<div class="control-group">
-			<div class="controls">
-				<a id="register-new-button" class="localized btn btn-large btn-primary" text-key="registrationNewSubmit"></a>
+	
+			<div class="control-group">
+				<div class="controls">
+					<a id="register-new-button" class="localized btn btn-large btn-primary primary-action" text-key="registrationNewSubmit"></a>
+				</div>
 			</div>
+		</form>
+		<div id="mollify-registration-success" style="display: none">
+			<h1><i class="icon-ok"></i><span class="localized" text-key="registrationNewSuccessTitle"></span></h1>
+			<p class="localized"text-key="registrationNewSuccessMessage"></p>
 		</div>
-	</form>
-	<div id="mollify-registration-success" style="display: none">
-		<h1><i class="icon-ok"></i><span class="localized" text-key="registrationNewSuccessTitle"></span></h1>
-		<p class="localized"text-key="registrationNewSuccessMessage"></p>
 	</div>
 </div>
