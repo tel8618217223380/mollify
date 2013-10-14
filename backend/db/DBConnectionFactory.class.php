@@ -26,6 +26,9 @@
 			} else if (strcasecmp($type, 'postgresql') == 0) {
 				require_once("db/postgresql/PostgresqlDatabase.class.php");
 				return PostgresqlDatabase::createFromConf($db);
+			} else if (strcasecmp($type, 'sqlite3') == 0) {
+				require_once("db/sqlite/SQLite3Database.class.php");
+				return MollifySQLite3Database::createFromConf($db);
 			} else if (strcasecmp($type, 'sqlite') == 0) {
 				require_once("db/sqlite/SQLiteDatabase.class.php");
 				return MollifySQLiteDatabase::createFromConf($db);

@@ -43,6 +43,7 @@
 			case 'mysql':
 				require_once("install/mysql/MySQLInstaller.class.php");
 				return new MySQLInstaller($settings);
+			case 'sqlite3':
 			case 'sqlite':
 				require_once("install/sqlite/SQLiteInstaller.class.php");
 				return new SQLiteInstaller($settings);
@@ -52,6 +53,6 @@
 	}
 	
 	function isValidConfigurationType($type) {
-		return in_array(strtolower($type), array("pdo", "mysql", "sqlite"));
+		return in_array(strtolower($type), array("pdo", "mysql", "sqlite", "sqlite3"));
 	}
 ?>

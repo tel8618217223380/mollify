@@ -15,11 +15,13 @@
 	require_once("install/sqlite/SQLiteInstallUtil.class.php");
 	
 	class SQLiteInstaller {
+		private $type;
 		protected $processor;
 		private $configured;
 		protected $db;
 
 		public function __construct($settings, $type = "install") {
+			$this->type = $settings["db"]["type"];
 			$this->processor = new MollifyInstallProcessor($type, "sqlite", $settings);
 			
 			$this->configured = isset($settings["db"]["file"]);
@@ -35,7 +37,11 @@
 			$this->processor->onError($e);
 		}
 
-		private function createDB($file) {			
+		private function createDB($file) {
+			if (strcasecmp($this->type, "sqlite3") == 0) {
+				require_once("db/sqlite/SQLite3Database.class.php");
+				return new MollifySQLite3Database($file);				
+			}
 			require_once("db/sqlite/SQLiteDatabase.class.php");
 			return new MollifySQLiteDatabase($file);
 		}
@@ -133,6 +139,16 @@
 		}
 		
 		private function checkSystem() {
+			if (strcasecmp($this->type, "sqlite3") == 0) {
+				try {
+					new SQLite3(":memory:");	//try to create SQLite3 instance to see if it is installed
+				} catch (Exception $e) {
+					$this->processor->setError("SQLite not detected", "Mollify cannot be installed to this system when SQLite is not available. Check your system configuration or choose different configuration type.");
+					$this->processor->showPage("install_error");					
+				}
+				return;	
+			}
+			
 			if (!function_exists('sqlite_open')) {
 				$this->processor->setError("SQLite not detected", "Mollify cannot be installed to this system when SQLite is not available. Check your system configuration or choose different configuration type.");
 				$this->processor->showPage("install_error");
