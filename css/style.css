@@ -633,12 +633,14 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 
 .mollify-filelist-col-sel {
 	width: 0px;
+	visibility: hidden;
 	font-size: 16px;
 	padding: 2px 0 0 2px;
 }
 
 .mollify-filelist.select .mollify-filelist-col-sel, .mollify-filelist-header-cols.select .mollify-filelist-col-sel {
 	width: 25px;
+	visibility: visible;
 }
 
 .mollify-filelist-col-icon {
