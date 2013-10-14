@@ -219,9 +219,18 @@ a.mollify-login-link {
 	margin-left: 20px;
 }*/
 
+#mollify-login-forgot-password {
+	margin-right: 10px;
+}
+
 .mollify-bubble-popover {
 	width: auto;
 	max-width: none;
+}
+
+#mollify-login-forgot-email {
+	clear: both;
+	text-align: left;	
 }
 
 .mollify-bubble-popover .popover-inner, .mollify-bubble-popover .popover-content {
