@@ -21,10 +21,12 @@
 		public function loadTexts($file, $curDir) {
 			$file .= ".txt";
 			$cl = $this->getCustomizationsAbsoluteLocation($file);
-			Logging::logDebug("ResourceLoader: Seeking ".$cl);
-			if ($cl != NULL and file_exists($cl))
-				return $this->loadTextFile($cl);
-				Logging::logDebug("ResourceLoader: Seeking ".$curDir.DIRECTORY_SEPARATOR.$file);
+			
+			if ($cl != NULL) {
+				Logging::logDebug("ResourceLoader: Seeking ".$cl);
+				if (file_exists($cl)) return $this->loadTextFile($cl);
+			}
+			Logging::logDebug("ResourceLoader: Seeking ".$curDir.DIRECTORY_SEPARATOR.$file);
 			return $this->loadTextFile($curDir.DIRECTORY_SEPARATOR.$file);
 		}
 		
