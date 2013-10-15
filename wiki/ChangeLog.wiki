@@ -5,7 +5,7 @@
 Released 2013/10/15
   * Added support for SQLite3
   * Fixed PDO installer issues
-  * Fixed issue where uploader did not upload more than one file
+  * Fixed issue #476
   * Rewritten registration plugin, integrated into client
   * Support for customizable backend text files
 
