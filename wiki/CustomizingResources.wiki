@@ -36,7 +36,7 @@ For example, following loads custom localizations file for Registration plugin:
 
 = Backend texts =
 
-When a backend feature needs text resources, these are stored in a text file.
+When a backend feature needs text resources, these are stored in a text file. With a customizations location defined, Mollify will look for any text resource from that location first.
 
 Customizations location is defined in configuration.php with following setting:
 {{{
