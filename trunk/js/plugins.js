@@ -1866,19 +1866,19 @@
 				var email = $("#registration-new-email").val();
 				
 				var proceed = true;
-				if (!name || name.length == 0) {
+				if (!name || name.length === 0) {
 					$("#registration-new-name").closest(".control-group").addClass("error");
 					proceed = false;
 				}
-				if (!pw || pw.length == 0) {
+				if (!pw || pw.length === 0) {
 					$("#registration-new-pw").closest(".control-group").addClass("error");
 					proceed = false;
 				}
-				if (!confirmPw || confirmPw.length == 0) {
+				if (!confirmPw || confirmPw.length === 0) {
 					$("#registration-new-pw-confirm").closest(".control-group").addClass("error");
 					proceed = false;
 				}
-				if (!email || email.length == 0) {
+				if (!email || email.length === 0) {
 					$("#registration-new-email").closest(".control-group").addClass("error");
 					proceed = false;
 				}
@@ -1905,15 +1905,15 @@
 			var vt = this;
 			
 			this.init = function($c) {
-				if (!urlParams["email"] || urlParams["email"].length == 0) {
+				if (!urlParams.email || urlParams.email.length === 0) {
 					mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationInvalidConfirm')});
 					return;
 				}
-				vt._email = urlParams["email"];
+				vt._email = urlParams.email;
 				
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Registration", "registration_confirm.html"), function() {
-					if (urlParams["key"] && urlParams["key"].length > 0) {
-						vt._confirm(vt._email, urlParams["key"]);
+					if (urlParams.key && urlParams.key.length > 0) {
+						vt._confirm(vt._email, urlParams.key);
 					} else {
 						$("#mollify-registration-confirm-form").show();
 						$("#registration-confirm-email").val(vt._email);
@@ -1928,7 +1928,7 @@
 				var key = $("#registration-confirm-key").val();
 				
 				var proceed = true;
-				if (!key || key.length == 0) {
+				if (!key || key.length === 0) {
 					$("#registration-confirm-key").closest(".control-group").addClass("error");
 					proceed = false;
 				}
