@@ -19,21 +19,15 @@
 		}
 		
 		that.onLoad = function() {
-			$(window).resize(that.onResize);
 			that.onResize();
 		
 			if (mollify.features.hasFeature('lost_password')) $("#mollify-login-forgot-password").show();
-			if (mollify.features.hasFeature('registration')) {
+			if (mollify.features.hasFeature('registration') && mollify.plugins.exists("plugin-registration")) {
 				$("#mollify-login-register").click(function() {
-					if (mollify.plugins.exists("plugin-registration"))
-						mollify.plugins.get("plugin-registration").show();
-					else
-						mollify.ui.window.open(mollify.plugins.url("Registration"));
+					mollify.plugins.get("plugin-registration").show();
 				}).show();
 			}
-			
-			//mollify.ui.process($("#mollify-login-data"), ["center"]);
-			//mollify.ui.handlers.bubble($data, that);
+
 			$("#mollify-login-name, #mollify-login-password").bind('keypress', function(e) {
 				if ((e.keyCode || e.which) == 13) that.onLogin();
 			});
@@ -41,17 +35,7 @@
 			$("#mollify-login-name").focus();
 		}
 		
-		that.onResize = function() {
-			/*var h = $(window).height();
-			$("#mollify-login-main").height(h);
-			
-			var $data = $("#mollify-login-data");
-			$data.css('margin-top', (h / 2) - ($data.height() / 2));*/
-		}
-		
 		that.onRenderBubble = function(id, bubble) {
-//			if (id === 'mollify-login-forgot-password') {
-//			}
 		}
 		
 		that.onShowBubble = function(id, bubble) {

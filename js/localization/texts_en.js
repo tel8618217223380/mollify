@@ -227,6 +227,7 @@ shareDialogSave: 'Save',
 shareDialogCancel: 'Cancel',
 pluginShareConfigViewNavTitle: "Shares",
 pluginShareConfigViewCountTitle: "Count",
+shareViewInvalidRequest: "The requested share was not found",
 
 pluginItemCollectionsNavTitle: "Stored",
 pluginItemCollectionStore: "Store...",

@@ -439,6 +439,12 @@
 		});
 	};
 	
+	mollify.ui.FullErrorView = function(e) {
+		this.init = function($c) {				
+			mollify.dom.template("mollify-tmpl-fullpage-error", {message: e}).appendTo($c.empty());
+		};
+	};
+	
 	/* CONTROLS */
 	
 	var processPopupActions = function(l) {

@@ -19,8 +19,12 @@
 		}
 		
 		public function processGet() {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
-			$this->handler()->processShareGet($this->path[0]);
+			if (count($this->path) == 1)
+				$this->handler()->processShareGet($this->path[0]);
+			else if (count($this->path) == 2 && $this->path[1] == "info")
+				$this->response()->success($this->handler()->getShareInfo($this->path[0]));
+			else
+				throw $this->invalidRequestException();
 		}
 				
 		public function processPost() {

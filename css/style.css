@@ -126,6 +126,10 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */	
 }
 
+.mollify-fullpage-form-bg .container.wide {
+	max-width: 600px;
+}
+
 #mollify-login-main > #mollify-notification-container {
 	margin-top: 30px;	
 }

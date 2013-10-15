@@ -1422,6 +1422,27 @@
 		this.initialize = function() {
 			that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 			mollify.dom.importCss(mollify.plugins.url("Share", "style.css"));
+			
+			mollify.App.registerView("share", {
+				getView : function(rqParts, urlParams) {					
+					if (rqParts.length != 2) return false;
+					var df = $.Deferred();
+					
+					var shareId = rqParts[1];
+					mollify.service.get("public/"+shareId+"/info/").done(function(result) {
+						if (!result) {
+							df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
+							return;
+						}
+						
+						//TODO check if needs authentication etc
+						df.resolve(new that.OpenShareView(rqParts[1], urlParams));
+					}).fail(function() {
+						df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
+					});
+					return df.promise();
+				}
+			});
 		};
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
@@ -1466,7 +1487,8 @@
 		};
 		
 		this.getShareLink = function(share) {
-			return mollify.service.url("public/"+share.id, true);
+			return mollify.App.getPageUrl("share/"+share.id);
+			//return mollify.service.url("public/"+share.id, true);
 		};
 		
 		this.updateShareList = function(item) {
@@ -1892,7 +1914,7 @@
 				
 				mollify.service.post("registration/create", {name:name, password:window.Base64.encode(pw), email:email, data: null}).done(function() {
 					$("#mollify-registration-form").hide();
-					$("#mollify-registration-main").addClass("success");
+					$("#mollify-registration-main").addClass("wide");
 					$("#mollify-registration-success").show();
 				}).fail(function() {
 					this.handled = true;
@@ -1941,7 +1963,7 @@
 				$("#mollify-registration-main").addClass("loading");
 				mollify.service.post("registration/confirm", {email:email, key:key}).done(function() {
 					$("#mollify-registration-confirm-form").hide();
-					$("#mollify-registration-main").removeClass("loading").addClass("complete");
+					$("#mollify-registration-main").removeClass("loading").addClass("wide");
 					$("#mollify-registration-confirm-success").show();
 				}).fail(function(error) {
 					$("#mollify-registration-main").removeClass("loading");
@@ -1949,7 +1971,7 @@
 					if (fromForm)
 						mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationConfirmFailed')});
 					else {
-						$("#mollify-registration-main").addClass("complete").empty().append(mollify.dom.template("mollify-tmpl-registration-errormessage", {message: mollify.ui.texts.get('registrationConfirmFailed')}));
+						$("#mollify-registration-main").addClass("wide").empty().append(mollify.dom.template("mollify-tmpl-registration-errormessage", {message: mollify.ui.texts.get('registrationConfirmFailed')}));
 					}
 				});
 			};
