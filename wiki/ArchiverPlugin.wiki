@@ -23,3 +23,15 @@ Value "COMPRESSOR" is the method used for compressing files, options are:
   * `ziparchive` Default PHP zip library (this is used if setting is not defined)
   * `native` Uses OS native tools to create the package (not available on all platforms)
   * `raw` PHP implementation of zip packaging
+
+And following into client settings:
+
+{{{
+<script type="text/javascript">
+	mollify.App.init({
+		...
+		}, [
+			new mollify.plugin.ArchiverPlugin()
+		]
+	});
+}}}
