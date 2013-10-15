@@ -6,7 +6,7 @@ Mollify allows storing customized versions of resources outside Mollify folders,
 
 = Client resources =
 
-Using resource map feature ([ResourceMap]), different resources can be mapped into custom location. These include any client loaded resources:
+Using resource map feature ([ClientResourceMap]), different resources can be mapped into custom location. These include any client loaded resources:
   * plugin texts
   * plugin javascripts
   * plugin css
