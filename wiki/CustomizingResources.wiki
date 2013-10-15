@@ -18,7 +18,7 @@ For example, following loads custom "mainview.html" from folder "custom" :
 {{{
 	mollify.App.init({
 		"resource-map" : {
-			"templates/mainview.html" : "foo/mainview.html"
+			"templates/mainview.html" : "custom/mainview.html"
 		},
 		...
 	});
