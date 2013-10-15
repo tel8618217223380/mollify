@@ -61,11 +61,11 @@
 		}
 		
 		private function notify($email, $user, $pw) {
-			require_once("Messages.php");
+			$texts = $this->env->resources()->loadTexts("PluginLostPasswordMessages", dirname(__FILE__));
 			$values = array("email" => $email, "name" => $user["name"], "password" => $pw);
 			
-			$subject = $this->replaceParams($RESET_PASSWORD_NOTIFICATION_SUBJECT, $values);
-			$msg = $this->replaceParams($RESET_PASSWORD_NOTIFICATION_MESSAGE, $values);
+			$subject = $this->replaceParams($texts["reset_password_notification_subject"], $values);
+			$msg = $this->replaceParams($texts["reset_password_notification_message"], $values);
 			$recipient = array(array("name" => NULL, "email" => $email));
 			$this->env->mailer()->send($recipient, $subject, $msg);
 		}

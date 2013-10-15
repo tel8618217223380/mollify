@@ -50,6 +50,11 @@
 		}
 		
 		that.onRenderBubble = function(id, bubble) {
+//			if (id === 'mollify-login-forgot-password') {
+//			}
+		}
+		
+		that.onShowBubble = function(id, bubble) {
 			if (id === 'mollify-login-forgot-password') {
 				$("#mollify-login-forgot-button").click(function() {				
 					var email = $("#mollify-login-forgot-email").val();
@@ -59,11 +64,7 @@
 					that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
 					that.onResetPassword(email);
 				});
-			}
-		}
-		
-		that.onShowBubble = function(id, bubble) {
-			if (id === 'mollify-login-forgot-password') {
+
 				$("#mollify-login-forgot-email").val("").focus();
 			}
 		}

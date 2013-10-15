@@ -1904,14 +1904,14 @@
 		this.ConfirmRegistrationView = function(urlParams) {
 			var vt = this;
 			
-			this.init = function($c) {
-				if (!urlParams.email || urlParams.email.length === 0) {
-					mollify.ui.dialogs.error({message: mollify.ui.texts.get('registrationInvalidConfirm')});
-					return;
-				}
-				vt._email = urlParams.email;
-				
+			this.init = function($c) {				
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Registration", "registration_confirm.html"), function() {
+					if (!urlParams.email || urlParams.email.length === 0) {
+							$("#mollify-registration-main").addClass("complete").empty().append(mollify.dom.template("mollify-tmpl-registration-errormessage", {message: mollify.ui.texts.get('registrationInvalidConfirm')}));
+						return;
+					}
+					vt._email = urlParams.email;
+
 					if (urlParams.key && urlParams.key.length > 0) {
 						vt._confirm(vt._email, urlParams.key);
 					} else {
