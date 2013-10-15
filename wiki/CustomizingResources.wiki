@@ -1,0 +1,53 @@
+#summary Customizing resources
+
+= Introduction =
+
+Mollify allows storing customized versions of resources outside Mollify folders, which makes updates easier.
+
+= Client resources =
+
+Using resource map feature ([ResourceMap]), different resources can be mapped into custom location. These include any client loaded resources:
+  * plugin texts
+  * plugin javascripts
+  * plugin css
+  * templates
+
+Copy original file into the custom location, and add resource map entry to load your version instead.
+ 
+For example, following loads custom "mainview.html" from folder "custom" :
+{{{
+	mollify.App.init({
+		"resource-map" : {
+			"templates/mainview.html" : "foo/mainview.html"
+		},
+		...
+	});
+}}}
+
+For example, following loads custom localizations file for Registration plugin:
+{{{
+	mollify.App.init({
+		"resource-map" : {
+			"backend/plugin/Registration/admin/texts_en.js": "custom/texts_registration_en.js"
+		},
+		...
+	});
+}}}
+
+= Backend texts =
+
+When a backend feature needs text resources, these are stored in a text file.
+
+Customizations location is defined in configuration.php with following setting:
+{{{
+	$CONFIGURATION = array(
+		"customizations_folder" => "/Applications/MAMP/htdocs/mollify/custom/backend/",
+		...
+	);
+}}}
+
+Now any text resources are first searched from this folder.
+
+For example customizing LostPassword plugin texts:
+  # Copy "backend/plugin/LostPassword/PluginLostPasswordMessages.txt" into customizations folder defined in configuration.php
+  # Make your own modifications
