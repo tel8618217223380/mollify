@@ -56,6 +56,18 @@ To enable mail notifications, add following settings:
 
 The setting "mail_notification_from" defines the address which the mail is sent from.
 
+Register client plugin with following client settings:
+
+{{{
+<script type="text/javascript">
+	mollify.App.init({
+		...
+		}, [
+			new mollify.plugin.RegistrationPlugin()
+		]
+	});
+}}}
+
 = Registration =
 
 Once registration plugin is installed, registration page is at "http://host/backend/plugin/Registration". Users can fill out the form presented, and they will receive a notification mail. Mail provides a link that will confirm the registration.
