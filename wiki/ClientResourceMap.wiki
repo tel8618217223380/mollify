@@ -16,4 +16,4 @@ This example overrides loading "mainview.html" template file to be loaded from f
 
 To get the resource path, open for example Chrome Dev Tools and Network Inspector. There you can see all loaded resources. Copy the url starting from the mollify root level.
 
-For example, if the loaded resource is "http://yourhost/mollify/backend/plugins/Notificator/admin/texts_en.js", use resource path "backend/plugins/Notificator/admin/texts_en.js".
+For example, if the loaded resource is "http://yourhost/mollify/backend/plugin/Notificator/admin/texts_en.js", use resource path "backend/plugin/Notificator/admin/texts_en.js".
