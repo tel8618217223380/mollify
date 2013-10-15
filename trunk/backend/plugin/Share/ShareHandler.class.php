@@ -114,6 +114,24 @@
 			$this->dao()->deleteSharesForItem($itemId);
 		}
 		
+		public function getShareInfo($id) {
+			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
+			if (!$share) return NULL;
+			
+			$this->env->filesystem()->allowFilesystems = TRUE;
+			$itemId = $share["item_id"];
+			if (strpos($itemId, "_") > 0) {
+				$parts = explode("_", $itemId);
+				$this->getCustomType($parts[0], $parts[1], $share);
+				return;
+			}
+			$item = $this->env->filesystem()->item($itemId);
+			$type = $item->isFile() ? "download" : "upload";
+			//TODO processed download
+			//TODO needs auth/password?
+			return array("type" => $type);
+		}
+		
 		public function processShareGet($id) {
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) $this->showInvalidSharePage();

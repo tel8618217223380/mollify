@@ -73,7 +73,7 @@ var mollifyDefaults = {
 			mollify.service.get("session/info/3").done(function(s) {
 				mollify.App.setSession(s);
 			}).fail(function(e) {
-				mollify.App.getElement().html("Failed to initialize Mollify");
+				new mollify.ui.FullErrorView('Failed to initialize Mollify').init(mollify.App.getElement());
 			});
 		};
 		
@@ -107,32 +107,47 @@ var mollifyDefaults = {
 	mollify.App._start = function() {
 		mollify.App.activeView = false;
 		
+		mollify.App._getView(function(v) {
+			mollify.App.activeView = v;
+			
+			if (!mollify.App.activeView) {
+				if (!mollify.session || !mollify.session.authenticated) {
+					mollify.App.activeView = new mollify.view.LoginView();
+				} else {
+					mollify.App.activeView = new mollify.view.MainView();
+				}
+			}
+			
+			mollify.App.activeView.init(mollify.App.getElement());			
+		});
+	};
+	
+	mollify.App._getView = function(cb) {
 		if (mollify.App.pageParams.v && mollify.App.pageParams.v.length > 0) {
 			var idParts = mollify.App.pageParams.v.split("/");
 			var h = mollify.App._views[idParts[0]];
 			if (h && h.getView)
-				mollify.App.activeView = h.getView(idParts, mollify.App.pageParams);
-		}
-		
-		if (!mollify.App.activeView) {
-			if (!mollify.session || !mollify.session.authenticated) {
-				mollify.App.activeView = new mollify.view.LoginView();
-			} else {
-				mollify.App.activeView = new mollify.view.MainView();
-			}
-		}
-		
-		
-		mollify.App.activeView.init(mollify.App.getElement());
-	};
+				var v = h.getView(idParts, mollify.App.pageParams);
+				
+				if (v && v.done)
+					v.done(function(v) {
+						cb(v);
+					});
+				else cb(v);
+		} else cb(false);
+	}
 	
 	mollify.App.registerView = function(id, h) {
 		mollify.App._views[id] = h;
 	};
 	
 	mollify.App.openPage = function(pageUrl) {
-		window.location = mollify.App.pageUrl + "?v="+pageUrl;
+		window.location = mollify.App.getPageUrl(pageUrl);
 	};
+	
+	mollify.App.getPageUrl = function(pageUrl) {
+		return mollify.App.pageUrl + "?v="+pageUrl;
+	}
 	
 	mollify.getItemDownloadInfo = function(i) {
 		if (!i) return false;
@@ -260,7 +275,7 @@ var mollifyDefaults = {
 			var failContext = {
 				handled: false
 			}
-			if (error.code == 100) {
+			if (error.code == 100 && mollify.session && mollify.session.authenticated) {
 				mollify.events.dispatch('session/end');
 				failContext.handled = true;
 			}
