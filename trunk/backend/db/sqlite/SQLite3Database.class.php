@@ -48,6 +48,7 @@
 			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (file=".$this->file.")");
 			$this->db = $db;
 			$this->registerRegex();
+			$this->db->busyTimeout(5000);
 		}
 		
 		public function registerRegex() {
@@ -142,18 +143,19 @@
 		}
 		
 		public function count() {
-			return count($this->rows());
+			return count($this->rows(FALSE));
 		}
 
 		public function affected() {
 			return $this->db->changes();
 		}
 				
-		public function rows() {
+		public function rows($free = TRUE) {
 			$list = array();
 			while ($row = $this->result->fetchArray(SQLITE3_BOTH)) {
 				$list[] = $row;
 			}
+			if ($free) $this->free();
 			return $list;
 		}
 
@@ -162,6 +164,7 @@
 			while ($row = $this->result->fetchArray(SQLITE3_ASSOC)) {
 				$list[] = $row[$col];
 			}
+			$this->free();
 			return $list;
 		}
 		
@@ -178,11 +181,13 @@
 				else
 					$list[$row[$keyCol]] = $row[$valueCol];
 			}
+			$this->free();
 			return $list;
 		}
 			
 		public function firstRow() {
 			$ret = $this->result->fetchArray(SQLITE3_ASSOC);
+			$this->free();
 			return $ret;
 		}
 		
@@ -193,6 +198,9 @@
 		}
 		
 		public function free() {
+			if ($this->result === TRUE or $this->result === FALSE) return;
+			$this->result->finalize();
+			$this->result = NULL;
 		}
 	}
 	
