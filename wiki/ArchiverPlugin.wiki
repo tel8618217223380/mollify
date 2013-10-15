@@ -24,7 +24,7 @@ Value "COMPRESSOR" is the method used for compressing files, options are:
   * `native` Uses OS native tools to create the package (not available on all platforms)
   * `raw` PHP implementation of zip packaging
 
-And following into client settings:
+Add following into client settings:
 
 {{{
 <script type="text/javascript">
