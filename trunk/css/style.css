@@ -538,6 +538,7 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
+	clear: both;
 }
 
 .mollify-filelist-item.dragged {

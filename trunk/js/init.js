@@ -768,15 +768,23 @@ var mollifyDefaults = {
 	md._hiddenLoaded = [];
 		
 	md.importScript = function(url) {
-		return $.getScript(mollify.resourceUrl(url));
+		var u = mollify.resourceUrl(url);
+		if (!u) {
+			var df = $.Deferred();
+			return df.resolve().promise();
+		}
+		return $.getScript(mollify.helpers.noncachedUrl(u));
 	};
 		
 	md.importCss = function(url) {
+		var u = mollify.resourceUrl(url);
+		if (!u) return;
+		
 		var link = $("<link>");
 		link.attr({
 			type: 'text/css',
 			rel: 'stylesheet',
-			href: mollify.helpers.noncachedUrl(mollify.resourceUrl(url))
+			href: mollify.helpers.noncachedUrl(u)
 		});
 		$("head").append(link);
 	};
@@ -786,15 +794,22 @@ var mollifyDefaults = {
 			if (cb) cb();
 			return;
 		}
+		var u = mollify.resourceUrl(url);
+		if (!u) {
+			if (cb) cb();
+			return;
+		}
 		var id = 'mollify-tmp-'+(mollify._hiddenInd++);
-		$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(mollify.helpers.noncachedUrl(mollify.resourceUrl(url)), function() {
+		$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(mollify.helpers.noncachedUrl(u), function() {
 			md._hiddenLoaded.push(contentId);
 			if (cb) cb();
 		});
 	};
 					
 	md.loadContentInto = function($target, url, handler, process) {
-		$target.load(mollify.helpers.noncachedUrl(mollify.resourceUrl(url)), function() {
+		var u = mollify.resourceUrl(url);
+		if (!u) return;
+		$target.load(mollify.helpers.noncachedUrl(u), function() {
 			if (process) mollify.ui.process($target, process, handler);
 			if (typeof handler === 'function') handler();
 			else if (handler.onLoad) handler.onLoad($target);
