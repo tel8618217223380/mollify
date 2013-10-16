@@ -114,22 +114,25 @@
 			$this->dao()->deleteSharesForItem($itemId);
 		}
 		
-		public function getShareInfo($id) {
+		public function getPublicShareInfo($id) {
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) return NULL;
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
 			$itemId = $share["item_id"];
+			$type = NULL;
 			if (strpos($itemId, "_") > 0) {
 				$parts = explode("_", $itemId);
-				$this->getCustomType($parts[0], $parts[1], $share);
-				return;
+				$type = $this->getCustomType($parts[0], $parts[1], $share);
+			} else {
+				$item = $this->env->filesystem()->item($itemId);
+				$type = $item->isFile() ? "download" : "upload";
 			}
-			$item = $this->env->filesystem()->item($itemId);
-			$type = $item->isFile() ? "download" : "upload";
+			if ($type == NULL) return NULL;
+			
 			//TODO processed download
 			//TODO needs auth/password?
-			return array("type" => $type);
+			return array("type" => $type, "auth" => FALSE, "pw" => FALSE);
 		}
 		
 		public function processShareGet($id) {
@@ -160,6 +163,15 @@
 			$handler->processGetShare($id, $share);
 		}
 
+		private function getCustomType($type, $id, $share) {
+			if(!array_key_exists($type, $this->customShareHandlers)) {
+				Logging::logError("No custom share handler found: ".$type);
+				return NULL;
+			}
+			$handler = $this->customShareHandlers[$type];
+			$handler->getShareType($id, $share);
+		}
+		
 		private function showInvalidSharePage() {
 			include("pages/InvalidShare.php");
 			die();

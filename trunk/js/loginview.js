@@ -19,8 +19,6 @@
 		}
 		
 		that.onLoad = function() {
-			that.onResize();
-		
 			if (mollify.features.hasFeature('lost_password')) $("#mollify-login-forgot-password").show();
 			if (mollify.features.hasFeature('registration') && mollify.plugins.exists("plugin-registration")) {
 				$("#mollify-login-register").click(function() {
