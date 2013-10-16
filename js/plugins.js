@@ -1430,19 +1430,33 @@
 					
 					var shareId = rqParts[1];
 					mollify.service.get("public/"+shareId+"/info/").done(function(result) {
-						if (!result) {
+						if (!result || !result.type || (["download", "upload"].indexOf(result.type) < 0)) {
 							df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
 							return;
 						}
 						
 						//TODO check if needs authentication etc
-						df.resolve(new that.OpenShareView(rqParts[1], urlParams));
+						if (result.type == "download") {
+							window.location.href = mollify.service.url("public/"+shareId, true);
+							return;
+						}
+						df.resolve(new that.OpenShareUploadView(rqParts[1], urlParams));
 					}).fail(function() {
 						df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
 					});
 					return df.promise();
 				}
 			});
+		};
+		
+		this.OpenShareUploadView = function() {
+			var vt = this;
+			
+			this.init = function($c) {
+				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_upload.html"), function() {
+
+				}, ['localize']);
+			};
 		};
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
