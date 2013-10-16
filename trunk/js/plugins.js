@@ -1417,7 +1417,7 @@
 		
 		this.initialize = function() {
 			that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
-			mollify.dom.importCss(mollify.plugins.url("Share", "style.css"));
+			//mollify.dom.importCss(mollify.plugins.url("Share", "style.css"));
 			
 			mollify.App.registerView("share", {
 				getView : function(rqParts, urlParams) {					
@@ -1788,6 +1788,10 @@
 		
 		return {
 			id: "plugin-share",
+			backendPluginId: "Share",
+			resources: {
+				css: true
+			},
 			initialize: that.initialize,
 
 			configViewHandler : {

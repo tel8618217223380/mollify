@@ -68,12 +68,12 @@ var mollifyDefaults = {
 		mollify.settings = $.extend({}, mollifyDefaults, s);
 		mollify.service.init(mollify.settings["limited-http-methods"]);
 		
+		var onError = function() { new mollify.ui.FullErrorView('Failed to initialize Mollify').show(); }
+		
 		var doStart = function() {
 			mollify.service.get("session/info/3").done(function(s) {
 				mollify.App.setSession(s);
-			}).fail(function(e) {
-				new mollify.ui.FullErrorView('Failed to initialize Mollify').init(mollify.App.getElement());
-			});
+			}).fail(onError);
 		};
 		
 		mollify.events.addEventHandler(function(e) {
@@ -92,9 +92,7 @@ var mollifyDefaults = {
 		});
 
 		mollify.ui.initialize();
-		mollify.plugins.initialize();
-
-		doStart();
+		mollify.plugins.initialize().done(doStart).fail(onError);
 	};
 	
 	mollify.App.getElement = function() { return $("#"+mollify.settings["app-element-id"]); };
@@ -639,11 +637,23 @@ var mollifyDefaults = {
 		pl._list[id] = p;
 	};
 	
-	pl.initialize = function() {
+	pl.initialize = function(cb) {
+		var df = $.Deferred();
+		var l = [];
 		for (var id in pl._list) {
 			var p = pl._list[id];
 			if (p.initialize) p.initialize();
+			if (p.resources) {
+				var pid = p.backendPluginId || id;
+				if (p.resources.texts) l.push(mollify.dom.importScript(mollify.plugins.getLocalizationUrl(pid)));
+				if (p.resources.css) mollify.dom.importCss(mollify.plugins.getStyleUrl(pid));
+			}
 		}
+		if (l.length == 0) {
+			return df.resolve().promise();
+		}
+		$.when.apply($, l).done(df.resolve).fail(df.reject);
+		return df.promise();
 	};
 	
 	pl.get = function(id) {
@@ -655,14 +665,22 @@ var mollifyDefaults = {
 		return !!pl._list[id];
 	};
 	
-	pl.url = function(id, p) {
+	pl.url = function(id, p, admin) {
 		var url = mollify.settings["service-path"]+"plugin/"+id;
 		if (!p) return url;
-		return url +"/client/"+p;
+		return url + (admin ? "/admin/" : "/client/")+p;
 	};
 	
 	pl.adminUrl = function(id, p) {
 		return pl.url(id)+"/admin/"+p;
+	};
+	
+	pl.getLocalizationUrl = function(id, admin) {
+		return pl.url(id, "texts_" + mollify.ui.texts.locale + ".js", admin);
+	};
+	
+	pl.getStyleUrl = function(id, admin) {
+		return pl.url(id, "style.css", admin);
 	};
 	
 	pl.getItemContextRequestData = function(item) {
@@ -769,11 +787,11 @@ var mollifyDefaults = {
 		
 	md.importScript = function(url) {
 		var u = mollify.resourceUrl(url);
-		if (!u) {
-			var df = $.Deferred();
-			return df.resolve().promise();
-		}
-		return $.getScript(mollify.helpers.noncachedUrl(u));
+		if (!u)
+			return $.Deferred().resolve().promise();
+		var df = $.Deferred();
+		$.getScript(u, df.resolve).fail(df.reject);
+		return df.promise();
 	};
 		
 	md.importCss = function(url) {
