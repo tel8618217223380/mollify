@@ -440,6 +440,10 @@
 	};
 	
 	mollify.ui.FullErrorView = function(e) {
+		this.show = function() {
+			this.init(mollify.App.getElement());
+		};
+		
 		this.init = function($c) {				
 			mollify.dom.template("mollify-tmpl-fullpage-error", {message: e}).appendTo($c.empty());
 		};

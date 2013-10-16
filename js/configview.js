@@ -102,7 +102,7 @@
 					var p = mollify.admin.plugins[pk];
 					if (!p || !p.views) continue;
 
-					if (p.hasTexts) o.push(mollify.dom.importScript("backend/plugin/"+pk+"/admin/texts_"+mollify.ui.texts.locale+".js"));
+					if (p.hasTexts) o.push(mollify.dom.importScript(mollify.plugins.getLocalizationUrl(pk, true)));
 					$.each(p.views, addView);
 				}
 

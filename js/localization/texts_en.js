@@ -230,6 +230,8 @@ shareDialogCancel: 'Cancel',
 pluginShareConfigViewNavTitle: "Shares",
 pluginShareConfigViewCountTitle: "Count",
 shareViewInvalidRequest: "The requested share was not found",
+shareViewDownloadTitle: "Download should begin soon...",
+shareViewUploadTitle: "Upload",
 
 pluginItemCollectionsNavTitle: "Stored",
 pluginItemCollectionStore: "Store...",
