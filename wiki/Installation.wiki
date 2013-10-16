@@ -16,8 +16,8 @@
 	 #  For backup, move or rename old installation directory "mollify" into different name or location
 	 #  Copy directory "mollify" from the latest Mollify installation package
 	 #  From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
-	 #  Remove backup directory
 	 #  Open update utility at address "http://your.host.name/mollify/backend/update/" to check if further update actions are required.
+	 #  Once everything is ok, remove backup directory
 
 = 3. Configuration =
 	
@@ -25,7 +25,7 @@
 	
 	Start configuration by creating "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
 
-	Follow instructions based on configuration type:
+	Follow instructions based on configuration type (instructions for PDO is included in these pages):
 	 * [ConfigurationMySql MySQL Database]
 	 * [ConfigurationSQLite SQLite Database]
 	 
