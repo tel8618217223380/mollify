@@ -22,7 +22,7 @@
 			if (count($this->path) == 1)
 				$this->handler()->processShareGet($this->path[0]);
 			else if (count($this->path) == 2 && $this->path[1] == "info")
-				$this->response()->success($this->handler()->getShareInfo($this->path[0]));
+				$this->response()->success($this->handler()->getPublicShareInfo($this->path[0]));
 			else
 				throw $this->invalidRequestException();
 		}

@@ -79,6 +79,10 @@
 			}
 
 			$this->db = $db;
+			
+			if ($this->type == "sqlite") {
+				$this->db->sqliteCreateFunction('REGEX', 'sqlite_regex_match', 2);
+			}
 		}
 		
 		public function setCharset($charset) {
@@ -257,5 +261,12 @@
 		
 		public function free() {
 		}
+	}
+	
+	function sqlite_regex_match($str, $regex) {  
+		if (preg_match($regex, $str, $matches)) {  
+			return $matches[0];  
+		}
+		return false;  
 	}
 ?>
