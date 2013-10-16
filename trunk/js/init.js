@@ -966,6 +966,16 @@ var mollifyDefaults = {
 			var result = [];
 			$.each(list, function(i, it) { if (f(it)) result.push(it); });
 			return result;
+		},
+		
+		arrayize : function(i) {
+			var a = [];
+			if (!window.isArray(i)) {
+				a.push(i);
+			} else {
+				return i;
+			}
+			return a;
 		}
 	};
 
