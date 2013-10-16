@@ -30,28 +30,3 @@
 	 * [ConfigurationSQLite SQLite Database]
 	 
 	For additional options, see additional settings on [ClientSettings client] and [BackendSettings backend].
-
-
-= 4. Modifying Installation =
-
-	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or in its subdirectories.
-
-	If you wish to locate backend interface files (`*`.php) into a different location, you must define this location in the index html file, with following format:
-
-{{{
-	<html>
-		<head>
-			...
-			<script type="text/javascript">
-				$(document).ready(function() {
-					mollify.App.init({
-						"service-path": "[RELATIVE_PATH]",
-						...
-					});
-			</script>
-		</head>
-		...
-	</html>
-}}}
-
-	Replace `[RELATIVE_PATH]` with path to the backend interface files, relative to the index html file.
