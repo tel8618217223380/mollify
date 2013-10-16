@@ -490,6 +490,8 @@
 			} else if (i.length == 1) {
 				item = i[0];
 				items = i;
+			} else {
+				items = i;
 			}
 			
 			var df = $.Deferred();

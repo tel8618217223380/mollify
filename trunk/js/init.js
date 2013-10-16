@@ -126,14 +126,12 @@ var mollifyDefaults = {
 		if (mollify.App.pageParams.v && mollify.App.pageParams.v.length > 0) {
 			var idParts = mollify.App.pageParams.v.split("/");
 			var h = mollify.App._views[idParts[0]];
-			if (h && h.getView)
-				var v = h.getView(idParts, mollify.App.pageParams);
+			if (h && h.getView) {
+				var view = h.getView(idParts, mollify.App.pageParams);
 				
-				if (v && v.done)
-					v.done(function(v) {
-						cb(v);
-					});
-				else cb(v);
+				if (view && view.done) view.done(cb);
+				else cb(view);
+			} else cb(false);
 		} else cb(false);
 	}
 	
