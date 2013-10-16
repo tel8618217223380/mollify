@@ -56,8 +56,7 @@ var mollifyDefaults = {
 		window.Modernizr.testProp("touch");
 		
 		mollify.App._views = {};
-		mollify.App.pageUrl = window.location.href;
-		mollify.App.pageUrl = mollify.App.pageUrl.substring(0, mollify.App.pageUrl.lastIndexOf('/')+1);
+		mollify.App.pageUrl = mollify.request.getBaseUrl(window.location.href);
 		mollify.App.pageParams = mollify.request.getParams(window.location.href);
 		
 		mollify.plugins.register(new mollify.plugin.Core());
@@ -192,6 +191,13 @@ var mollifyDefaults = {
 		},
 		getParams: function() {
 			return mollify.helpers.getUrlParams(location.search);
+		},
+		getBaseUrl : function(url) {
+			var param = url.lastIndexOf('?');
+			if (param >= 0) url = url.substring(0, param+1);
+			
+			var dash = url.lastIndexOf('/');
+			return url.substring(0, dash+1);
 		}
 	}
 	
