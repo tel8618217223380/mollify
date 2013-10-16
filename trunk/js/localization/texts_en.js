@@ -137,6 +137,8 @@ copyFileMessage: "Select folder where \"{0}\" is copied into:",
 
 copyMultipleFileDialogTitle: "Copy",
 copyMultipleFileMessage: "Select folder where {0} files are copied into:",
+moveMultipleFileDialogTitle: "Move",
+moveMultipleFileMessage: "Select folder where {0} files are moved into:",
 
 renameDialogTitleFile: "Rename File",
 renameDialogTitleFolder: "Rename Folder",
