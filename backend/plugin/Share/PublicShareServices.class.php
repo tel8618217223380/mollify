@@ -30,6 +30,7 @@
 		public function processPost() {
 			if (count($this->path) != 1) throw $this->invalidRequestException();
 			$this->handler()->processSharePost($this->path[0]);
+			$this->response()->html(json_encode(array("result" => TRUE)));
 		}
 		
 		private function handler() {
