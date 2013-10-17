@@ -498,14 +498,11 @@
 			that._dndUploader = false;
 			
 			if (mollify.ui.uploader && mollify.ui.uploader.initDragAndDropUploader) {
-				//if (that._canWrite) mollify.ui.uploader.setMainViewUploadFolder(that._currentFolder);
-				//else mollify.ui.uploader.setMainViewUploadFolder(false);
-				if (mollify.ui.uploader && mollify.ui.uploader.initDragAndDropUploader)
-					that._dndUploader = mollify.ui.uploader.initDragAndDropUploader({
-						container: mollify.App.getElement(),
-						dropElement: $("#mollify-folderview"),
-						handler: that._getUploadHandler()
-					});
+				that._dndUploader = mollify.ui.uploader.initDragAndDropUploader({
+					container: mollify.App.getElement(),
+					dropElement: $("#mollify-folderview"),
+					handler: that._getUploadHandler()
+				});
 			}
 			
 			that._scrollOutThreshold = 100000;
