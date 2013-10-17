@@ -58,6 +58,7 @@ var mollifyDefaults = {
 		mollify.App._views = {};
 		mollify.App.pageUrl = mollify.request.getBaseUrl(window.location.href);
 		mollify.App.pageParams = mollify.request.getParams(window.location.href);
+		mollify.App.mobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 		
 		mollify.plugins.register(new mollify.plugin.Core());
 		if (p) {
@@ -310,9 +311,14 @@ var mollifyDefaults = {
 	mfs.getDownloadUrl = function(item) {
 		if (!item.is_file) return false;
 		var url = mollify.service.url("filesystem/"+item.id, true);
-		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+		if (mollify.App.mobile)
 			url = url + ((url.indexOf('?') >= 0) ? "&" : "?") + "m=1";
 		return url;
+	};
+
+	mfs.getUploadUrl = function(folder) {	
+		if (!folder || folder.is_file) return null;
+		return mollify.service.url("filesystem/"+folder.id+'/files/') + "?format=binary";
 	};
 	
 	mfs.itemDetails = function(item, data) {

@@ -88,7 +88,7 @@
 			});
 		};
 		
-		this.initWidget = function($e, folder, l) {
+		this.initWidget = function($e, url, l) {
 			var $d = mollify.dom.template("mollify-tmpl-uploader-widget");
 			$e.append($d);
 			mollify.ui.handlers.localize($e);
@@ -96,7 +96,7 @@
 			var started = false;
 			
 			var $input = $d.find("input").fileupload($.extend({
-				url: mollify.service.url("filesystem/"+folder.id+'/files/') + "?format=binary",
+				url: url,
 				dataType: 'json',
 				dropZone: $dropZone,
 				add: function (e, data) {
@@ -155,9 +155,9 @@
 					t.open(folder);
 				});
 			},
-			initUploadWidget : function($e, folder, l) {
+			initUploadWidget : function($e, url, l) {
 				mollify.templates.load("mollify-uploader", mollify.templates.url("uploader.html"), function() {
-					t.initWidget($e, folder, l);
+					t.initWidget($e, url, l);
 				});
 			},
 			initMainViewUploader : function(h) {

@@ -150,7 +150,10 @@
 	};
 	
 	mollify.ui.download = function(url) {
-		window.open(url);	//TODO frame?	
+		if (mollify.App.mobile)
+			window.open(url);
+		else
+			$("#mollify-download-frame").attr("src", url);
 	};
 		
 	mollify.ui.itemContext = function(o) {
