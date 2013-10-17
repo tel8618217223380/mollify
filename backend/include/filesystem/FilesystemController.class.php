@@ -589,6 +589,8 @@
 		        $type = isset($_SERVER['HTTP_CONTENT_DESCRIPTION']) ? $_SERVER['HTTP_CONTENT_DESCRIPTION'] : null;
 		        $range = isset($_SERVER['HTTP_CONTENT_RANGE']) ? preg_split('/[^0-9]+/', $_SERVER['HTTP_CONTENT_RANGE']) : null;
 		        $size =  $range ? $range[3] : null;
+		        
+				if (Logging::isDebug()) Logging::logDebug("Stream upload: ".$name. " ".Util::array2str($range));
 				
                 $info[] = $this->upload(
                 	$folder,

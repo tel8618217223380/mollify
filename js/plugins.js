@@ -1466,7 +1466,7 @@
 					vt._uploadProgress = new that.PublicUploaderProgress($("#mollify-share-public-upload-progress"));
 					
 					mollify.ui.uploader.initUploadWidget($("#mollify-share-public-uploader"), {
-						url: serviceUrl,
+						url: mollify.helpers.urlWithParam(serviceUrl, "format=binary"),
 						handler: {
 							start: function(files, ready) {							
 								vt._uploadProgress.start(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length));
