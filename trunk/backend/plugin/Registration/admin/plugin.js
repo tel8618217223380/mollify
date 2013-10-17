@@ -134,7 +134,9 @@
 	}
 
 	mollify.admin.plugins.Registration = {
-		hasTexts : true,
+		resources : {
+			texts: true
+		},
 		views: [
 			new mollify.view.config.admin.Registration.PendingRegistrationsView()
 		]

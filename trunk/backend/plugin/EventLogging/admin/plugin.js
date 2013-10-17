@@ -120,7 +120,9 @@
 	}
 
 	mollify.admin.plugins.EventLogging = {
-		hasTexts : true,
+		resources : {
+			texts: true
+		},
 		views: [
 			new mollify.view.config.admin.EventLogging.AllEventsView()
 		]

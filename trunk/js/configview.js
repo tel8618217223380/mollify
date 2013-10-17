@@ -89,7 +89,7 @@
 			var l = [];
 			l.push(mollify.service.get("configuration/settings").done(function(s) { that._settings = s; }));			
 			for (var i=0,j=ids.length;i<j;i++) {
-				l.push(mollify.dom.importScript("backend/plugin/"+ids[i]+"/admin/plugin.js"));
+				l.push(mollify.dom.importScript(mollify.plugins.url(ids[i], "plugin.js", true)));
 			}
 			
 			$.when.apply($, l).done(function() {
@@ -102,7 +102,9 @@
 					var p = mollify.admin.plugins[pk];
 					if (!p || !p.views) continue;
 
-					if (p.hasTexts) o.push(mollify.dom.importScript(mollify.plugins.getLocalizationUrl(pk, true)));
+					if (p.resources) {
+						if (p.resources.texts) o.push(mollify.dom.importScript(mollify.plugins.getLocalizationUrl(pk, true)));
+					}
 					$.each(p.views, addView);
 				}
 

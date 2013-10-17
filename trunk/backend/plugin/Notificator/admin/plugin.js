@@ -344,7 +344,9 @@
 	}
 
 	mollify.admin.plugins.Notificator = {
-		hasTexts : true,
+		resources : {
+			texts: true
+		},
 		views: [
 			new mollify.view.config.admin.Notificator.NotificationsView()
 		]
