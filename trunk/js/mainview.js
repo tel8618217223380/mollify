@@ -817,7 +817,7 @@
 						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($tb).click(function() {
 							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
 								onRenderBubble: function(b) {
-									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that._currentFolder, that._getUploadHandler(b));
+									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), mollify.filesystem.getUploadUrl(that._folder), that._getUploadHandler(b));
 									if (!mollify.features.hasFeature('retrieve_url')) {
 										$("#mollify-mainview-addfile-retrieve").remove();
 									}
