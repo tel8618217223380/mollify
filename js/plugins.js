@@ -1461,8 +1461,7 @@
 			
 			this.init = function($c) {
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_upload.html"), function() {
-
-					mollify.ui.uploader.initUploadWidget($("#mollify-share-public-uploader"), that._currentFolder, that._getUploadHandler(b));
+					mollify.ui.uploader.initUploadWidget($("#mollify-share-public-uploader"), serviceUrl, {});
 				}, ['localize']);
 			};
 		};
