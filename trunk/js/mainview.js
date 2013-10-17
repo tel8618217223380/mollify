@@ -495,16 +495,17 @@
 			that.initList();
 			
 			that.uploadProgress = new UploadProgress($("#mollify-mainview-progress"));
+			that._dndUploader = false;
 			
-			if (mollify.ui.uploader && mollify.ui.uploader.initMainViewUploader) {
+			if (mollify.ui.uploader && mollify.ui.uploader.initDragAndDropUploader) {
 				//if (that._canWrite) mollify.ui.uploader.setMainViewUploadFolder(that._currentFolder);
 				//else mollify.ui.uploader.setMainViewUploadFolder(false);
-				if (mollify.ui.uploader && mollify.ui.uploader.initMainViewUploader) mollify.ui.uploader.initMainViewUploader({
-					folder: that._currentFolder,
-					container: mollify.App.getElement(),
-					dropElement: $("#mollify-folderview"),
-					handler: that._getUploadHandler()
-				});
+				if (mollify.ui.uploader && mollify.ui.uploader.initDragAndDropUploader)
+					that._dndUploader = mollify.ui.uploader.initDragAndDropUploader({
+						container: mollify.App.getElement(),
+						dropElement: $("#mollify-folderview"),
+						handler: that._getUploadHandler()
+					});
 			}
 			
 			that._scrollOutThreshold = 100000;
@@ -604,7 +605,7 @@
 		this.onDeactivate = function() {
 			$(window).unbind('scroll');
 			
-			if (mollify.ui.uploader && mollify.ui.uploader.destroyMainViewUploader) mollify.ui.uploader.destroyMainViewUploader();
+			if (that._dndUploader) that._dndUploader.destroy();
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
 				if (p.fileViewHandler.onDeactivate)
@@ -817,7 +818,7 @@
 						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($tb).click(function() {
 							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
 								onRenderBubble: function(b) {
-									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), mollify.filesystem.getUploadUrl(that._folder), that._getUploadHandler(b));
+									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), mollify.filesystem.getUploadUrl(that._currentFolder), that._getUploadHandler(b));
 									if (!mollify.features.hasFeature('retrieve_url')) {
 										$("#mollify-mainview-addfile-retrieve").remove();
 									}
@@ -862,7 +863,8 @@
 					$("#mollify-folderview-items").addClass("loading");
 				}
 
-				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite() ? that._currentFolder : false);
+				if (that._dndUploader)
+					that._dndUploader.setUrl(that._canWrite() ? mollify.filesystem.getUploadUrl(that._currentFolder) : false);
 				that.addCommonFileviewActions($fa);
 			}
 			

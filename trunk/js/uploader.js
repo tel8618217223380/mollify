@@ -160,12 +160,12 @@
 					t.initWidget($e, url, l);
 				});
 			},
-			initMainViewUploader : function(h) {
+			initDragAndDropUploader : function(h) {
 				var $p = h.container;
 				var $container = $('<div style="width: 0px; height: 0px; overflow: hidden;"></div>').appendTo($p);
 				var $form = $('<form enctype="multipart/form-data"></form>').appendTo($container);
 				var started = false;
-				t.$mainViewInput = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"></input>').appendTo($form).fileupload($.extend({
+				var $dndUploader = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"></input>').appendTo($form).fileupload($.extend({
 					url: '',
 					dataType: 'json',
 					dropZone: h.dropElement,
@@ -207,18 +207,21 @@
 					}
 				}, t._getUploaderSettings())).fileupload('disable');
 				t._initDropZoneEffects(h.dropElement);
-			},
-			destroyMainViewUploader : function() {
-				if (t.$mainViewInput) t.$mainViewInput.fileupload("destroy");
-				t.$mainViewInput = false;
-			},
-			setMainViewUploadFolder : function(f) {
-				if (!t.$mainViewInput) return;
-				if (!f) {
-					t.$mainViewInput.fileupload('disable');
-					return;
-				}
-				t.$mainViewInput.fileupload('enable').fileupload('option', 'url', mollify.service.url("filesystem/"+f.id+'/files/') + "?format=binary");
+				
+				return {
+					destroy: function() {
+						if ($dndUploader) $dndUploader.fileupload("destroy");
+						$dndUploader = false;
+					},
+					setUrl : function(url) {
+						if (!$dndUploader) return;
+						if (!url) {
+							$dndUploader.fileupload('disable');
+							return;
+						}
+						$dndUploader.fileupload('enable').fileupload('option', 'url', url);
+					}
+				};
 			}
 		};
 	}
