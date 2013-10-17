@@ -20,7 +20,7 @@
 			return false;
 		});
 		
-		this.open = function(folder) {
+		/*this.open = function(folder) {
 			var $d = mollify.dom.template("mollify-tmpl-uploader-dlg");
 			mollify.ui.dialogs.custom({
 				element: $d,
@@ -36,9 +36,9 @@
 				},
 				"on-show": function(dlg) { t.onOpen($d, dlg, folder); }
 			});
-		};
+		};*/
 		
-		this.onOpen = function($d, dlg, folder) {
+		/*this.onOpen = function($d, dlg, folder) {
 			//var $form = $d.find(".mollify-uploader-form");//.attr("action", );
 			var $input = $d.find("input").on('change', function() {
 				//if (!this.files || this.files.length == 0) return;
@@ -59,7 +59,7 @@
 	
 				}
 			});	
-		};
+		};*/
 		
 		this._getUploaderSettings = function() {
 			return mollify.settings["html5-uploader"] || {};	
@@ -88,15 +88,15 @@
 			});
 		};
 		
-		this.initWidget = function($e, url, l) {
-			var $d = mollify.dom.template("mollify-tmpl-uploader-widget");
-			$e.append($d);
+		this.initWidget = function($e, o) {
+			var $d = mollify.dom.template("mollify-tmpl-uploader-widget").appendTo($e);
 			mollify.ui.handlers.localize($e);
 			var $dropZone = $("#mollify-uploader-widget");
 			var started = false;
+			var l = o.handler;
 			
 			var $input = $d.find("input").fileupload($.extend({
-				url: url,
+				url: o.url,
 				dataType: 'json',
 				dropZone: $dropZone,
 				add: function (e, data) {
@@ -107,29 +107,7 @@
 					else
 						data.submit();
 					started = true;
-					
-					//$input.attr("disabled", "disabled");
-					//alert('Dropped: ' + data.files.length);
-					//uploadData.push(data);
-					//totalFiles = totalFiles + data.files.length;
-					//console.log(totalFiles);
 				},
-				/*send: function(e, data) {
-					//if (data.files.length == 0) return false;
-					//if (l.start) l.start(data.files);
-				},*/
-				/*submit: function (e, data) {
-					e.stopPropagation();
-					var $this = $(this);
-					//console.log(data);
-					if (!started && l.start) l.start(data.originalFiles, function() {
-							$this.fileupload('send', data);
-						});
-					//else
-					//	$this.fileupload('send', data);
-					started = true;
-					return false;
-				},*/
 				progressall: function (e, data) {
 					if (!l.progress) return;
 					
@@ -150,14 +128,9 @@
 		};
 		
 		return {
-			open : function(folder) {
+			initUploadWidget : function($e, o) {
 				mollify.templates.load("mollify-uploader", mollify.templates.url("uploader.html"), function() {
-					t.open(folder);
-				});
-			},
-			initUploadWidget : function($e, url, l) {
-				mollify.templates.load("mollify-uploader", mollify.templates.url("uploader.html"), function() {
-					t.initWidget($e, url, l);
+					t.initWidget($e, o);
 				});
 			},
 			initDragAndDropUploader : function(h) {
@@ -177,20 +150,7 @@
 						else
 							data.submit();
 						started = true;
-						
-						//$input.attr("disabled", "disabled");
-						//alert('Dropped: ' + data.files.length);
-						//uploadData.push(data);
-						//totalFiles = totalFiles + data.files.length;
-						//console.log(totalFiles);
 					},
-					/*submit: function (e, data) {
-						var $this = $(this);
-						if (h.handler.start) h.handler.start(data.files, function() {
-							$this.fileupload('send', data);
-						});
-						return false;
-					},*/
 					progressall: function (e, data) {
 						if (!h.handler.progress) return;
 						
@@ -225,5 +185,4 @@
 			}
 		};
 	}
-
 }(window.jQuery, window.mollify);

@@ -200,21 +200,10 @@
 
 			$this->processUpload($id, $item);
 		}
-				
-		private function getUploader() {
-			$uploader = FALSE;
-			if (isset($this->settings) and isset($this->settings["uploader"])) $uploader = $this->settings["uploader"];
-			
-			if (!$uploader) require_once("upload/http/PublicUploader.class.php");
-			else require_once($uploader."/PublicUploader.class.php");
-			
-			return new PublicUploader($this->env);
-		}
 
 		public function processUpload($shareId, $folder) {
 			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READWRITE);
-			$uploader = $this->getUploader();
-			$uploader->uploadTo($shareId, $folder);
+			$this->env->filesystem()->uploadTo($folder);
 		}
 								
 		public function onEvent($e) {

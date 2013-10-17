@@ -1460,10 +1460,64 @@
 			var vt = this;
 			
 			this.init = function($c) {
+				var uploadSpeedFormatter = new mollify.ui.formatters.Number(1, mollify.ui.texts.get('dataRateKbps'), mollify.ui.texts.get('decimalSeparator'));
+				
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_upload.html"), function() {
-					mollify.ui.uploader.initUploadWidget($("#mollify-share-public-uploader"), serviceUrl, {});
+					vt._uploadProgress = new that.PublicUploaderProgress($("#mollify-share-public-upload-progress"));
+					
+					mollify.ui.uploader.initUploadWidget($("#mollify-share-public-uploader"), {
+						url: serviceUrl,
+						handler: {
+							start: function(files, ready) {							
+								vt._uploadProgress.start(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length));
+								ready();
+							},
+							progress: function(pr, br) {
+								var speed = "";
+								if (br) speed = uploadSpeedFormatter.format(br/1024);
+								vt._uploadProgress.update(pr, speed);
+							},
+							finished: function() {
+								vt._uploadProgress.success(mollify.ui.texts.get('mainviewFileUploadComplete'));
+							},
+							failed: function() {
+								vt._uploadProgress.failure(mollify.ui.texts.get('mainviewFileUploadFailed'));
+							}
+						}
+					});
 				}, ['localize']);
 			};
+		};
+		
+		this.PublicUploaderProgress = function($e) {
+			var t = this;
+			t._$title = $e.find(".title");
+			t._$speed = $e.find(".speed");
+			t._$bar = $e.find(".bar");
+			
+			return {
+				start : function(title) {
+					$e.removeClass("success failure");
+					t._$title.text(title ? title : "");
+					t._$speed.text("");
+					t._$bar.css("width", "0%");
+				},
+				update : function(progress, speed) {
+					t._$bar.css("width", progress+"%");
+					t._$speed.text(speed ? speed : "");
+				},
+				success : function(text) {
+					$e.addClass("success");
+					t._$bar.css("width", "0%");
+					t._$title.text(text);
+					t._$speed.text("");
+				},
+				failure : function(text) {
+					$e.addClass("failure");
+					t._$title.text(text);
+					t._$speed.text("");
+				}
+			}
 		};
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
