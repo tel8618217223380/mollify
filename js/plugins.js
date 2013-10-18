@@ -1434,11 +1434,11 @@
 						var serviceUrl = mollify.service.url("public/"+shareId, true);
 						//TODO check if needs authentication etc
 						if (result.type == "download") {
-							df.resolve(new that.OpenShareDownloadView(shareId, serviceUrl));
+							df.resolve(new that.OpenShareDownloadView(shareId, serviceUrl, result.name));
 						} else if (result.type == "prepared_download") {
-							df.resolve(new that.OpenSharePreparedDownloadView(shareId, serviceUrl));						
+							df.resolve(new that.OpenSharePreparedDownloadView(shareId, serviceUrl, result.name));
 						} else {
-							df.resolve(new that.OpenShareUploadView(shareId, serviceUrl));
+							df.resolve(new that.OpenShareUploadView(shareId, serviceUrl, result.name));
 						}
 					}).fail(function() {
 						df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
@@ -1448,7 +1448,7 @@
 			});
 		};
 
-		this.OpenShareDownloadView = function(shareId, serviceUrl) {
+		this.OpenShareDownloadView = function(shareId, serviceUrl, shareName) {
 			var vt = this;
 			
 			this.init = function($c) {
@@ -1460,7 +1460,7 @@
 			};
 		};
 
-		this.OpenSharePreparedDownloadView = function(shareId, serviceUrl) {
+		this.OpenSharePreparedDownloadView = function(shareId, serviceUrl, shareName) {
 			var vt = this;
 			
 			this.init = function($c) {
@@ -1478,7 +1478,7 @@
 			};
 		};
 						
-		this.OpenShareUploadView = function(shareId, serviceUrl) {
+		this.OpenShareUploadView = function(shareId, serviceUrl, shareName) {
 			var vt = this;
 			
 			this.init = function($c) {
