@@ -40,14 +40,14 @@
 			$af = $am->compress($ic["items"]);
 			$key = uniqid('ic', true);
 			
-			Logging::logDebug("Storing prepared package ".$key.":".$file);
-			$this->env->session()->param("ic_".$key, $af->filename());
+			Logging::logDebug("Storing prepared package ".$key.":".$af);
+			$this->env->session()->param($key, $af);
 			
 			return array("key" => $key);
 		}
 		
 		public function processGetShare($id, $share, $params) {
-			if (!$params == NULL or !isset($params["key"])) throw new ServiceException("INVALID_REQUEST");
+			if (!$params == NULL or !isset($params["key"]) or substr($params["key"], 0, 2) != "ic") throw new ServiceException("INVALID_REQUEST");
 			
 			$ic = $this->dao()->getItemCollection($id);
 			if (!$ic) {
@@ -55,7 +55,7 @@
 				throw new ServiceException("INVALID_REQUEST");
 			}
 			
-			$file = $this->env->session()->param("ic_".$key);
+			$file = $this->env->session()->param($key);
 			if (!$file or !file_exists($file)) {
 				Logging::logDebug("Invalid share request, no prepared package found ".$key.":".$file);
 				throw new ServiceException("INVALID_REQUEST");
