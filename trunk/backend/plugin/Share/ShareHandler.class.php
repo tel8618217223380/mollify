@@ -145,7 +145,7 @@
 			return array("type" => $type, "name" => $name, "auth" => FALSE, "pw" => FALSE);			
 		}
 		
-		private function getCustomInfo($type, $id, $share) {
+		private function getCustomShareInfo($type, $id, $share) {
 			if(!array_key_exists($type, $this->customShareHandlers)) {
 				Logging::logError("No custom share handler found: ".$type);
 				return NULL;
