@@ -373,7 +373,7 @@
 
 		this._onShareNavItem = function(ic) {
 			if (!mollify.plugins.exists("plugin-share")) return;
-			mollify.plugins.get("plugin-share").openShares({ id: "ic_" + ic.name, "name": ic.name, shareTitle: mollify.ui.texts.get("pluginItemCollectionShareTitle") });
+			mollify.plugins.get("plugin-share").openShares({ id: "ic_" + ic.id, "name": ic.name, shareTitle: mollify.ui.texts.get("pluginItemCollectionShareTitle") });
 		};
 
 		this._getItemActions = function(ic) {

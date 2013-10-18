@@ -173,7 +173,7 @@
 			$this->processDownload($item);
 		}
 
-		public function processSharePrepareGet($id, $params) {
+		public function processSharePrepareGet($id) {
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
 			
@@ -183,7 +183,7 @@
 			$itemId = $share["item_id"];
 			if (strpos($itemId, "_") > 0) {
 				$parts = explode("_", $itemId);
-				return $this->processCustomPrepareGet($parts[0], $parts[1], $share, $params);
+				return $this->processCustomPrepareGet($parts[0], $parts[1], $share);
 			}
 			
 			//TODO zip download
@@ -205,7 +205,16 @@
 			$handler = $this->customShareHandlers[$type];
 			$handler->processGetShare($id, $share);
 		}
-		
+
+		private function processCustomPrepareGet($type, $id, $share) {
+			if(!array_key_exists($type, $this->customShareHandlers)) {
+				Logging::logError("No custom share handler found: ".$type);
+				die();
+			}
+			$handler = $this->customShareHandlers[$type];
+			return $handler->processPrepareGetShare($id, $share);
+		}
+				
 		/*private function showInvalidSharePage() {
 			include("pages/InvalidShare.php");
 			die();
