@@ -1426,7 +1426,7 @@
 					
 					var shareId = rqParts[1];
 					mollify.service.get("public/"+shareId+"/info/").done(function(result) {
-						if (!result || !result.type || (["download", "upload"].indexOf(result.type) < 0)) {
+						if (!result || !result.type || (["download", "upload", "prepared_download"].indexOf(result.type) < 0)) {
 							df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
 							return;
 						}
@@ -1435,6 +1435,8 @@
 						//TODO check if needs authentication etc
 						if (result.type == "download") {
 							df.resolve(new that.OpenShareDownloadView(shareId, serviceUrl));
+						} else if (result.type == "prepared_download") {
+							df.resolve(new that.OpenSharePreparedDownloadView(shareId, serviceUrl));						
 						} else {
 							df.resolve(new that.OpenShareUploadView(shareId, serviceUrl));
 						}
@@ -1451,11 +1453,31 @@
 			
 			this.init = function($c) {
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_download.html"), function() {
-					setTimeout(function() { window.location.href=serviceUrl; }, 1000);
+					$("#mollify-share-title").text(mollify.ui.texts.get("shareViewDownloadTitle", shareName));
+					
+					setTimeout(function() { mollify.ui.download(serviceUrl); }, 1000);
 				}, ['localize']);
 			};
 		};
-				
+
+		this.OpenSharePreparedDownloadView = function(shareId, serviceUrl) {
+			var vt = this;
+			
+			this.init = function($c) {
+				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_prepared_download.html"), function() {
+					$("#mollify-share-download-prepare").text(mollify.ui.texts.get("shareViewPreparedDownloadPreparingTitle", shareName));
+					$("#mollify-share-download").text(mollify.ui.texts.get("shareViewPreparedDownloadDownloadingTitle", shareName));
+					
+					mollify.service.get(serviceUrl+"/prepare", function(r) {
+						$("#mollify-share-download-prepare").hide();
+						$("#mollify-share-download").show();
+						alert(r);
+						mollify.ui.download(serviceUrl+"/get?key="+r.key);
+					})
+				}, ['localize']);
+			};
+		};
+						
 		this.OpenShareUploadView = function(shareId, serviceUrl) {
 			var vt = this;
 			
@@ -1463,6 +1485,7 @@
 				var uploadSpeedFormatter = new mollify.ui.formatters.Number(1, mollify.ui.texts.get('dataRateKbps'), mollify.ui.texts.get('decimalSeparator'));
 				
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_upload.html"), function() {
+					$("#mollify-share-title").text(mollify.ui.texts.get("shareViewUploadTitle", shareName));
 					vt._uploadProgress = new that.PublicUploaderProgress($("#mollify-share-public-upload-progress"));
 					
 					mollify.ui.uploader.initUploadWidget($("#mollify-share-public-uploader"), {
@@ -1478,7 +1501,7 @@
 								vt._uploadProgress.update(pr, speed);
 							},
 							finished: function() {
-								vt._uploadProgress.success(mollify.ui.texts.get('mainviewFileUploadComplete'));
+								setTimeout(function() { vt._uploadProgress.success(mollify.ui.texts.get('mainviewFileUploadComplete')); }, 1000);
 							},
 							failed: function() {
 								vt._uploadProgress.failure(mollify.ui.texts.get('mainviewFileUploadFailed'));

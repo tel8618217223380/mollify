@@ -142,7 +142,21 @@
 			
 			$this->doSendBinary($stream);
 		}
-		
+
+		public function sendFile($file, $name, $type) {			
+			$handle = @fopen($file, "rb");
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open file for reading: ".$file);
+			
+			if ($size) header("Content-Length: ".$size);
+			header("Content-Type: ".$this->getMime(trim(strtolower($type))));
+			
+			$this->doSendBinary($handle);
+			//$this->env->response()->download($name, $type, Util::isMobile(), $handle, filesize($file));
+			
+			fclose($handle);
+		}
+				
 		private function doSendBinary($stream) {
 			//if ($this->supportOutputBuffer) ob_start();
 			$count = 0;

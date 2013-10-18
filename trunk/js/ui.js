@@ -106,6 +106,9 @@
 			mollify.App.getElement().addClass("lang-"+mollify.ui.texts.locale);
 		}
 		
+		// add invisible download frame
+		$("body").append('<div style="width: 0px; height: 0px; overflow: hidden;"><iframe id="mollify-download-frame" src=""></iframe></div>');
+		
 		$(window).click(function(e) {
 			// hide popups when clicked outside
 			if (mollify.ui._activePopup) {

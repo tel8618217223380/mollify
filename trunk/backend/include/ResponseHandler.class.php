@@ -54,6 +54,11 @@
 			$this->notifyResponse();
 		}
 
+		public function sendFile($file, $name, $type) {
+			$this->output->sendFile($file, $name, $type);
+			$this->notifyResponse();
+		}
+
 		public function send($filename, $type, $stream, $size = NULL) {
 			$this->output->sendBinary($filename, $type, $stream, $size);
 			$this->notifyResponse();

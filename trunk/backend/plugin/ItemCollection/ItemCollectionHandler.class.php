@@ -21,7 +21,54 @@
 			$this->settings = $settings;
 		}
 		
-		public function processGetShare($id, $share) {
+		/* share handler */
+		
+		public function processPrepareGetShare($id, $share) {
+			$ic = $this->dao()->getItemCollection($id);
+			if (!$ic) {
+				Logging::logDebug("Invalid share request, no item collection found with id ".$id);
+				throw new ServiceException("INVALID_REQUEST");
+			}
+			foreach($ic["items"] as $item)
+				$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
+
+			//TODO archiver plugin
+			$ap = $this->env->plugins()->getPlugin("Archiver");
+			if (!$ap) throw new ServiceException("INVALID_REQUEST", "No archiver plugin");
+			$am = $ap->getArchiveManager();
+			
+			$af = $am->compress($ic["items"]);
+			$key = uniqid('ic', true);
+			
+			Logging::logDebug("Storing prepared package ".$key.":".$file);
+			$this->env->session()->param("ic_".$key, $af->filename());
+			
+			return array("key" => $key);
+		}
+		
+		public function processGetShare($id, $share, $params) {
+			if (!$params == NULL or !isset($params["key"])) throw new ServiceException("INVALID_REQUEST");
+			
+			$ic = $this->dao()->getItemCollection($id);
+			if (!$ic) {
+				Logging::logDebug("Invalid share request, no item collection found with id ".$id);
+				throw new ServiceException("INVALID_REQUEST");
+			}
+			
+			$file = $this->env->session()->param("ic_".$key);
+			if (!$file or !file_exists($file)) {
+				Logging::logDebug("Invalid share request, no prepared package found ".$key.":".$file);
+				throw new ServiceException("INVALID_REQUEST");
+			}
+			
+			$name = $ic["name"];
+			if (!$name or strlen($name) == 0) $name = "items";
+
+			$this->env->response()->sendFile($file, $name, "zip");
+			unlink($file);
+		}
+		
+		/*public function processGetShare($id, $share) {
 			$ic = $this->dao()->getItemCollection($id);
 			if (!$ic) {
 				Logging::logDebug("Ignoring share request, no item collection found with id ".$id);
@@ -71,6 +118,15 @@
 				Logging::logDebug("Ignoring share request, invalid share action ".$type);
 			}
 			die();
+		}*/
+		
+		public function getShareInfo($id, $share) {
+			$ic = $this->dao()->getItemCollection($id);
+			if (!$ic) {
+				Logging::logDebug("Invalid share request, no item collection found with id ".$id);
+				return NULL;
+			}
+			return array("name" => $ic["name"], "type" => "prepared_download");
 		}
 
 		public function getUserItemCollection($id) {
