@@ -118,42 +118,85 @@
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) return NULL;
 			
-			$this->env->filesystem()->allowFilesystems = TRUE;
+			return $this->doGetSharePublicInfo($share);
+		}
+		
+		private function doGetSharePublicInfo($share) {
 			$itemId = $share["item_id"];
 			$type = NULL;
+			$name = NULL;
+			
 			if (strpos($itemId, "_") > 0) {
 				$parts = explode("_", $itemId);
-				$type = $this->getCustomType($parts[0], $parts[1], $share);
+				$info = $this->getCustomShareInfo($parts[0], $parts[1], $share);
+				if ($info == NULL) return NULL;
+				
+				$type = $info["type"];
+				$name = $info["name"];
 			} else {
+				$this->env->filesystem()->allowFilesystems = TRUE;
 				$item = $this->env->filesystem()->item($itemId);
 				$type = $item->isFile() ? "download" : "upload";
+				$name = $item->name();
 			}
-			if ($type == NULL) return NULL;
 			
 			//TODO processed download
 			//TODO needs auth/password?
-			return array("type" => $type, "auth" => FALSE, "pw" => FALSE);
+			return array("type" => $type, "name" => $name, "auth" => FALSE, "pw" => FALSE);			
 		}
 		
-		public function processShareGet($id) {
+		private function getCustomInfo($type, $id, $share) {
+			if(!array_key_exists($type, $this->customShareHandlers)) {
+				Logging::logError("No custom share handler found: ".$type);
+				return NULL;
+			}
+			$handler = $this->customShareHandlers[$type];
+			return $handler->getShareInfo($id, $share);
+		}
+		
+		public function processShareGet($id, $params) {
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
-			if (!$share) $this->showInvalidSharePage();
-			
-			$this->env->filesystem()->allowFilesystems = TRUE;
+			if (!$share) throw new ServiceException("INVALID_REQUEST");
 
 			$itemId = $share["item_id"];
 			if (strpos($itemId, "_") > 0) {
 				$parts = explode("_", $itemId);
-				$this->processCustomGet($parts[0], $parts[1], $share);
+				$this->processCustomGet($parts[0], $parts[1], $share, $params);
 				return;
 			}
+			
+			$this->env->filesystem()->allowFilesystems = TRUE;
 			$item = $this->env->filesystem()->item($itemId);
 			if (!$item) throw new ServiceException("INVALID_REQUEST");
+			if (!$item->isFile()) throw new ServiceException("INVALID_REQUEST");
 
-			if ($item->isFile()) $this->processDownload($item);
-			else $this->processUploadPage($id, $item);
+			$this->processDownload($item);
 		}
-		
+
+		public function processSharePrepareGet($id, $params) {
+			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
+			if (!$share) throw new ServiceException("INVALID_REQUEST");
+			
+			$info = $this->doGetSharePublicInfo($share);
+			if ($info == NULL or $info["type"] != "prepared_download") throw new ServiceException("INVALID_REQUEST");
+
+			$itemId = $share["item_id"];
+			if (strpos($itemId, "_") > 0) {
+				$parts = explode("_", $itemId);
+				return $this->processCustomPrepareGet($parts[0], $parts[1], $share, $params);
+			}
+			
+			//TODO zip download
+			throw new ServiceException("INVALID_REQUEST");
+			
+			$this->env->filesystem()->allowFilesystems = TRUE;
+			$item = $this->env->filesystem()->item($itemId);
+			if (!$item) throw new ServiceException("INVALID_REQUEST");
+			if ($item->isFile()) throw new ServiceException("INVALID_REQUEST");
+
+			//prepare zip for folder
+		}
+				
 		private function processCustomGet($type, $id, $share) {
 			if(!array_key_exists($type, $this->customShareHandlers)) {
 				Logging::logError("No custom share handler found: ".$type);
@@ -162,20 +205,11 @@
 			$handler = $this->customShareHandlers[$type];
 			$handler->processGetShare($id, $share);
 		}
-
-		private function getCustomType($type, $id, $share) {
-			if(!array_key_exists($type, $this->customShareHandlers)) {
-				Logging::logError("No custom share handler found: ".$type);
-				return NULL;
-			}
-			$handler = $this->customShareHandlers[$type];
-			$handler->getShareType($id, $share);
-		}
 		
-		private function showInvalidSharePage() {
+		/*private function showInvalidSharePage() {
 			include("pages/InvalidShare.php");
 			die();
-		}
+		}*/
 		
 		private function processDownload($file) {
 			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
@@ -184,15 +218,15 @@
 			$this->env->filesystem()->download($file, $mobile);
 		}
 
-		private function processUploadPage($shareId, $folder) {
+		/*private function processUploadPage($shareId, $folder) {
 			$uploader = $this->getUploader();
 			$uploader->showPage($shareId, $folder);
 			die();
-		}
+		}*/
 		
 		public function processSharePost($id) {
 			$share = $this->dao()->getShare($id);
-			if (!$share) $this->showInvalidSharePage();
+			if (!$share) throw new ServiceException("INVALID_REQUEST");
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
 			$item = $this->env->filesystem()->item($share["item_id"]);
