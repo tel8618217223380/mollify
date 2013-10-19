@@ -953,7 +953,6 @@
 	
 	 class MultiFileEvent extends Event {
 		private $items;
-		private $info;
 
 		static function download($items) {
 			return new MultiFileEvent($items, FileEvent::DOWNLOAD);
@@ -962,7 +961,6 @@
 		function __construct($items, $type) {
 			parent::__construct(time(), FileSystemController::EVENT_TYPE_FILE, $type);
 			$this->items = $items;
-			$this->info = NULL;
 		}
 
 		public function items() {
