@@ -36,8 +36,11 @@
 			if (!$ap) throw new ServiceException("INVALID_REQUEST", "No archiver plugin");
 			$am = $ap->getArchiveManager();
 			
-			$af = $am->compress($ic["items"]);
+			$items = $ic["items"];
+			$af = $am->compress($items);
 			$key = str_replace(".", "", uniqid('', true));
+			
+			$this->env->events()->onEvent(MultiFileEvent::download($items));
 			
 			Logging::logDebug("Storing prepared package ".$key.":".$af);
 			$this->env->session()->param($key, $af);

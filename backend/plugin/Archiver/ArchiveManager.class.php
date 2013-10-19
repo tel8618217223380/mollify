@@ -33,13 +33,11 @@
 				
 				foreach($items as $item) {
 					$item->addTo($c);
-					$this->env->events()->onEvent(FileEvent::download($item));
 				}
 			} else {
 				$item = $items;
 				$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_READ, "add to package");
 				$item->addTo($c);
-				$this->env->events()->onEvent(FileEvent::download($item));
 			}
 			
 			$c->finish();

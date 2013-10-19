@@ -1474,6 +1474,7 @@
 						$("#mollify-share-download").show();
 						mollify.ui.download(mollify.helpers.urlWithParam(serviceUrl, "key="+r.key));
 					}).fail(function() {
+						this.handled = true;
 						$("#mollify-share-download-prepare").hide();
 						$("#mollify-share-download-error").show();
 					});
