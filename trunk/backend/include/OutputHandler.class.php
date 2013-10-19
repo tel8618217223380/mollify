@@ -118,22 +118,27 @@
 				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
 				header('Content-Length: '.($end - $start + 1));
 			} else {
-				if ($size) header("Content-Length: ".$size);
-				header("Cache-Control: public, must-revalidate");
-				header("Content-Type: application/octet-stream");
-				if (!$mobile) {
-					header("Content-Type: application/force-download");	// mobile browsers don't like these
-					header("Content-Type: application/download");
-				}
-				header("Content-Disposition: attachment; filename=\"".$filename."\";");
-				header("Content-Transfer-Encoding: binary");
-				header("Pragma: hack");
+				$this->sendDownloadHeaders($filename, $type, $mobile, $size);
 			}
 
 			Logging::logDebug("Sending $filename ($size)");			
 			if ($range) fseek($stream, $range[0]);
 
 			$this->doSendBinary($stream);
+		}
+		
+		private function sendDownloadHeaders($filename, $type, $mobile, $size) {
+			if ($size) header("Content-Length: ".$size);
+			header("Cache-Control: public, must-revalidate");
+			header("Content-Type: application/octet-stream");
+			if ($type) header("Content-Type: ".$this->getMime(trim(strtolower($type))));
+			if (!$mobile) {
+				header("Content-Type: application/force-download");	// mobile browsers don't like these
+				header("Content-Type: application/download");
+			}
+			header("Content-Disposition: attachment; filename=\"".$filename."\";");
+			header("Content-Transfer-Encoding: binary");
+			header("Pragma: hack");
 		}
 
 		public function sendBinary($filename, $type, $stream, $size = NULL) {
@@ -143,18 +148,13 @@
 			$this->doSendBinary($stream);
 		}
 
-		public function sendFile($file, $name, $type) {			
+		public function sendFile($file, $name, $type, $mobile, $size = NULL) {			
 			$handle = @fopen($file, "rb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for reading: ".$file);
 			
-			if ($size) header("Content-Length: ".$size);
-			header("Content-Type: ".$this->getMime(trim(strtolower($type))));
-			
+			$this->sendDownloadHeaders($name, $type, $mobile, $size);
 			$this->doSendBinary($handle);
-			//$this->env->response()->download($name, $type, Util::isMobile(), $handle, filesize($file));
-			
-			fclose($handle);
 		}
 				
 		private function doSendBinary($stream) {

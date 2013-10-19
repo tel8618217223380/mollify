@@ -32,13 +32,12 @@
 			foreach($ic["items"] as $item)
 				$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
 
-			//TODO archiver plugin
 			$ap = $this->env->plugins()->getPlugin("Archiver");
 			if (!$ap) throw new ServiceException("INVALID_REQUEST", "No archiver plugin");
 			$am = $ap->getArchiveManager();
 			
 			$af = $am->compress($ic["items"]);
-			$key = uniqid('ic', true);
+			$key = str_replace(".", "", uniqid('', true));
 			
 			Logging::logDebug("Storing prepared package ".$key.":".$af);
 			$this->env->session()->param($key, $af);
@@ -47,7 +46,7 @@
 		}
 		
 		public function processGetShare($id, $share, $params) {
-			if (!$params == NULL or !isset($params["key"]) or substr($params["key"], 0, 2) != "ic") throw new ServiceException("INVALID_REQUEST");
+			if ($params == NULL or !isset($params["key"])) throw new ServiceException("INVALID_REQUEST");
 			
 			$ic = $this->dao()->getItemCollection($id);
 			if (!$ic) {
@@ -55,71 +54,21 @@
 				throw new ServiceException("INVALID_REQUEST");
 			}
 			
-			$file = $this->env->session()->param($key);
+			$file = $this->env->session()->param($params["key"]);
 			if (!$file or !file_exists($file)) {
-				Logging::logDebug("Invalid share request, no prepared package found ".$key.":".$file);
+				Logging::logDebug("Invalid share request, no prepared package found ".$params["key"].":".$file);
 				throw new ServiceException("INVALID_REQUEST");
 			}
 			
 			$name = $ic["name"];
 			if (!$name or strlen($name) == 0) $name = "items";
+			$type = "zip";	//TODO get from archiver
 
-			$this->env->response()->sendFile($file, $name, "zip");
+			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
+			$this->env->response()->sendFile($file, $name.".".$type, $type, $mobile, filesize($file));
 			unlink($file);
 		}
-		
-		/*public function processGetShare($id, $share) {
-			$ic = $this->dao()->getItemCollection($id);
-			if (!$ic) {
-				Logging::logDebug("Ignoring share request, no item collection found with id ".$id);
-				die();
-			}
-			if (count($ic["items"]) == 0) {
-				$resourcesUrl = $this->env->getCommonResourcesUrl();
-				include("pages/empty.php");
-				die();
-			}
-			if (!$this->env->request()->hasParam("ac")) {
-				$resourcesUrl = $this->env->getCommonResourcesUrl();
-				include("pages/prepare.php");
-				die();
-			}
-			$type = $this->env->request()->param("ac");
-			if (strcmp("prepare", $type) == 0) {
-				foreach($ic["items"] as $item)
-					$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
 				
-				$zip = $this->env->filesystem()->createZip($ic["items"], "ic_".uniqid());
-				$this->env->response()->success(array("id" => $zip->name()));
-			} else if (strcmp("download", $type) == 0) {
-				if (!$this->env->request()->hasParam("id")) {
-					Logging::logDebug("Ignoring share request, no zip id provider");
-					die();
-				}
-				
-				//$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
-				$id = urldecode($this->env->request()->param("id"));
-				$file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$id.'zip';
-				if (!file_exists($file)) {
-					Logging::logDebug("Zip file missing ".$file);
-					die();
-				}
-				$handle = @fopen($file, "rb");
-				if (!$handle)
-					throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$file);
-				
-				$name = $ic["name"];
-				if (!$name or strlen($name) == 0) $name = "items";
-				
-				$this->env->response()->download($name.".zip", "zip", Util::isMobile(), $handle, filesize($file));
-				fclose($handle);
-				unlink($file);
-			} else {
-				Logging::logDebug("Ignoring share request, invalid share action ".$type);
-			}
-			die();
-		}*/
-		
 		public function getShareInfo($id, $share) {
 			$ic = $this->dao()->getItemCollection($id);
 			if (!$ic) {
@@ -128,6 +77,8 @@
 			}
 			return array("name" => $ic["name"], "type" => "prepared_download");
 		}
+		
+		/* -> share handler */
 
 		public function getUserItemCollection($id) {
 			return $this->dao()->getItemCollection($id, $this->env->session()->userId());

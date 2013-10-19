@@ -1467,13 +1467,16 @@
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_prepared_download.html"), function() {
 					$("#mollify-share-download-prepare").text(mollify.ui.texts.get("shareViewPreparedDownloadPreparingTitle", shareName));
 					$("#mollify-share-download").text(mollify.ui.texts.get("shareViewPreparedDownloadDownloadingTitle", shareName));
+					$("#mollify-share-download-error").text(mollify.ui.texts.get("shareViewPreparedDownloadErrorTitle", shareName));
 					
-					mollify.service.get(serviceUrl+"/prepare", function(r) {
+					mollify.service.get(serviceUrl+"/prepare").done(function(r) {
 						$("#mollify-share-download-prepare").hide();
 						$("#mollify-share-download").show();
-						alert(r);
-						mollify.ui.download(serviceUrl+"/get?key="+r.key);
-					})
+						mollify.ui.download(mollify.helpers.urlWithParam(serviceUrl, "key="+r.key));
+					}).fail(function() {
+						$("#mollify-share-download-prepare").hide();
+						$("#mollify-share-download-error").show();
+					});
 				}, ['localize']);
 			};
 		};
