@@ -66,7 +66,12 @@
 		
 		private function addCollectionItemRows($db, $cid, $items) {
 			$itemIds = $db->query("select item_id from ".$db->table("itemcollection_item")." where collection_id = ".$db->string($cid, TRUE))->values("item_id");
-			$ind = count($itemIds);
+			if (count($itemIds) > 0)
+				$maxInd = $db->query("select max(item_index) as max_ind from ".$db->table("itemcollection_item")." where collection_id = ".$db->string($cid, TRUE))->value();
+			else
+				$maxInd = -1;
+
+			$ind = $maxInd + 1;
 		
 			foreach($items as $i) {
 				if (in_array($i["id"], $itemIds)) continue;

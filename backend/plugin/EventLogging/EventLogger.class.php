@@ -20,6 +20,8 @@
 			$time = date('YmdHis', $e->time());
 			
 			$item = $e->itemToStr();
+			if (strlen($item) > 512) $item = substr($item, 0, 512);	//TODO
+			
 			$details = $e->details();
 			$type = $e->typeId();
 			$username = $this->getUser($e);
