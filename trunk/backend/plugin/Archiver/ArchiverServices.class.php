@@ -107,6 +107,12 @@
 			$a = $this->archiveManager()->compress($items);
 			$id = uniqid();
 			$this->env->session()->param("archive_".$id, $a);
+			
+			if (is_array($items)) {
+				$this->env->events()->onEvent(MultiFileEvent::download($items));
+			} else {
+				$this->env->events()->onEvent(FileEvent::download($items));
+			}
 				
 			$this->response()->success(array("id" => $id));
 		}
@@ -139,30 +145,6 @@
 			$this->archiveManager()->extract($archive->internalPath(), $target);
 			$this->response()->success(array());
 		}
-
-		/*private function onCompress($itemId) {
-			$data = $this->request->data;
-			$overwrite = isset($data['overwrite']) ? $data['overwrite'] : FALSE;
-
-			$folder = $this->item($itemId);
-			if ($folder->isFile()) throw $this->invalidRequestException();
-			$this->env->filesystem()->assertRights($folder, Authentication::RIGHTS_READ, "compress");
-			
-			$parent = $folder->parent();
-			$this->env->filesystem()->assertRights($parent, Authentication::RIGHTS_WRITE, "compress");
-			
-			$name = str_replace(".", "_", basename($folder->internalPath()));
-			$target = $parent->internalPath().DIRECTORY_SEPARATOR.$name.".zip";
-			
-			if (file_exists($target)) {
-				if (!$overwrite)
-					throw new ServiceException("FILE_ALREADY_EXISTS", $target);
-				$parent->fileWithName($name)->delete();
-			}
-			
-			$this->archiveManager()->compress($folder, $target);
-			$this->response()->success(array());
-		}*/
 		
 		private function archiveManager() {
 			return $this->env->plugins()->getPlugin("Archiver")->getArchiveManager();
