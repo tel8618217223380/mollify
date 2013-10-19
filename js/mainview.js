@@ -626,12 +626,16 @@
 				if (e.which == 13) onSearch();
 			});
 			$("#mollify-fileview-search > button").click(onSearch);
-		}
+		};
 				
 		this.getDataRequest = function() {
 			var rq = that._currentFolder && !that._currentFolder.type ? {'core-parent-description': {}} : {};
 			return $.extend(rq, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest() : {});
-		}
+		};
+		
+		this.getCurrentFolder = function() {
+			return that._currentFolder;
+		};
 		
 		this.onEvent = function(e) {
 			if (!e.type.startsWith('filesystem/')) return;
