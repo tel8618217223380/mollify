@@ -346,6 +346,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 
 #mollify-mainview-navlist-parent {
 	margin: 8px 0 0 8px;
+	z-index: 1;
 }
 
 .navlist-sep {
@@ -1134,7 +1135,7 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	visibility: hidden;
 }
 
-.mollify-mainview-navbar-item:hover .mollify-mainview-navbar-dropdown {
+.mollify-mainview-navbar-item:hover .mollify-mainview-navbar-dropdown, .mollify-mainview-navbar-dropdown.open {
 	visibility: visible;
 }
 
