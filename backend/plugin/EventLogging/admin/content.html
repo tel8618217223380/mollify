@@ -45,3 +45,31 @@
 		</div>
 	</div>
 </script>
+<script id="mollify-tmpl-config-eventlogging-eventdetails" type="text/x-jquery-tmpl">
+	<div id="mollify-config-eventlogging-eventdetails-content">
+		<legend>${event.type}</legend>
+		
+		<dl class="dl-horizontal">
+			<dt class="localized" text-key="pluginEventLoggingAdminDetailsTime"></dt>
+			<dd>${$item.formatTimestamp($item.data.event.time)}</dd>
+			
+			<dt class="localized" text-key="pluginEventLoggingAdminDetailsUser"></dt>
+			<dd>${event.user}</dd>
+
+			<dt class="localized" text-key="pluginEventLoggingAdminDetailsIP"></dt>
+			<dd>${event.ip}</dd>
+
+			{{if event.item}}
+			<dt class="localized" text-key="pluginEventLoggingAdminDetailsItem"></dt>
+			<dd>{{html $item.formatItem($item.data.event)}}</dd>
+			{{/if}}
+			
+			{{if details}}
+			{{each details}}
+			<dt>${title}</dt>
+			<dd>${value}</dd>
+			{{/each}}
+			{{/if}}
+		</dl>
+	</div>
+</script>

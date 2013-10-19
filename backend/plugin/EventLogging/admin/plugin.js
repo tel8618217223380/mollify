@@ -30,6 +30,7 @@
 
 			this.onActivate = function($c) {
 				$c.addClass("loading");
+				that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 				
 				mollify.service.get("configuration/users/").done(function(users) {
 					$c.removeClass("loading");
@@ -80,7 +81,15 @@
 								{ id: "user", title: mollify.ui.texts.get('pluginEventLoggingUserTitle'), sortable: true },
 								{ id: "time", title: mollify.ui.texts.get('pluginEventLoggingTimeTitle'), formatter: that._timestampFormatter, sortable: true },
 								{ id: "ip", title: mollify.ui.texts.get('pluginEventLoggingIPTitle'), sortable: true }
-							]
+							],
+							onHilight: function(e) {
+								if (e) {
+									that._showEventDetails(e, that._details.getContentElement().empty());
+									that._details.show(false, 400);
+								} else {
+									that._details.hide();
+								}
+							}
 						}
 					});
 					var $options = $c.find(".mollify-configlistview-options");
@@ -116,6 +125,22 @@
 					});
 				});
 			};
+			
+			this._showEventDetails = function(e, $e) {
+				var d = false;
+				if (e.details) {
+					d = [];
+					$.each(e.details.split(';'), function(i, dr) {
+						var p = dr.split('=');
+						d.push({title: p[0], value: p[1]});
+					});
+				}
+				mollify.dom.template("mollify-tmpl-config-eventlogging-eventdetails", {event: e, details: d}, {
+					formatTimestamp: that._timestampFormatter.format,
+					formatItem: function(e) { return e.item.replace(/,/g, "<br/>"); }
+				}).appendTo($e);
+				mollify.ui.process($e, ["localize"]);
+			}
 		}
 	}
 
