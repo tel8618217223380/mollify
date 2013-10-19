@@ -9,5 +9,10 @@ pluginEventLoggingAdminOptionEventType: "Event type:",
 pluginEventLoggingAdminOptionUser: "User:",
 pluginEventLoggingAdminOptionTime: "Time:",
 pluginEventLoggingAdminAny: "Any",
-pluginEventLoggingAdminEventTypeCustom: "Custom"
+pluginEventLoggingAdminEventTypeCustom: "Custom",
+pluginEventLoggingAdminDetailsTime: "Time",
+pluginEventLoggingAdminDetailsUser: "User",
+pluginEventLoggingAdminDetailsIP: "IP",
+pluginEventLoggingAdminDetailsItem: "Item",
+pluginEventLoggingAdminDetailsDetails: "Details"
 })})();

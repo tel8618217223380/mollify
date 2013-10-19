@@ -976,7 +976,7 @@
 			foreach($this->items as $i) {
 				$f .= $i->internalPath().",";
 			}
-			return $f;
+			return rtrim($f, ",");
 		}
 				
 		public function details() {
@@ -984,7 +984,7 @@
 			foreach($this->items as $i) {
 				$f .= $i->id().",";
 			}
-			return 'item id='.$f;
+			return 'item id='.rtrim($f, ",");
 		}
 		
 		public function values($formatter) {
