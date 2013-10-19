@@ -1153,6 +1153,7 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+	z-index: 20;
 }
 
 .mollify-slidepanel-container.relative {
@@ -1259,6 +1260,8 @@ a.mollify-tableaction {
 	width: 45%;
 	overflow: hidden;
 	min-width: 350px;
+	min-height: 200px;
+	margin-left: 10px;
 }
 
 .mollify-notificator-notificationdetails-message-title, .mollify-notificator-notificationdetails-message-title > *, .mollify-notificator-notificationdetails-messagetitle, .mollify-notificator-notificationdetails-message {

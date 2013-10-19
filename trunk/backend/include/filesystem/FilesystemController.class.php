@@ -950,4 +950,64 @@
 			return "FILESYSTEMEVENT ".get_class($this);
 		}
 	}
+	
+	 class MultiFileEvent extends Event {
+		private $items;
+		private $info;
+
+		static function download($items) {
+			return new MultiFileEvent($item, FileEvent::DOWNLOAD);
+		}
+		
+		function __construct($items, $type, $info = NULL) {
+			parent::__construct(time(), FileSystemController::EVENT_TYPE_FILE, $type);
+			$this->items = $items;
+			$this->info = $info;
+		}
+
+		public function items() {
+			return $this->items;
+		}
+
+		public function info() {
+			return $this->info;
+		}
+		
+		public function itemToStr() {
+			return ""; //$this->item->internalPath();
+		}
+				
+		public function details() {
+			/*$f = $this->item->id()." (".$this->item->filesystem()->name().")";
+			
+			if ($this->subType() === self::RENAME or $this->subType() === self::COPY or $this->subType() === self::MOVE)
+				return 'item id='.$f.';to='.$this->info->id()." (".$this->info->filesystem()->name().")";
+			return 'item id='.$f;*/
+			return "";
+		}
+		
+		public function values($formatter) {
+			$values = parent::values($formatter);
+			$values["item_id"] = $this->item->id();
+			$values["item_name"] = $this->item->name();
+			$values["item_path"] = $this->item->path();
+			$values["item_internal_path"] = $this->item->internalPath();
+			$values["root_name"] = $this->item->root()->name();
+
+			if ($this->subType() === self::RENAME or $this->subType() === self::COPY or $this->subType() === self::MOVE) {
+				$values["to_item_id"] = $this->info->id();
+				$values["to_item_name"] = $this->info->name();
+				$values["to_item_path"] = $this->info->path();
+				$values["to_item_internal_path"] = $this->info->internalPath();
+				$values["to_root_name"] = $this->info->root()->name();
+			}
+
+			return $values;
+		}
+		
+		public function __toString() {
+			return "FILESYSTEMEVENT ".get_class($this);
+		}
+	}
+
 ?>
