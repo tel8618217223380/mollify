@@ -324,7 +324,7 @@
 			that._collectionsNav.setActive(ic);
 		};
 		
-		this.editCollection = function(ic) {
+		this.editCollection = function(ic, done) {
 			mollify.service.get("itemcollections/"+ic.id).done(function(loaded){
 				mollify.ui.dialogs.tableView({
 					title: mollify.ui.texts.get('pluginItemCollectionsEditDialogTitle', ic.name),
@@ -332,6 +332,7 @@
 					onButton: function(btn, h) {
 						h.close();
 						if (btn.id == 'remove') that.removeCollection(ic);
+						done(btn.id == 'remove');
 					},
 					table: {
 						key: "item_id",
@@ -378,7 +379,15 @@
 
 		this._getItemActions = function(ic) {
 			var items = [
-				{"title-key":"pluginItemCollectionsNavEdit", callback: function() { that.editCollection(ic); }},
+				{"title-key":"pluginItemCollectionsNavEdit", callback: function() {
+					that.editCollection(ic, function(removed) {
+						var f = that._fileView.getCurrentFolder();
+						if (f.type != 'ic' || f.ic.id != ic.id) return;
+
+						if (removed) that._fileView.openInitialFolder();
+						else that._fileView.refresh();
+					});
+				 }},
 				{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that._fileView.openInitialFolder(); that.removeCollection(ic); }}
 			];
 			if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(ic); }});
@@ -537,9 +546,9 @@
 		};
 		
 		this._onExtract = function(a, folder) {
-			return mollify.service.post("archiver/extract", {item : a, folder: folder}).done(function(r) {
-				mollify.events.dispatch('archiver/extract', { item: a, folder: folder });
-				mollify.events.dispatch('filesystem/update', { folder: folder });
+			return mollify.service.post("archiver/extract", { item : a, folder : folder }).done(function(r) {
+				mollify.events.dispatch('archiver/extract', { item : a, folder : folder });
+				mollify.events.dispatch('filesystem/update', { folder : folder });
 			});
 		};
 		
@@ -557,7 +566,7 @@
 				var single = false;
 		
 				if (!window.isArray(i)) single = i;
-				else if (i.length === 0) single = i[0];
+				else if (i.length == 1) single = i[0];
 				
 				if (single)
 					return mollify.service.url("archiver/download?item="+single.id, true);
