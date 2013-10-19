@@ -54,8 +54,8 @@
 			$this->notifyResponse();
 		}
 
-		public function sendFile($file, $name, $type) {
-			$this->output->sendFile($file, $name, $type);
+		public function sendFile($file, $name, $type, $mobile, $size = NULL) {
+			$this->output->sendFile($file, $name, $type, $mobile, $size);
 			$this->notifyResponse();
 		}
 

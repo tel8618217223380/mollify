@@ -197,13 +197,13 @@
 			//prepare zip for folder
 		}
 				
-		private function processCustomGet($type, $id, $share) {
+		private function processCustomGet($type, $id, $share, $params) {
 			if(!array_key_exists($type, $this->customShareHandlers)) {
 				Logging::logError("No custom share handler found: ".$type);
 				die();
 			}
 			$handler = $this->customShareHandlers[$type];
-			$handler->processGetShare($id, $share);
+			$handler->processGetShare($id, $share, $params);
 		}
 
 		private function processCustomPrepareGet($type, $id, $share) {
@@ -214,11 +214,6 @@
 			$handler = $this->customShareHandlers[$type];
 			return $handler->processPrepareGetShare($id, $share);
 		}
-				
-		/*private function showInvalidSharePage() {
-			include("pages/InvalidShare.php");
-			die();
-		}*/
 		
 		private function processDownload($file) {
 			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
@@ -226,12 +221,6 @@
 			$this->env->filesystem()->temporaryItemPermission($file, Authentication::PERMISSION_VALUE_READONLY);
 			$this->env->filesystem()->download($file, $mobile);
 		}
-
-		/*private function processUploadPage($shareId, $folder) {
-			$uploader = $this->getUploader();
-			$uploader->showPage($shareId, $folder);
-			die();
-		}*/
 		
 		public function processSharePost($id) {
 			$share = $this->dao()->getShare($id);
