@@ -1000,6 +1000,9 @@
 				$values["item_name"] .= $i->name().",";
 				$values["item_path"] .= $i->path().",";
 			}
+			$values["item_id"] = rtrim($values["item_id"], ",");
+			$values["item_name"] = rtrim($values["item_name"], ",");
+			$values["item_path"] = rtrim($values["item_path"], ",");
 
 			return $values;
 		}
