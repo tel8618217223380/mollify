@@ -135,21 +135,23 @@
 			
 			$oldRestrictionType = $old["restriction"];
 			$restrictionType = NULL;
+			$restrictionPwValue = FALSE;
 			if (is_array($restriction) and isset($restriction["type"])) {
 				if ($restriction["type"] == "private") $restrictionType = "private";
 				else if ($restriction["type"] == "pw") {
 					if ($oldRestrictionType != "pw" and !isset($restriction["value"]) or strlen($restriction["value"]) == 0)
 						throw new ServiceException("INVALID_REQUEST", "pw missing");
+					$restrictionPwValue = (isset($restriction["value"]) and strlen($restriction["value"]) > 0);
 					$restrictionType = "pw";
 				}
 			}
 
 			$db = $this->env->db();
 			$db->startTransaction();			
-			if ($restrictionType != "pw") $db->update("DELETE FROM ".$db->table("share_auth")." WHERE id = ".$db->string($id, TRUE));
+			if ($restrictionType != "pw" or $restrictionPwValue) $db->update("DELETE FROM ".$db->table("share_auth")." WHERE id = ".$db->string($id, TRUE));
 
 			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s, expiration = %s, restriction = %s WHERE id=%s", $db->string($name, TRUE), ($active ? "1" : "0"), $db->string($expirationTime), $db->string($restrictionType, TRUE), $db->string($id, TRUE)));
-			if ($restrictionType == "pw" and isset($restriction["value"]) and strlen($restriction["value"]) > 0) $this->createAuth($db, $id, $restriction["value"]);
+			if ($restrictionPwValue)  $this->createAuth($db, $id, $restriction["value"]);
 			$db->commit();
 		}
 
