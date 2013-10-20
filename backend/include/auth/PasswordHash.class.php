@@ -28,7 +28,8 @@
 		}
 		
 		public function isEqual($pw, $hash, $salt) {
-			return $this->hasher->CheckPassword($this->serverSalt.$pw.$salt, $hash);
+			$ret = $this->hasher->CheckPassword($this->serverSalt.$pw.$salt, $hash);
+			return ($ret === TRUE or $ret == 1);
 		}
 	}
 ?>

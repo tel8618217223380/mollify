@@ -163,13 +163,13 @@
 				throw new ServiceException("UNAUTHORIZED");
 			}
 			if ($share["restriction"] == "pw") {
-				$pw = $this->request()->header("MOLLIFY_SHARE_ACCESS_KEY");
-				if (!pw or strlen($pw) == 0) throw new ServiceException("REQUEST_FAILED", "No access key in request");
+				$pw = $this->env->request()->param("ak");
+				if (!$pw or strlen($pw) == 0) throw new ServiceException("REQUEST_FAILED", "No access key in request");
 				
 				$hash = $this->dao()->getShareHash($share["id"]);
 				if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");				
 				
-				if (!$this->env->passwordHash()->isEqual(base64_decode($pw), $hash["hash"], $hash["salt"]));
+				if ($this->env->passwordHash()->isEqual(base64_decode($pw), $hash["hash"], $hash["salt"])) return;
 				throw new ServiceException("UNAUTHORIZED");
 			}
 			

@@ -245,6 +245,7 @@ shareAccessPasswordViewTitle: "Protected content",
 shareAccessPasswordViewMessage: "The requested content is password protected, enter the password to access.",
 shareAccessPasswordTitle: "Password",
 shareAccessPasswordButtonTitle: "OK",
+shareAccessPasswordFailed: "Password was not correct",
 
 pluginItemCollectionsNavTitle: "Stored",
 pluginItemCollectionStore: "Store...",

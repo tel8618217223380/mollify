@@ -952,8 +952,10 @@ var mollifyDefaults = {
 			return params;	
 		},
 		
-		urlWithParam : function(url, param) {
-			return url + (window.strpos(url, "?") ? "&" : "?") + param;
+		urlWithParam : function(url, param, v) {
+			var p = param;
+			if (v) p = param + "=" + encodeURIComponent(v);
+			return url + (window.strpos(url, "?") ? "&" : "?") + p;
 		},
 		
 		noncachedUrl : function(url) {
