@@ -128,17 +128,19 @@
 		}
 		
 		private function sendDownloadHeaders($filename, $type, $mobile, $size) {
-			if ($size) header("Content-Length: ".$size);
-			header("Cache-Control: public, must-revalidate");
-			header("Content-Type: application/octet-stream");
+			header("Pragma: public");
+			header("Expires: 0");
+			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			header("Cache-Control: private",false);
+			header("Content-Type: application/x-unknown"); //octet-stream");
+			header("Content-Transfer-Encoding: binary");
 			if ($type) header("Content-Type: ".$this->getMime(trim(strtolower($type))));
-			if (!$mobile) {
+			/*if (!$mobile) {
 				header("Content-Type: application/force-download");	// mobile browsers don't like these
 				header("Content-Type: application/download");
-			}
+			}*/
 			header("Content-Disposition: attachment; filename=\"".$filename."\";");
-			header("Content-Transfer-Encoding: binary");
-			header("Pragma: hack");
+			if ($size) header("Content-Length: ".$size);
 		}
 
 		public function sendBinary($filename, $type, $stream, $size = NULL) {
