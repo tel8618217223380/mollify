@@ -123,6 +123,11 @@
 			return $this->data[$key];
 		}
 		
+		public function header($key) {
+			$headerKey = 'HTTP_'.$key;			
+			return $_SERVER[$headerKey];
+		}
+		
 		public function log() {
 			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", ip=".$this->ip.", params=".Util::array2str($this->params).", data=".Util::toString($this->data));
 		}
