@@ -1450,9 +1450,7 @@
 							return;
 						}
 						
-						var view = that._getShareView(shareId, result);
-						if (!view) df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
-						else df.resolve(view);
+						df.resolve(that._getShareView(shareId, result));
 					}).fail(function() {
 						df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
 					});
@@ -1469,7 +1467,7 @@
 					if (path) url = url + path;
 					if (key) url = mollify.helpers.urlWithParam(url, "ak", key);
 					if (param) url = mollify.helpers.urlWithParam(url, param);
-					return url;
+					return mollify.helpers.noncachedUrl(url);
 				}
 			}
 			
@@ -1480,7 +1478,7 @@
 			} else {
 				return new that.ShareUploadView(id, urlProvider, info.name);
 			}
-			return false;
+			return new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest'));
 		};
 
 		this.ShareAccessPasswordView = function(shareId, info) {
