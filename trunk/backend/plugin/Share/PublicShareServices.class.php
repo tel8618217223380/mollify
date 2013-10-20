@@ -35,6 +35,11 @@
 		}
 				
 		public function processPost() {
+			if (count($this->path) == 2 and $this->path[1] == "key") {
+				$this->response()->success(array("result" => $this->handler()->checkPublicShareAccessKey($this->path[0], $this->request->data("key"))));
+				return;
+			}
+
 			if (count($this->path) != 1) throw $this->invalidRequestException();
 			$this->handler()->processSharePost($this->path[0]);
 			$this->response()->html(json_encode(array("result" => TRUE)));

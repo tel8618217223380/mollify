@@ -53,7 +53,7 @@
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
 			$this->resources = new ResourceLoader($this);
-			$this->passwordHash = new Mollify_PasswordHash("TODO_MOLLIFY_SERVER_SALT");
+			$this->passwordHash = new Mollify_PasswordHash($this->settings);
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}

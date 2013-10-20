@@ -144,6 +144,17 @@
 			return array("type" => $type, "name" => $name, "restriction" => $share["restriction"]);
 		}
 		
+		public function checkPublicShareAccessKey($id, $key) {
+			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
+			if (!$share) return FALSE;
+			if ($share["restriction"] != "pw") return FALSE;
+			
+			$hash = $this->dao()->getShareHash($id);
+			if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");				
+
+			return $this->env->passwordHash()->isEqual(base64_decode($key), $hash["hash"], $hash["salt"]);
+		}
+		
 		private function assertAccess($share) {
 			if ($share["restriction"] == NULL) return;
 			
@@ -152,14 +163,13 @@
 				throw new ServiceException("UNAUTHORIZED");
 			}
 			if ($share["restriction"] == "pw") {
-				$pw = $this->request()->header("MOLLIFY_ACCESS_KEY");
+				$pw = $this->request()->header("MOLLIFY_SHARE_ACCESS_KEY");
 				if (!pw or strlen($pw) == 0) throw new ServiceException("REQUEST_FAILED", "No access key in request");
 				
 				$hash = $this->dao()->getShareHash($share["id"]);
-				if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");
+				if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");				
 				
-				
-				if (!$this->env->passwordHash()->isEqual($pw, $hash["hash"], $hash["salt"]));
+				if (!$this->env->passwordHash()->isEqual(base64_decode($pw), $hash["hash"], $hash["salt"]));
 				throw new ServiceException("UNAUTHORIZED");
 			}
 			

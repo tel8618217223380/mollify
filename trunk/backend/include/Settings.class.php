@@ -13,6 +13,7 @@
 		private $settings = array();
 		
 		private static $VALUES = array(
+			"server_hash_salt" => "MOLLIFY_SERVER_SALT",
 			"db" => FALSE,
 			"plugins" => FALSE,
 			"email_login" => FALSE,
