@@ -387,7 +387,7 @@
 						if (removed) that._fileView.openInitialFolder();
 						else that._fileView.refresh();
 					});
-				 }},
+				}},
 				{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that._fileView.openInitialFolder(); that.removeCollection(ic); }}
 			];
 			if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(ic); }});
