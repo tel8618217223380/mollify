@@ -1448,16 +1448,17 @@
 						} else if (result.restriction == "pw") {
 							//is pw given & confirmed?
 							// -> show pw screen
-							df.resolve(new mollify.ui.FullErrorView("pw"));
+							df.resolve(new that.ShareAccessPasswordView(shareId, result.name));
+							return;
 						}
 						
 						var serviceUrl = mollify.service.url("public/"+shareId, true);
 						if (result.type == "download") {
-							df.resolve(new that.OpenShareDownloadView(shareId, serviceUrl, result.name));
+							df.resolve(new that.ShareDownloadView(shareId, serviceUrl, result.name));
 						} else if (result.type == "prepared_download") {
-							df.resolve(new that.OpenSharePreparedDownloadView(shareId, serviceUrl, result.name));
+							df.resolve(new that.SharePreparedDownloadView(shareId, serviceUrl, result.name));
 						} else {
-							df.resolve(new that.OpenShareUploadView(shareId, serviceUrl, result.name));
+							df.resolve(new that.ShareUploadView(shareId, serviceUrl, result.name));
 						}
 					}).fail(function() {
 						df.resolve(new mollify.ui.FullErrorView(mollify.ui.texts.get('shareViewInvalidRequest')));
@@ -1467,7 +1468,29 @@
 			});
 		};
 
-		this.OpenShareDownloadView = function(shareId, serviceUrl, shareName) {
+		this.ShareAccessPasswordView = function(shareId, serviceUrl, shareName) {
+			var vt = this;
+			
+			this.init = function($c) {
+				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_access_password.html"), function() {					
+					$("#mollify-share-access-button").click(function() {
+						var pw = $("#mollify-share-access-password").val();
+						if (!pw || pw.length === 0) return;
+						var key = window.Base64.encode(pw);
+						
+						mollify.service.post("public/"+shareId+"/key/", { key: key }).done(function(r) {
+							if (!r.result) alert("fail");
+							else alert("success");							
+						}).fail(function() {
+							this.handled = true;
+							alert("fail");
+						});
+					});
+				}, ['localize']);
+			};
+		};
+		
+		this.ShareDownloadView = function(shareId, serviceUrl, shareName) {
 			var vt = this;
 			
 			this.init = function($c) {
@@ -1479,7 +1502,7 @@
 			};
 		};
 
-		this.OpenSharePreparedDownloadView = function(shareId, serviceUrl, shareName) {
+		this.SharePreparedDownloadView = function(shareId, serviceUrl, shareName) {
 			var vt = this;
 			
 			this.init = function($c) {
@@ -1501,7 +1524,7 @@
 			};
 		};
 						
-		this.OpenShareUploadView = function(shareId, serviceUrl, shareName) {
+		this.ShareUploadView = function(shareId, serviceUrl, shareName) {
 			var vt = this;
 			
 			this.init = function($c) {

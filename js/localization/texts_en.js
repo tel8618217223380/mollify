@@ -241,6 +241,10 @@ shareViewUploadMessage: "Click the button to select uploaded files, or drag&drop
 shareViewPreparedDownloadPreparingTitle: "Preparing to download \"{0}\", please wait...",
 shareViewPreparedDownloadDownloadingTitle: "Downloading \"{0}\"...",
 shareViewPreparedDownloadErrorTitle: "Download failed",
+shareAccessPasswordViewTitle: "Protected content",
+shareAccessPasswordViewMessage: "The requested content is password protected, enter the password to access.",
+shareAccessPasswordTitle: "Password",
+shareAccessPasswordButtonTitle: "OK",
 
 pluginItemCollectionsNavTitle: "Stored",
 pluginItemCollectionStore: "Store...",
