@@ -655,7 +655,7 @@ var mollifyDefaults = {
 				if (p.resources.css) mollify.dom.importCss(mollify.plugins.getStyleUrl(pid));
 			}
 		}
-		if (l.length == 0) {
+		if (l.length === 0) {
 			return df.resolve().promise();
 		}
 		$.when.apply($, l).done(df.resolve).fail(df.reject);
