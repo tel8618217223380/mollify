@@ -652,7 +652,7 @@
 					popLeft = maxRight - popW - 10;
 				$pop.css("left", popLeft + "px");
 				
-				var arrowPos = ($e.offset().left - $cnt.offset().left) + ($e.outerWidth() / 2);
+				var arrowPos = ($e.offset().left - $cnt.offset().left) + ($e.outerWidth() / 2) - 10;
 				arrowPos = Math.max(0, (arrowPos - popLeft));
 				$pop.find(".arrow").css("left", arrowPos + "px");
 			};
@@ -672,7 +672,8 @@
 				},
 				content: function(c) {
 					var $c = $tip.find('.popover-content');
-					$c.html(bubbleHtml(c));
+					if (typeof(c) === 'string') $c.html(c);
+					else $c.empty().append(c);
 					pos();
 				},
 				position: pos
@@ -1844,7 +1845,8 @@
 		window.ZeroClipboard.setDefaults({
 			moviePath: 'js/lib/ZeroClipboard.swf',
 			hoverClass: 'hover',
-			activeClass: 'active'
+			activeClass: 'active',
+			forceHandCursor: true
 		});
 		
 		var $testclip = $('<div id="zeroclipboard-test" style="width=0px; height=0px;"></div>').appendTo($("body"));
