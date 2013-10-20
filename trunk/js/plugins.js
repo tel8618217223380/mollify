@@ -1908,7 +1908,10 @@
 			
 			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
 				that.d.content(mollify.dom.template("mollify-tmpl-shares", {item: item, bubble: true}));
-				that.loadShares(item).done(function(shares) { that.initContent(item, shares, that.d.element()); that.d.position(); });
+				that.loadShares(item).done(function(shares) {
+					that.initContent(item, shares, that.d.element());
+					that.d.position();
+				});
 			});
 		};
 
