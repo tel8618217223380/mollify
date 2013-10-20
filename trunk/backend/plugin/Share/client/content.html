@@ -75,12 +75,27 @@
 				</div>
 			</div>
 		</div>
+		
+		<legend class="localized" text-key="shareDialogShareAccessTitle"></legend>
+		<div class="control-group">
+			<label class="control-label localized" for="shareAccess" text-key="shareDialogShareAccessRestrictionTitle"></label>
+			<div class="controls">
+				<label class="radio">
+					<input type="radio" name="shareAccess" id="share-access-norestriction" value="no">
+					<span class="localized" text-key="shareDialogShareAccessNoRestrictionTitle"></span>
+				</label>
+				<label class="radio">
+					<input type="radio" name="shareAccess" id="share-access-public-password" value="pw">
+					<span class="localized" text-key="shareDialogShareAccessPasswordTitle"></span>
+				</label>
+				<input id="share-access-public-password-value" type="text"></input>
+				<label class="radio">
+					<input type="radio" name="shareAccess" id="share-access-private-loggedin" value="login">
+					<span class="localized" text-key="shareDialogShareAccessLoggedInTitle"></span>
+				</label>
+			</div>
+		</div>
 	</form>
-	
-	<!--div id="title-protection" class="context-group"><text key="shareDialogShareProtectionTitle" /></div>
-	<input id="share-protection-none" type="radio" class="share-protection-option" value="none"><text key="shareDialogShareNoProtectionTitle" /></input>
-	<input id="share-protection-pw" type="radio" class="share-protection-option" value="pw" title="pw"><text key="shareDialogSharePwProtectionTitle" /></input>
-	<input id="share-protection-pw-value" type="text" class="option-value"></input-->
 	
 	<div id="context-buttons">
 		<button id="share-addedit-btn-ok" class="btn btn-primary localized" text-key="shareDialogSave"></button>

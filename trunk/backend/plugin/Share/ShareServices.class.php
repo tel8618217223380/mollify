@@ -89,7 +89,7 @@
 			
 			if ($data["expiration"] and !is_int($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration");
 			
-			$this->handler()->addShare($itemId, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE);
+			$this->handler()->addShare($itemId, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE, $data["restriction"]);
 			$this->response()->success($this->handler()->getShares($itemId));
 		}
 		
@@ -101,7 +101,7 @@
 			if (!isset($data["name"])) throw $this->invalidRequestException("No data");
 			if ($data["expiration"] and !is_int($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration");
 			
-			$this->handler()->editShare($id, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE);
+			$this->handler()->editShare($id, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE, $data["restriction"]);
 			$this->response()->success(array());
 		}
 		

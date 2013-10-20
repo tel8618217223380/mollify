@@ -1440,8 +1440,18 @@
 							return;
 						}
 						
+						if (result.restriction == "private") {
+							if (!mollify.session || !mollify.session.authenticated) {
+								df.resolve(false);
+								return;
+							}
+						} else if (result.restriction == "pw") {
+							//is pw given & confirmed?
+							// -> show pw screen
+							df.resolve(new mollify.ui.FullErrorView("pw"));
+						}
+						
 						var serviceUrl = mollify.service.url("public/"+shareId, true);
-						//TODO check if needs authentication etc
 						if (result.type == "download") {
 							df.resolve(new that.OpenShareDownloadView(shareId, serviceUrl, result.name));
 						} else if (result.type == "prepared_download") {
@@ -1697,15 +1707,29 @@
 			that.openContextContent('add-share-title', 'share-context-addedit-template');
 			$("#share-general-name").val('');
 			$('#share-general-active').attr('checked', true);
-	
+			$("#share-access-norestriction").attr('checked', true);
+			
 			$("#share-addedit-btn-ok").click(function() {
+				$("#share-access-public-password-value").removeClass("error");
+				
 				var name = $("#share-general-name").val();
 				var active = $("#share-general-active").is(":checked");
 				var expiration = $("#share-validity-expirationdate-value").data("mollify-datepicker").get();
 				
+				var restriction = false;
+				if ($("#share-access-private-loggedin").is(":checked")) restriction = { type: "private" };
+				else if ($("#share-access-public-password").is(":checked")) {
+					var value = $("#share-access-public-password-value").val();
+					if (!value || value.length === 0) {
+						$("#share-access-public-password-value").addClass("error");
+						return;
+					}
+					restriction = { type: "pw", value : value };
+				}
+				
 				$("#share-items").empty().append('<div class="loading"/>');
 				that.closeAddEdit();
-				that.addShare(item, name || '', expiration, active);
+				that.addShare(item, name || '', expiration, active, restriction);
 			});
 			
 			$("#share-addedit-btn-cancel").click(function() {
@@ -1718,15 +1742,37 @@
 			
 			$("#share-general-name").val(share.name);
 			$("#share-general-active").attr("checked", share.active);
-			
+
+			var oldRestrictionPw = (share.restriction == 'pw');
+			if (share.restriction == 'pw')
+				$("#share-access-public-password").attr('checked', true);
+			else if (share.restriction == 'private')
+				$("#share-access-private-loggedin").attr('checked', true);
+			else
+				$("#share-access-norestriction").attr('checked', true);
+				
+			//TODO restriction pw: if previous was pw, show "change pw"
+			//TODO restriction pw: if previous was NOT pw, show "enter pw" && mandatory
+						
 			$("#share-addedit-btn-ok").click(function() {
 				var name = $("#share-general-name").val();
 				var active = $("#share-general-active").is(":checked");
 				var expiration = $("#share-validity-expirationdate-value").data("mollify-datepicker").get();
 				
+				var restriction = false;
+				if ($("#share-access-private-loggedin").is(":checked")) restriction = { type: "private" };
+				else if ($("#share-access-public-password").is(":checked")) {
+					var value = $("#share-access-public-password-value").val();
+					if (!oldRestrictionPw && (!value || value.length === 0)) {
+						$("#share-access-public-password-value").addClass("error");
+						return;
+					}
+					restriction = { type: "pw", value : value };
+				}
+				
 				$("#share-items").empty().append('<div class="loading"/>')
 				that.closeAddEdit();
-				that.editShare(item, share.id, name || '', expiration, active);
+				that.editShare(item, share.id, name || '', expiration, active, restriction);
 			});
 			
 			$("#share-addedit-btn-cancel").click(function() {
@@ -1756,19 +1802,20 @@
 			});
 		};
 		
-		this.addShare = function(item, name, expiration, active) {
-			return mollify.service.post("share/", { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }).done(function(result) {
+		this.addShare = function(item, name, expiration, active, restriction) {
+			return mollify.service.post("share/", { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active, restriction: restriction }).done(function(result) {
 				that.refreshShares(result);
 				that.updateShareList(item);
 			}).fail(that.d.close);
 		}
 	
-		this.editShare = function(item, id, name, expiration, active) {
-			return mollify.service.put("share/"+id, { id: id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }).done(function(result) {
+		this.editShare = function(item, id, name, expiration, active, restriction) {
+			return mollify.service.put("share/"+id, { id: id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active, restriction: restriction }).done(function(result) {
 				var share = that.getShare(id);
 				share.name = name;
 				share.active = active;
 				share.expiration = expiration;
+				share.restriction = restriction ? restriction.type : false;
 				that.updateShareList(item);
 			}).fail(that.d.close);
 		}

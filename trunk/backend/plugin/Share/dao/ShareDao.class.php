@@ -23,15 +23,21 @@
 
 		public function getShare($id, $mustBeValidAfter = NULL) {
 			$db = $this->env->db();
-			$query = "select id, name, item_id, active from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE);
+			$query = "select id, name, item_id, active, restriction from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE);
 			if ($mustBeValidAfter)
 				$query .= ' and (expiration is null or expiration >= '.$db->string($mustBeValidAfter).')';
 			return $db->query($query)->firstRow();
 		}
 
+		public function getShareHash($id) {
+			$db = $this->env->db();
+			$query = "select hash, salt from ".$db->table("share_auth")." where id = ".$db->string($id, TRUE);
+			return $db->query($query)->firstRow();
+		}
+
 		public function getUserShares($userId) {
 			$db = $this->env->db();
-			$list = $db->query("select id, user_id, item_id, name, expiration, active from ".$db->table("share")." where user_id = ".$db->string($userId, TRUE)." order by item_id asc, created asc")->rows();
+			$list = $db->query("select id, user_id, item_id, name, expiration, active, restriction from ".$db->table("share")." where user_id = ".$db->string($userId, TRUE)." order by item_id asc, created asc")->rows();
 			
 			$res = array();
 			$itemId = FALSE;
@@ -48,18 +54,18 @@
 				}
 				$itemId = $s["item_id"];
 
-				$res[$userId][$itemId][] = array("id" => $s["id"], "name" => $s["name"], "expiration" => $s["expiration"],"active" => ($s["active"] == 1));
+				$res[$userId][$itemId][] = array("id" => $s["id"], "name" => $s["name"], "expiration" => $s["expiration"],"active" => ($s["active"] == 1), "restriction" => $s["restriction"]);
 			}
 			return $res;
 		}
 
 		public function getShares($itemId, $userId) {
 			$db = $this->env->db();
-			$list = $db->query("select id, name, expiration, active from ".$db->table("share")." where item_id = ".$db->string($itemId, TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
+			$list = $db->query("select id, name, expiration, active, restriction from ".$db->table("share")." where item_id = ".$db->string($itemId, TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
 			
 			$res = array();
 			foreach($list as $s)
-				$res[] = array("id" => $s["id"], "name" => $s["name"], "expiration" => $s["expiration"],"active" => ($s["active"] == 1));
+				$res[] = array("id" => $s["id"], "name" => $s["name"], "expiration" => $s["expiration"],"active" => ($s["active"] == 1), "restriction" => $s["restriction"]);
 			return $res;
 		}
 		
@@ -101,32 +107,90 @@
 			return $db->query("select item_id, sum(case when user_id = ".$db->string($currentUser, TRUE)." then 1 else 0 end) as own, sum(case when user_id <> ".$db->string($currentUser, TRUE)." then 1 else 0 end) as other from ".$db->table("share")." where item_id in (".$db->arrayString($ids, TRUE).") group by item_id")->valueMap("item_id", "own", "other");
 		}
 				
-		public function addShare($id, $itemId, $name, $userId, $expirationTime, $time, $active = TRUE) {
+		public function addShare($id, $itemId, $name, $userId, $expirationTime, $time, $active = TRUE, $restriction = FALSE) {
+			$restrictionType = NULL;
+			if (is_array($restriction) and isset($restriction["type"])) {
+				if ($restriction["type"] == "private") $restrictionType = "private";
+				else if ($restriction["type"] == "pw" and isset($restriction["value"]) and strlen($restriction["value"]) > 0) {
+					$restrictionType = "pw";
+				}
+			}
+			
 			$db = $this->env->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active) VALUES (%s, %s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($itemId, TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string($time), ($active ? "1" : "0")));
+			$db->startTransaction();
+			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active, restriction) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($itemId, TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string($time), ($active ? "1" : "0"), $db->string($restrictionType, TRUE)));
+			
+			if ($restrictionType == "pw") $this->createAuth($db, $id, $restriction["value"]);
+			$db->commit();
 		}
 		
-		public function editShare($id, $name, $expirationTime, $active) {
+		private function createAuth($db, $id, $pw) {
+			$salt = uniqid('', TRUE);
+			$hash = $this->env->passwordHash()->createHash($pw, $salt);
+			$db->update(sprintf("INSERT INTO ".$db->table("share_auth")." (id, hash, salt) VALUES (%s, %s, %s)", $db->string($id, TRUE), $db->string($hash, TRUE), $db->string($salt, TRUE)));
+		}
+		
+		public function editShare($id, $name, $expirationTime, $active, $restriction) {
+			$old = $this->getShare($id);
+			
+			$oldRestrictionType = $old["restriction"];
+			$restrictionType = NULL;
+			if (is_array($restriction) and isset($restriction["type"])) {
+				if ($restriction["type"] == "private") $restrictionType = "private";
+				else if ($restriction["type"] == "pw") {
+					if ($oldRestrictionType != "pw" and !isset($restriction["value"]) or strlen($restriction["value"]) == 0)
+						throw new ServiceException("INVALID_REQUEST", "pw missing");
+					$restrictionType = "pw";
+				}
+			}
+
 			$db = $this->env->db();
-			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s, expiration = %s WHERE id=%s", $db->string($name, TRUE), ($active ? "1" : "0"), $db->string($expirationTime), $db->string($id, TRUE)));
+			$db->startTransaction();			
+			if ($restrictionType != "pw") $db->update("DELETE FROM ".$db->table("share_auth")." WHERE id = ".$db->string($id, TRUE));
+
+			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s, expiration = %s, restriction = %s WHERE id=%s", $db->string($name, TRUE), ($active ? "1" : "0"), $db->string($expirationTime), $db->string($restrictionType, TRUE), $db->string($id, TRUE)));
+			if ($restrictionType == "pw" and isset($restriction["value"]) and strlen($restriction["value"]) > 0) $this->createAuth($db, $id, $restriction["value"]);
+			$db->commit();
 		}
 
 		public function deleteShare($id) {
 			$db = $this->env->db();
-			return $db->update("DELETE FROM ".$db->table("share")." WHERE id = ".$db->string($id, TRUE));
+			$db->startTransaction();
+			
+			$success = $db->update("DELETE FROM ".$db->table("share")." WHERE id = ".$db->string($id, TRUE));
+			if ($success) $db->update("DELETE FROM ".$db->table("share_auth")." WHERE id = ".$db->string($id, TRUE));
+			
+			$db->commit();
+			return $success;
 		}
 		
 		public function deleteShares($item) {
 			$db = $this->env->db();
-			if ($item->isFile())
-				return $db->update("DELETE FROM ".$db->table("share")." WHERE item_id = ".$db->string($item->id(), TRUE));
-			else
-				return $db->update(sprintf("DELETE FROM ".$db->table("share")." WHERE item_id in (select id from ".$db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $db->string($item->location()))));
+			$db->startTransaction();
+			
+			if ($item->isFile()) {
+				$criteria = "item_id = ".$db->string($item->id(), TRUE);
+			} else {
+				$criteria = sprintf("item_id in (select id from ".$db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $db->string($item->location())));
+			}
+			
+			$db->update("DELETE FROM ".$db->table("share_auth")." WHERE id in (SELECT id FROM ".$db->table("share")." WHERE ".$criteria.")");
+			$success = $db->update("DELETE FROM ".$db->table("share")." WHERE ".$criteria);
+
+			$db->commit();
+			return $success;
 		}
 
 		public function deleteSharesForItem($itemId) {
 			$db = $this->env->db();
-			return $db->update("DELETE FROM ".$db->table("share")." WHERE item_id = ".$db->string($itemId, TRUE));
+			$db->startTransaction();
+
+			$criteria = "item_id = ".$db->string($itemId, TRUE);
+			$db->update("DELETE FROM ".$db->table("share_auth")." WHERE id in (SELECT id FROM ".$db->table("share")." WHERE ".$criteria.")");
+			$success = $db->update("DELETE FROM ".$db->table("share")." WHERE ".$criteria);
+
+			$db->commit();
+			return $success;
 		}
 						
 		public function __toString() {

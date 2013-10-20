@@ -18,6 +18,7 @@
 	require_once("Formatter.class.php");
 	require_once("Cookie.class.php");
 	require_once("ResourceLoader.class.php");
+	require_once("auth/PasswordHash.class.php");
 	
 	class ServiceEnvironment {
 		const ENTRY_SCRIPT = 'r.php';
@@ -52,6 +53,7 @@
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
 			$this->resources = new ResourceLoader($this);
+			$this->passwordHash = new Mollify_PasswordHash("TODO_MOLLIFY_SERVER_SALT");
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
@@ -116,6 +118,10 @@
 
 		public function resources() {
 			return $this->resources;
+		}
+
+		public function passwordHash() {
+			return $this->passwordHash;
 		}
 		
 		public function mailer() {

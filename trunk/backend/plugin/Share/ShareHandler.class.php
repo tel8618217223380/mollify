@@ -97,13 +97,13 @@
 			return $this->dao()->getShareUsers($i);
 		}
 		
-		public function addShare($item, $name, $expirationTs, $active) {
+		public function addShare($item, $name, $expirationTs, $active, $restriction) {
 			$created = $this->env->configuration()->formatTimestampInternal(time());
-			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->session()->userId(), $expirationTs, $created, $active);
+			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->session()->userId(), $expirationTs, $created, $active, $restriction);
 		}
 
-		public function editShare($id, $name, $expirationTs, $active) {
-			$this->dao()->editShare($id, $name, $expirationTs, $active);
+		public function editShare($id, $name, $expirationTs, $active, $restriction) {
+			$this->dao()->editShare($id, $name, $expirationTs, $active, $restriction);
 		}
 		
 		public function deleteShare($id) {
@@ -141,8 +141,29 @@
 			}
 			
 			//TODO processed download
-			//TODO needs auth/password?
-			return array("type" => $type, "name" => $name, "auth" => FALSE, "pw" => FALSE);			
+			return array("type" => $type, "name" => $name, "restriction" => $share["restriction"]);
+		}
+		
+		private function assertAccess($share) {
+			if ($share["restriction"] == NULL) return;
+			
+			if ($share["restriction"] == "private") {
+				if ($this->env->session()->isActive()) return;
+				throw new ServiceException("UNAUTHORIZED");
+			}
+			if ($share["restriction"] == "pw") {
+				$pw = $this->request()->header("MOLLIFY_ACCESS_KEY");
+				if (!pw or strlen($pw) == 0) throw new ServiceException("REQUEST_FAILED", "No access key in request");
+				
+				$hash = $this->dao()->getShareHash($share["id"]);
+				if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");
+				
+				
+				if (!$this->env->passwordHash()->isEqual($pw, $hash["hash"], $hash["salt"]));
+				throw new ServiceException("UNAUTHORIZED");
+			}
+			
+			throw new ServiceException("REQUEST_FAILED", "Invalid share restriction: ".$share["restriction"]);
 		}
 		
 		private function getCustomShareInfo($type, $id, $share) {
@@ -157,6 +178,9 @@
 		public function processShareGet($id, $params) {
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
+			
+			//TODO check auth/pw
+			$this->assertAccess($share);
 
 			$itemId = $share["item_id"];
 			if (strpos($itemId, "_") > 0) {
@@ -176,6 +200,8 @@
 		public function processSharePrepareGet($id) {
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
+			
+			//TODO check auth/pw
 			
 			$info = $this->doGetSharePublicInfo($share);
 			if ($info == NULL or $info["type"] != "prepared_download") throw new ServiceException("INVALID_REQUEST");
@@ -225,6 +251,8 @@
 		public function processSharePost($id) {
 			$share = $this->dao()->getShare($id);
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
+			
+			//TODO check auth/pw
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
 			$item = $this->env->filesystem()->item($share["item_id"]);
