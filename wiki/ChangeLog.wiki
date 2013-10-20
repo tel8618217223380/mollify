@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.1.7 ===
+Released 2013/10/20
+  * Registration and share views integrated into client
+  * Fixed issue 477
+  * Other UI and functionality improvements
+
 === Version 2.1.6 ===
 Released 2013/10/15
   * Added support for SQLite3
