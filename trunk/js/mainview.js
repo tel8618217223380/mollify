@@ -1013,7 +1013,8 @@
 				var cols = mollify.settings["list-view-columns"];
 				that.itemWidget = new FileList('mollify-folderview-items', $h, 'main', this._filelist, cols);
 			} else {
-				that.itemWidget = new IconView('mollify-folderview-items', $h, 'main', that._viewStyle == 1 ? 'iconview-small' : 'iconview-large');
+				var thumbs = !!mollify.session.features.thumbnails;
+				that.itemWidget = new IconView('mollify-folderview-items', $h, 'main', that._viewStyle == 1 ? 'iconview-small' : 'iconview-large', thumbs);
 			}
 			
 			that.itemWidget.init({
@@ -1173,7 +1174,7 @@
 		}
 	};
 	
-	var IconView = function(container, $headerContainer, id, cls) {
+	var IconView = function(container, $headerContainer, id, cls, thumbs) {
 		var t = this;
 		t.$c = $("#"+container);
 		t.viewId = 'mollify-iconview-'+id;
@@ -1192,7 +1193,16 @@
 			t.items = items;
 			t.data = data;
 			
+			var supportedThumbs = ["jpg", "png", "gif", "jpeg"];	//TODO settings
+			
 			mollify.dom.template("mollify-tmpl-iconview-item", items, {
+				showThumb: function(item) {
+					if (!thumbs || !item.is_file) return false;
+					return (supportedThumbs.indexOf(item.extension) >= 0);
+				},
+				thumbUrl: function(item) {
+					return mollify.service.url("filesystem/"+item.id+"/thumbnail/");
+				},
 				typeClass : function(item) {
 					var c = item.is_file ? 'item-file' : 'item-folder';
 					if (item.is_file && item.extension) c += ' item-type-'+item.extension;

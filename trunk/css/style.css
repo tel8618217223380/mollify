@@ -754,21 +754,32 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	height: 100px;
 }
 
-.mollify-iconview-item-icon {
+.mollify-iconview-item-icon, .mollify-iconview-item-icon-thumb {
 	width: 195px;
 	height: 145px;
-	background: url(images/mimetypes128/empty.png) no-repeat 24px 7px;
 	margin-left: 13px;
 	margin-top: 14px;
+}
+
+.mollify-iconview.iconview-small .mollify-iconview-item-icon, .mollify-iconview.iconview-small .mollify-iconview-item-icon-thumb {
+	width: 75px;
+	height: 70px;
+	margin-top: 4px;
+	margin-left: 13px;
+}
+
+.mollify-iconview-item-icon-thumb > img {
+	width: 100%;
+	height: auto;
+}
+
+.mollify-iconview-item-icon {
+	background: url(images/mimetypes128/empty.png) no-repeat 24px 7px;
 	pointer-events: none;
 }
 
 .mollify-iconview.iconview-small .mollify-iconview-item-icon {
-	width: 75px;
-	height: 70px;
 	background: url(images/mimetypes64/empty.png) no-repeat 4px 7px;
-	margin-top: 4px;
-	margin-left: 13px;
 }
 
 .mollify-iconview-item-label {

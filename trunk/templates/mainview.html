@@ -266,7 +266,11 @@
 
 <script id="mollify-tmpl-iconview-item" type="text/x-jquery-tmpl">
 	<div id="mollify-iconview-item-${id}" title="${name}" class="mollify-iconview-item ${$item.typeClass($data)}">
+		{{if $item.showThumb($data)}}
+		<div class="mollify-iconview-item-icon-thumb"><img src="${$item.thumbUrl($data)}"></img></div>
+		{{else}}
 		<div class="mollify-iconview-item-icon"></div>
+		{{/if}}
 		<div class="mollify-iconview-item-label">${name}</div>
 		<div class="mollify-iconview-item-info"><i class="icon-info-sign"></i></div>
 		<div class="mollify-iconview-item-sel">
