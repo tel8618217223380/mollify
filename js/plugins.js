@@ -1426,7 +1426,6 @@
 		
 		this.initialize = function() {
 			that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
-			//mollify.dom.importCss(mollify.plugins.url("Share", "style.css"));
 			
 			mollify.App.registerView("share", {
 				getView : function(rqParts, urlParams) {					
@@ -1658,7 +1657,6 @@
 		
 		this.getShareLink = function(share) {
 			return mollify.App.getPageUrl("share/"+share.id);
-			//return mollify.service.url("public/"+share.id, true);
 		};
 		
 		this.updateShareList = function(item) {
@@ -1757,6 +1755,7 @@
 			$("#share-general-name").val('');
 			$('#share-general-active').attr('checked', true);
 			$("#share-access-norestriction").attr('checked', true);
+			$("#share-access-public-password-value").attr("placeholder", mollify.ui.texts.get("shareDialogShareAccessEnterPwTitle"));
 			
 			$("#share-addedit-btn-ok").click(function() {
 				$("#share-access-public-password-value").removeClass("error");
@@ -1799,9 +1798,9 @@
 				$("#share-access-private-loggedin").attr('checked', true);
 			else
 				$("#share-access-norestriction").attr('checked', true);
-				
-			//TODO restriction pw: if previous was pw, show "change pw"
-			//TODO restriction pw: if previous was NOT pw, show "enter pw" && mandatory
+			
+			if (oldRestrictionPw) $("#share-access-public-password-value").attr("placeholder", mollify.ui.texts.get("shareDialogShareAccessChangePwTitle"));
+			else $("#share-access-public-password-value").attr("placeholder", mollify.ui.texts.get("shareDialogShareAccessEnterPwTitle"));
 						
 			$("#share-addedit-btn-ok").click(function() {
 				var name = $("#share-general-name").val();
