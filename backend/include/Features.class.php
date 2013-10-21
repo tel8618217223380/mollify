@@ -12,17 +12,13 @@
 	class Features {
 		private $features = array(
 			"limited_http_methods" => FALSE,
-			"file_upload" => FALSE,
-			"folder_actions" => FALSE,
-			"file_upload_progress" => FALSE,
-			"zip_download" => FALSE,
 			"change_password" => FALSE,
 			"descriptions" => FALSE,
-			"administration" => FALSE,
 			"user_groups" => FALSE,
 			"mail_notification" => FALSE,
 			"retrieve_url" => FALSE,
 			"folder_protection" => FALSE,
+			"thumbnails" => FALSE,
 			"guest_mode" => FALSE
 		);
 		
