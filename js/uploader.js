@@ -91,7 +91,7 @@
 		this.initWidget = function($e, o) {
 			var $d = mollify.dom.template("mollify-tmpl-uploader-widget").appendTo($e);
 			mollify.ui.handlers.localize($e);
-			var $dropZone = $("#mollify-uploader-widget");
+			var $dropZone = o.dropElement || $e;
 			var started = false;
 			var l = o.handler;
 			
@@ -124,7 +124,7 @@
 				}
 			}, t._getUploaderSettings()));
 			
-			t._initDropZoneEffects($dropZone);
+			if ($dropZone) t._initDropZoneEffects($dropZone);
 		};
 		
 		return {

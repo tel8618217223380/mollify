@@ -1485,26 +1485,33 @@
 			var vt = this;
 			
 			this.init = function($c) {
+				vt._$c = $c;
+				
 				mollify.dom.loadContentInto($c, mollify.plugins.url("Share", "public_share_access_password.html"), function() {
-					$("#mollify-share-access-button").click(function() {
-						var pw = $("#mollify-share-access-password").val();
-						if (!pw || pw.length === 0) return;
-						var key = window.Base64.encode(pw);
-						
-						mollify.service.post("public/"+shareId+"/key/", { key: key }).done(function(r) {
-							if (!r.result) {
-								mollify.ui.dialogs.notification({
-									message: mollify.ui.texts.get('shareAccessPasswordFailed')
-								});
-								$("#mollify-share-access-password").focus();
-								return;
-							}
-							//proceed to original view
-							that._getShareView(shareId, info, key).init($c);
-						});
-					});
+					$("#mollify-share-access-button").click(vt._onAccess);
 					$("#mollify-share-access-password").focus();
+					$("#mollify-share-access-password").bind('keypress', function(e) {
+						if ((e.keyCode || e.which) == 13) vt._onAccess();
+					});
 				}, ['localize']);
+			};
+			
+			this._onAccess = function() {
+				var pw = $("#mollify-share-access-password").val();
+				if (!pw || pw.length === 0) return;
+				var key = window.Base64.encode(pw);
+				
+				mollify.service.post("public/"+shareId+"/key/", { key: key }).done(function(r) {
+					if (!r.result) {
+						mollify.ui.dialogs.notification({
+							message: mollify.ui.texts.get('shareAccessPasswordFailed')
+						});
+						$("#mollify-share-access-password").focus();
+						return;
+					}
+					//proceed to original view
+					that._getShareView(shareId, info, key).init(vt._$c);
+				});				
 			};
 		};
 		
@@ -1554,6 +1561,7 @@
 					
 					mollify.ui.uploader.initUploadWidget($("#mollify-share-public-uploader"), {
 						url: u.get(false, "format=binary"),
+						dropElement: $("#mollify-share-public"),
 						handler: {
 							start: function(files, ready) {							
 								vt._uploadProgress.start(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length));
