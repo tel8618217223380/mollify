@@ -244,7 +244,7 @@ shareViewPreparedDownloadPreparingTitle: "Preparing to download \"{0}\", please 
 shareViewPreparedDownloadDownloadingTitle: "Downloading \"{0}\"...",
 shareViewPreparedDownloadErrorTitle: "Download failed",
 shareAccessPasswordViewTitle: "Protected content",
-shareAccessPasswordViewMessage: "The requested content is password protected, enter the password to access.",
+shareAccessPasswordViewMessage: "The requested content is password protected.",
 shareAccessPasswordTitle: "Password",
 shareAccessPasswordButtonTitle: "OK",
 shareAccessPasswordFailed: "Password was not correct",

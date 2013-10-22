@@ -170,13 +170,18 @@
 			return $ret[$val];
 		}
 			
-		public function valueMap($keyCol, $valueCol = NULL) {
+		public function valueMap($keyCol, $valueCol = NULL, $valueCol2 = NULL) {
 			$list = array();
 			while ($row = sqlite_fetch_array($this->result, SQLITE_ASSOC)) {
 				if ($valueCol == NULL)
 					$list[$row[$keyCol]] = $row;
-				else
-					$list[$row[$keyCol]] = $row[$valueCol];
+				else {
+					if ($valueCol2) {
+						$list[$row[$keyCol]] = array($valueCol => $row[$valueCol], $valueCol2 => $row[$valueCol2]);
+					} else {
+						$list[$row[$keyCol]] = $row[$valueCol];
+					}
+				}
 			}
 			return $list;
 		}
