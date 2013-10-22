@@ -91,6 +91,7 @@ fileListColumnTitleName: "Name",
 fileListColumnTitlePath: "Path",
 fileListColumnTitleSize: "Size",
 fileListColumnTitleLastModified: "Last modified",
+fileListColumnTitleDescription: "Description",
 
 fileActionDownloadTitle: "Download",
 fileActionRenameTitle: "Rename...",

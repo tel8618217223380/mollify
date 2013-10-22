@@ -410,7 +410,7 @@
 		 	if ($recursive) {
 			 	$pathFilter = "i.path like '".$p."%'";
 		 	} else {
-				if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+				if (strcasecmp("mysql", $this->env->db()->type()) == 0) {
 					$pathFilter = "i.path REGEXP '^".$p."[^/\\\\]+[/\\\\]?$'";
 				} else {
 					$pathFilter = "REGEX(i.path, \"#^".$p."[^/\\\\]+[/\\\\]?$#\")";
