@@ -90,6 +90,7 @@ mainviewRetrieveFileResourceNotFound: "Could not retrieve file, resource not fou
 fileListColumnTitleName: "Name",
 fileListColumnTitlePath: "Path",
 fileListColumnTitleSize: "Size",
+fileListColumnTitleType: "Type",
 fileListColumnTitleLastModified: "Last modified",
 fileListColumnTitleDescription: "Description",
 
