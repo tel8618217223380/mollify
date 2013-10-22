@@ -11,7 +11,6 @@ CREATE TABLE share (
 CREATE TABLE share_auth (
   id char(32) PRIMARY KEY,
   salt char(128) NOT NULL,
-  hash char(128) NOT NULL,
-  PRIMARY KEY (`id`)
+  hash char(128) NOT NULL
 );
 INSERT INTO parameter (name, value) VALUES ('plugin_Share_version', '1_3');
