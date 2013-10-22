@@ -301,10 +301,12 @@
 			"id": "type",
 			"title-key": "fileListColumnTitleType",
 			"sort": function(i1, i2, sort, data) {
-				return i1.extension.toLowerCase().localeCompare(i2.extension.toLowerCase()) * sort;
+				var e1 = i1.is_file ? i1.extension : '';
+				var e2 = i2.is_file ? i1.extension : '';
+				return e1.toLowerCase().localeCompare(e2.toLowerCase()) * sort;
 			},
 			"content": function(item, data) {
-				return item.extension;
+				return item.is_file ? item.extension : '';
 			}
 		});
 		this._filelist.addColumn({
