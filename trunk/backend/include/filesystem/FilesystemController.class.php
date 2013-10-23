@@ -574,7 +574,6 @@
 		}
 		
 		public function uploadTo($folder) {
-			$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
 			
 			//if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
@@ -690,8 +689,18 @@
 		
 		private function findFreeFileWithIndex($folder, $name) {
 			$index = 1;
+			$base = $name;
+			$ext = strrchr($name, ".");
+
+			if ($ext != FALSE) {
+				$base = substr($name, 0, 0-strlen($ext));
+			} else {
+				$ext = "";
+			}
+			Logging::logDebug($name."->".$base."_".$ext);
+						
 			while (TRUE) {
-				$file = $folder->fileWithName($name."(".$index.")");
+				$file = $folder->fileWithName($base."(".$index.")".$ext);
 				if (!$file->exists()) return $file;
 				$index = $index + 1;
 				if ($index > 100) break;
@@ -709,64 +718,7 @@
 			
 			$this->env->events()->onEvent(FileEvent::upload($targetItem));
 		}
-		
-		/*public function downloadAsZip($items, $mobile) {
-			$zip = $this->createZip($items);
-			$name = "items.zip";
-			if (!is_array($items)) $name = $items->name().".zip";
-			$this->env->response()->download($name, "zip", $mobile, $zip->stream());
-			unlink($zip->filename());
-		}
-		
-		public function storeZip($items) {
-			$id = uniqid();
-			$zip = $this->createZip($items);
-			$this->env->session()->param("zip_".$id, $zip->filename());
-			return $id;
-		}
-		
-		public function downloadStoredZip($id, $mobile) {
-			$p = "zip_".$id;
-			if (!$this->env->session()->hasParam($p))
-				throw new ServiceException("INVALID_REQUEST", "Stored zip id does not exist: ".$p);
-			
-			$filename = $this->env->session()->param($p);
-			if (!file_exists($filename))
-				throw new ServiceException("INVALID_REQUEST", "Stored zip file does not exist");
-
-			$handle = @fopen($filename, "rb");
-			if (!$handle)
-				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
-			$this->env->response()->download("items.zip", "zip", $mobile, $handle);
-			unlink($filename);
-		}
-		
-		private function createZip($items) {
-			$this->env->features()->assertFeature("zip_download");
-			
-			if (is_array($items)) {
-				$this->assertRights($items, Authentication::RIGHTS_READ, "download as zip");
 				
-				$zip = $this->zipper();
-				foreach($items as $item) {
-					$item->addToZip($zip);
-					$this->env->events()->onEvent(FileEvent::download($item));
-				}
-				$zip->finish();
-			} else {
-				$item = $items;
-				$this->assertRights($item, Authentication::RIGHTS_READ, "download as zip");
-
-				$zip = $this->zipper();
-				$item->addToZip($zip);
-				$zip->finish();
-				
-				$this->env->events()->onEvent(FileEvent::download($item));
-			}
-			
-			return $zip;
-		}*/
-		
 		public function search($parent, $text, $rqData) {
 			if ($parent == NULL) {
 				$m = array();
@@ -812,24 +764,6 @@
 			}
 			return $result;
 		}
-		
-		/*public function zipper() {
-			require_once('zip/MollifyZip.class.php');
-			$zipper = $this->setting("zipper", TRUE);
-			
-			if (strcasecmp($zipper, "ziparchive") === 0) {
-				require_once('zip/MollifyZipArchive.class.php');
-				return new MollifyZipArchive($this->env);
-			} else if (strcasecmp($zipper, "native") === 0) {
-				require_once('zip/MollifyZipNative.class.php');
-				return new MollifyZipNative($this->env);
-			} else if (strcasecmp($zipper, "raw") === 0) {
-				require_once('zip/MollifyZipRaw.class.php');
-				return new MollifyZipRaw($this->env);
-			}
-			
-			throw new ServiceException("INVALID_CONFIGURATION", "Unsupported zipper configured: ".$zipper);
-		}*/
 		
 		public function setting($setting) {
 			return $this->env->settings()->setting($setting);
