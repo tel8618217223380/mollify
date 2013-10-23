@@ -36,6 +36,8 @@
 			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic left outer join ".$db->table("itemcollection_item")." ici on ici.collection_id = ic.id where ic.user_id = ".$db->string($userId, TRUE)." order by ic.created asc, ici.item_index asc")->rows();
 			
 			$res = array();
+			if (!$list or count($list) == 0) return $res;
+			
 			$id = FALSE;
 			$items = array();
 			$collection = FALSE;

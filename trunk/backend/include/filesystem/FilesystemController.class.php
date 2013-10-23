@@ -200,7 +200,6 @@
 			$result = array();
 			
 			$result['filesystem'] = array(
-				"folder_separator" => DIRECTORY_SEPARATOR,
 				"max_upload_file_size" => Util::inBytes(ini_get("upload_max_filesize")),
 				"max_upload_total_size" => Util::inBytes(ini_get("post_max_size")),
 				"allowed_file_upload_types" => $this->allowedFileUploadTypes()

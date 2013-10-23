@@ -637,6 +637,11 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	vertical-align: middle;
 }
 
+.mollify-filelist-col-item-description {
+	white-space: nowrap;
+	text-overflow:  ellipsis;
+}
+
 .mollify-filelist-col-sel {
 	width: 0px;
 	visibility: hidden;

@@ -196,7 +196,7 @@
 		}
 		
 		public function hasReadRights($permission) {
-			return strcasecmp($permission, self::PERMISSION_VALUE_ADMIN) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READONLY) === 0;
+			return strcasecmp($permission, self::PERMISSION_VALUE_ADMIN) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE_NODELETE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READONLY) === 0;
 		}
 		
 		function hasModifyRights() {
