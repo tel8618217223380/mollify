@@ -1526,7 +1526,7 @@
 			};
 		};
 
-		this.SharePreparedDownloadView = function(shareId, serviceUrl, shareName) {
+		this.SharePreparedDownloadView = function(shareId, u, shareName) {
 			var vt = this;
 			
 			this.init = function($c) {

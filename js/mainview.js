@@ -1105,7 +1105,13 @@
 			that._itemsById = mollify.helpers.mapByKey(items, "id");
 			if (that._selectedItems) {
 				var existing = [];
-				$.each(that._selectedItems, function(i, itm) { if (that._itemsById[itm.id]) existing.push(itm); });
+				var ids = {};
+				$.each(that._selectedItems, function(i, itm) {
+					var newItem = that._itemsById[itm.id];
+					if (!newItem || ids[itm.id]) return;
+					existing.push(newItem);
+					ids[itm.id] = true;
+				});
 				that._selectedItems = existing;
 			}
 			//$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
