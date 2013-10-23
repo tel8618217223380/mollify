@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.1.8 ===
+Released 2013/10/23
+  * Share plugin updated to version 1.3: Added access restriction for share plugin: private and password protected shares
+  * Fixed issue 479
+  * Fixed issue 480
+
+NOTE! Share plugin update required
+
 === Version 2.1.7 ===
 Released 2013/10/20
   * Registration and share views integrated into client
