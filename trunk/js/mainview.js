@@ -459,6 +459,7 @@
 		
 		this.onActivate = function(h) {
 			mollify.dom.template("mollify-tmpl-fileview").appendTo(h.content);
+			that.showProgress();
 			// TODO default view mode
 			// TODO expose file urls
 			
@@ -867,7 +868,7 @@
 				
 					that.setupHierarchy(that._currentFolderInfo.hierarchy, $tb);
 				
-					$("#mollify-folderview-items").addClass("loading");
+					that.showProgress();
 				}
 
 				if (that._dndUploader)
@@ -1082,7 +1083,7 @@
 		};
 		
 		this.data = function() {
-			$("#mollify-folderview-items").removeClass("loading");
+			that.hideProgress();
 			
 			var descriptionExists = that._currentFolderInfo.data && that._currentFolderInfo.data['core-parent-description'];
 			if (descriptionExists)

@@ -1,6 +1,9 @@
 {
 	"locale": "en",
 	"texts": {
+		"language_en": "English",
+		"language_de": "Deutsch",
+
 		"decimalSeparator": ".",
 		"groupingSeparator": ",",
 		"zeroDigit": "0",
@@ -287,6 +290,8 @@
 		"configAdminUsersUserDialogEditTitle": "Edit User",
 		"configAdminUsersUserDialogAddTitle": "Add New User",
 		"configAdminUserDialogUsernameTitle": "Username",
+		"configAdminUserDialogLanguageTitle": "Language",
+		"configAdminUsersUserDialogLangDefault": "Default ({0})",
 		"configAdminUserDialogEmailTitle": "Email",
 		"configAdminUserDialogPasswordTitle": "Password",
 		"configAdminUserDialogGeneratePassword": "Generate",

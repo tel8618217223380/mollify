@@ -660,7 +660,12 @@ var mollifyDefaults = {
 			if (p.initialize) p.initialize();
 			if (p.resources) {
 				var pid = p.backendPluginId || id;
-				if (p.resources.texts) l.push(mollify.dom.importScript(mollify.plugins.getLocalizationUrl(pid)));
+				if (p.resources.texts) {
+					if (mollify.settings.texts_js)
+						l.push(mollify.dom.importScript(mollify.plugins.getJsLocalizationUrl(pid)));
+					else
+						l.push(mollify.ui.texts.loadPlugin(pid));
+				}
 				if (p.resources.css) mollify.dom.importCss(mollify.plugins.getStyleUrl(pid));
 			}
 		}
@@ -689,8 +694,12 @@ var mollifyDefaults = {
 	pl.adminUrl = function(id, p) {
 		return pl.url(id)+"/admin/"+p;
 	};
-	
+
 	pl.getLocalizationUrl = function(id, admin) {
+		return pl.url(id, "localization/texts_" + mollify.ui.texts.locale + ".json", admin);
+	};
+		
+	pl.getJsLocalizationUrl = function(id, admin) {
 		return pl.url(id, "texts_" + mollify.ui.texts.locale + ".js", admin);
 	};
 	
