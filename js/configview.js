@@ -40,7 +40,7 @@
 		}
 
 		this.onActivate = function(h) {
-			mollify.templates.load("configview", mollify.templates.url("configview.html"), function() {
+			mollify.templates.load("configview", mollify.templates.url("configview.html")).done(function() {
 				mollify.dom.template("mollify-tmpl-configview").appendTo(h.content);
 
 				var navBarItems = [];

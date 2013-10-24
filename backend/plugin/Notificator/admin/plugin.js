@@ -124,7 +124,7 @@
 			}
 			
 			this._showNotificationDetails = function(n, $e) {
-				mollify.templates.load("plugin-notification-content", mollify.helpers.noncachedUrl(mollify.plugins.adminUrl("Notificator", "content.html")), function() {
+				mollify.templates.load("plugin-notification-content", mollify.helpers.noncachedUrl(mollify.plugins.adminUrl("Notificator", "content.html"))).done(function() {
 					mollify.dom.template("mollify-tmpl-plugin-notificator-notificationdetails", {notification: n}).appendTo($e);
 					mollify.ui.process($e, ["localize"]);
 					

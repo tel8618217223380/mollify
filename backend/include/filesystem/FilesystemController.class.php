@@ -697,7 +697,6 @@
 			} else {
 				$ext = "";
 			}
-			Logging::logDebug($name."->".$base."_".$ext);
 						
 			while (TRUE) {
 				$file = $folder->fileWithName($base."(".$index.")".$ext);

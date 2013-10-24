@@ -106,7 +106,7 @@
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
 			$content.addClass("loading");
-			mollify.templates.load("itemdetails-content", mollify.helpers.noncachedUrl(mollify.plugins.url("ItemDetails", "content.html")), function() {
+			mollify.templates.load("itemdetails-content", mollify.helpers.noncachedUrl(mollify.plugins.url("ItemDetails", "content.html"))).done(function() {
 				$content.removeClass("loading");
 				that.renderItemDetails(el, item, {element: $content.empty(), data: data});
 			});
@@ -839,7 +839,7 @@
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
 			$content.addClass("loading");
-			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
+			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html"))).done(function() {
 				$content.removeClass("loading");
 				if (data.count === 0) {
 					that.renderItemContextComments(el, item, [], {element: $content.empty(), contentTemplate: 'comments-template'});
@@ -866,7 +866,7 @@
 		this.showCommentsBubble = function(item, e) {
 			var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name, container: $("#mollify-filelist-main-items")});
 			
-			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
+			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html"))).done(function() {
 				bubble.content(mollify.dom.template("comments-template", item));
 		
 				$("#comments-dialog-add").click(function() { 
@@ -1616,7 +1616,7 @@
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
 			$content.addClass("loading");
-			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html"))).done(function() {
 				$content.removeClass("loading");
 				mollify.dom.template("mollify-tmpl-shares", {item: item}).appendTo($content);
 				that.loadShares(item).done(function(shares) {
@@ -1829,7 +1829,7 @@
 		}
 		
 		this.onOpenShares = function(item) {
-			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html"))).done(function() {
 				mollify.ui.dialogs.custom({
 					resizable: true,
 					initSize: [600, 470],
@@ -1913,7 +1913,7 @@
 		this.showShareBubble = function(item, cell) {
 			that.d = mollify.ui.controls.dynamicBubble({element:cell, title: item.name, container: $("#mollify-filelist-main-items")});
 			
-			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html"))).done(function() {
 				that.d.content(mollify.dom.template("mollify-tmpl-shares", {item: item, bubble: true}));
 				that.loadShares(item).done(function(shares) {
 					that.initContent(item, shares, that.d.element());
