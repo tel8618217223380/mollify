@@ -1,7 +1,6 @@
 <?php
-	require_once("vendor/phpass/PasswordHash.php");
 	/**
-	 * PasswordHash.class.php
+	 * AuthenticatorPW.class.php
 	 *
 	 * Copyright 2008- Samuli Järvelä
 	 * Released under GPL License.
@@ -9,15 +8,8 @@
 	 * License: http://www.mollify.org/license.php
 	 */
 
-	class Mollify_PasswordHash {
-		private static $hash_cost_log2 = 8;
-		private static $hash_portable = FALSE;
-		
-		private $serverSalt;
-
+	class Mollify_Authenticator_PW extends Mollify_Authenticator {
 		public function __construct($settings) {
-			$this->serverSalt = $settings->setting("server_hash_salt");
-			$this->hasher = new PasswordHash(self::$hash_cost_log2, self::$hash_portable);
 		}
 		
 		public function createHash($pw, $salt) {
