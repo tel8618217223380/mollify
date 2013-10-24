@@ -8,6 +8,10 @@
  */
  
 var mollifyDefaults = {
+	"language": {
+		"default": "en",
+		"options": ["en"]	
+	},
 	"app-element-id" : "mollify",
 	"service-path": "backend/",
 	"limited-http-methods" : false,
@@ -69,7 +73,9 @@ var mollifyDefaults = {
 		mollify.settings = $.extend({}, mollifyDefaults, s);
 		mollify.service.init(mollify.settings["limited-http-methods"]);
 		
-		var onError = function() { new mollify.ui.FullErrorView('Failed to initialize Mollify').show(); }
+		var onError = function() {
+			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
+		}
 		
 		var doStart = function() {
 			mollify.service.get("session/info/3").done(function(s) {
@@ -91,9 +97,12 @@ var mollifyDefaults = {
 				doStart();
 			}
 		});
-
-		mollify.ui.initialize();
-		mollify.plugins.initialize().done(doStart).fail(onError);
+		
+		mollify.ui.initialize().done(function() {
+			mollify.plugins.initialize().done(doStart).fail(onError);
+		}).fail(function(e) {
+			mollify.App.getElement().html("Failed to initialize Mollify");
+		});
 	};
 	
 	mollify.App.getElement = function() { return $("#"+mollify.settings["app-element-id"]); };
@@ -774,17 +783,20 @@ var mollifyDefaults = {
 		return mollify.helpers.noncachedUrl(mollify.resourceUrl(base + name));
 	};
 	
-	mt.load = function(name, url, cb) {
+	mt.load = function(name, url) {
+		var df = $.Deferred();
 		if (mt._loaded.indexOf(name) >= 0) {
-			if (cb) cb();
-			return;
+			return df.resolve();
 		}
 		
-		$.get(url ? mollify.resourceUrl(url) : mt.url(name), function(h) {
+		$.get(url ? mollify.resourceUrl(url) : mt.url(name)).done(function(h) {
 			mt._loaded.push(name);
 			$("body").append(h);
-			if (cb) cb();
+			df.resolve();
+		}).fail(function(f) {
+			df.reject();
 		});
+		return df;
 	};
 	
 	/* DOM */

@@ -19,6 +19,33 @@
 	
 	tt.locale = null;
 	tt._dict = {};
+	
+	tt.load = function(id) {
+		var df = $.Deferred();
+		$.ajax({
+			type: "GET",
+			dataType: 'text',
+			url: mollify.resourceUrl("localization/texts_"+id+".json")
+		}).done(function(r) {
+			if (!r || (typeof(r) != "string")) {
+				df.reject();
+				return;
+			}
+			var t = JSON.parse(r);
+			if (!tt.locale)
+				tt.locale = t.locale;
+			else
+				if (tt.locale != t.locale) {
+					df.reject();
+					return;
+				}
+			tt.add(t.locale, t.texts);
+			df.resolve(t.locale);			
+		}).fail(function(e){
+			df.reject();
+		});
+		return df;
+	};
 			
 	tt.add = function(locale, t) {
 		if (!locale || !t) return;
@@ -101,10 +128,12 @@
 	mollify.ui._activePopup = false;
 	
 	mollify.ui.initialize = function() {
-		if (mollify.ui.texts.locale) {
-			$("html").attr("lang", mollify.ui.texts.locale);
-			mollify.App.getElement().addClass("lang-"+mollify.ui.texts.locale);
-		}
+		var list = [];
+		
+		list.push(mollify.ui.texts.load(mollify.settings.language.default).done(function(locale) {
+			$("html").attr("lang", locale);
+			mollify.App.getElement().addClass("lang-"+locale);
+		}));
 		
 		// add invisible download frame
 		$("body").append('<div style="width: 0px; height: 0px; overflow: hidden;"><iframe id="mollify-download-frame" src=""></iframe></div>');
@@ -119,12 +148,17 @@
 				mollify.ui.hideActivePopup();
 			}
 		});
-		mollify.templates.load("dialogs.html");
+		list.push(mollify.templates.load("dialogs.html"));
+		
 		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (window.Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
 		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.MollifyHTML5Uploader();
 		if (!mollify.ui.clipboard) new mollify.ZeroClipboard(function(cb) {
 			mollify.ui.clipboard = cb;
 		});
+		
+		var df = $.Deferred();
+		$.when.apply($, list).done(df.resolve).fail(df.reject);
+		return df;
 	};
 	
 	mollify.ui.hideActivePopup = function() {
