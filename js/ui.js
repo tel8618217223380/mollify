@@ -22,10 +22,25 @@
 	
 	tt.load = function(id) {
 		var df = $.Deferred();
+		if (tt.locale) {
+			return df.resolve();
+		}
+
+		return tt._load("localization/texts_"+(id || 'en')+".json", df);
+	};
+
+	tt.loadPlugin = function(pluginId, admin) {
+		return tt._load(mollify.plugins.getLocalizationUrl(pluginId, admin), $.Deferred());
+	};
+	
+	tt._load = function(u, df) {
+		var url = mollify.resourceUrl(u);
+		if (!url) return df.resolve();
+		
 		$.ajax({
 			type: "GET",
 			dataType: 'text',
-			url: mollify.resourceUrl("localization/texts_"+id+".json")
+			url: url
 		}).done(function(r) {
 			if (!r || (typeof(r) != "string")) {
 				df.reject();
