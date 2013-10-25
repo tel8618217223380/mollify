@@ -9,19 +9,26 @@
 	 */
 
 	class Mollify_Authenticator_PW extends Mollify_Authenticator {
-		public function __construct($settings) {
+		private $env;
+		
+		public function __construct($env) {
+			$this->env = $env;
 		}
 		
-		public function createHash($pw, $salt) {
-			$hash = $this->hasher->HashPassword($this->serverSalt.$pw.$salt);
-			if (strlen($hash) < 20)
-				throw new ServiceException("REQUEST_FAILED");
-			return $hash;
-		}
-		
-		public function isEqual($pw, $hash, $salt) {
-			$ret = $this->hasher->CheckPassword($this->serverSalt.$pw.$salt, $hash);
-			return ($ret === TRUE or $ret == 1);
+		public function authenticate($user, $pw, $auth) {
+			if ($auth["salt"] == "-" and $auth["hash"] == "-") {
+				$oldPw = $this->env->configuration()->getUserLegacyPw($user["id"]);
+				// old pw auth
+				if (strcmp($oldPw, md5($pw)) != 0) throw new ServiceException("AUTHENTICATION_FAILED");
+				
+				//convert old pws into hash
+				Logging::logDebug("Adding new user hash for ".$user["id"]);
+				$this->env->configuration()->storeUserAuth($user["id"], $user["name"], 'pw', $pw);
+				$this->env->configuration()->removeUserLegacyPw($user["id"]);
+				return;
+			}
+			if ($this->env->passwordHash()->isEqual($pw, $auth["hash"], $auth["salt"])) return;
+			throw new ServiceException("AUTHENTICATION_FAILED");
 		}
 	}
 ?>
