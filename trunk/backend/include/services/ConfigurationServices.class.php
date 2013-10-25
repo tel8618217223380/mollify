@@ -268,6 +268,7 @@
 					// users/xx/password
 					case 'password':
 						$this->env->features()->assertFeature("change_password");
+						$username = NULL;
 						
 						$pw = $this->request->data;
 						if (!isset($pw['new'])) throw $this->invalidRequestException();
@@ -275,15 +276,16 @@
 						if ($userId === 'current') {
 							if (!isset($pw['old'])) throw $this->invalidRequestException();
 							$userId = $this->env->session()->userId();
-							
-							//TODO hash
-							
-														
-							if (strcmp(md5(base64_decode($pw['old'])), $this->env->configuration()->getPassword($userId)) != 0)
+							$username = $this->env->session()->username();
+							if (!$this->env->authentication()->authenticate($userId, base64_decode($pw['old'])))
 								throw new ServiceException("AUTHENTICATION_FAILED");
+						} else {
+							$user = $this->env->configuration()->getUser($userId);
+							if (!$user) throw $this->invalidRequestException();
+							$username = $user["name"];
 						}
 						
-						$this->response()->success($this->env->configuration()->changePassword($userId, base64_decode($pw['new'])));
+						$this->response()->success($this->env->configuration()->updateUserAuth($userId, $username, base64_decode($pw['new']), FALSE));
 						return;
 				}				
 			}

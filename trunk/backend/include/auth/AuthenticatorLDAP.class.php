@@ -32,9 +32,10 @@
 			$bind = @ldap_bind($conn, $connString, $pw);
 			if (!$bind) {
 				Logging::logDebug("LDAP error: ".ldap_error($conn));
-				throw new ServiceException("AUTHENTICATION_FAILED");
+				return FALSE;
 			}
 			ldap_close($conn);
+			return TRUE;
 		}
 	}
 ?>

@@ -61,7 +61,7 @@
 		}
 				
 		public function authenticate($userId) {
-			$this->authentication->doAuth($this->getUser($userId));
+			$this->authentication->setAuth($this->getUser($userId));
 		}
 		
 		public function isAuthenticated() {
