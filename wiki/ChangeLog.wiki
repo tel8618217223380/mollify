@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.1.9 ===
+Released 2013/10/25
+  * Added support for new file permission: read&write&no delete.
+  * Fixed issue 481
+
 === Version 2.1.8 ===
 Released 2013/10/23
   * Share plugin updated to version 1.3: Added access restriction for share plugin: private and password protected shares
