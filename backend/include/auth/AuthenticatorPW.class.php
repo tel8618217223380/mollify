@@ -19,16 +19,15 @@
 			if ($auth["salt"] == "-" and $auth["hash"] == "-") {
 				$oldPw = $this->env->configuration()->getUserLegacyPw($user["id"]);
 				// old pw auth
-				if (strcmp($oldPw, md5($pw)) != 0) throw new ServiceException("AUTHENTICATION_FAILED");
+				if (strcmp($oldPw, md5($pw)) != 0) return FALSE;
 				
 				//convert old pws into hash
 				Logging::logDebug("Adding new user hash for ".$user["id"]);
 				$this->env->configuration()->storeUserAuth($user["id"], $user["name"], 'pw', $pw);
 				$this->env->configuration()->removeUserLegacyPw($user["id"]);
-				return;
+				return TRUE;
 			}
-			if ($this->env->passwordHash()->isEqual($pw, $auth["hash"], $auth["salt"])) return;
-			throw new ServiceException("AUTHENTICATION_FAILED");
+			return ($this->env->passwordHash()->isEqual($pw, $auth["hash"], $auth["salt"]));
 		}
 	}
 ?>

@@ -217,7 +217,7 @@
 				echo "Authentication required\n";
 				die();
 			}
-			$env->authentication()->doAuth($user, "pw");
+			$env->authentication()->setAuth($user, "pw");
 		} else {
 			$auth = new Sabre_HTTP_DigestAuth();
 			$auth->setRealm($env->authentication()->realm());
@@ -239,7 +239,7 @@
 				echo "Authentication required\n";
 				die();
 			}
-			$env->authentication()->doAuth($user, "pw");
+			$env->authentication()->setAuth($user, "pw");
 		}
 
 		$dav = new Sabre_DAV_Server(new Mollify_DAV_Root($env->filesystem()));

@@ -56,7 +56,7 @@
 				throw new ServiceException("INVALID_REQUEST", "Missing parameters");
 			
 			$pw = base64_decode($this->request->data("password"));
-			$this->env->authentication()->authenticate($this->request->data("username"), $pw);
+			$this->env->authentication()->login($this->request->data("username"), $pw);
 			$this->env->events()->onEvent(SessionEvent::login($this->env->request()->ip()));
 			
 			$sessionInfo = $this->getSessionInfo($this->request->data("protocol_version"));

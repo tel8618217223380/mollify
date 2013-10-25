@@ -63,7 +63,7 @@
 			if ($user == NULL) return FALSE;
 			
 			Logging::logDebug("Remote authentication succeeded for [".$user["id"]."] ".$user["name"]);
-			$this->doAuth($user, "remote");
+			$this->setAuth($user, "remote");
 			return true;
 		}
 		
@@ -90,7 +90,7 @@
 				return FALSE;
 			}
 			Logging::logDebug("Stored authentication succeeded for user [".$user["id"]."] ".$user["name"]);
-			$this->doAuth($user, "cookie");
+			$this->setAuth($user, "cookie");
 		}
 		
 		private function getCookieAuthString($user) {
@@ -108,14 +108,27 @@
 			$this->env->cookies()->remove("login");
 		}
 		
-		public function authenticate($userId, $pw) {
-			$user = $this->env->configuration()->findUser($userId, $this->env->settings()->setting("email_login"), time());
+		public function login($username, $pw) {
+			$user = $this->env->configuration()->findUser($username, $this->env->settings()->setting("email_login"), time());
 			if (!$user) {
-				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
-				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
+				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$username."]");
+				$this->env->events()->onEvent(SessionEvent::failedLogin($username, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
-			
+			if (!$this->auth($user, $pw)) {
+				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$username."]");
+				$this->env->events()->onEvent(SessionEvent::failedLogin($username, $this->env->request()->ip()));
+				throw new ServiceException("AUTHENTICATION_FAILED");				
+			}
+			$this->setAuth($user, $authType);
+			return $user;
+		}
+		
+		public function authenticate($userId, $pw) {
+			return $this->auth($this->env->configuration()->getUser($userId), $pw);
+		}
+		
+		private function auth($user, $pw) {
 			$auth = $this->env->configuration()->getUserAuth($user["id"]);
 			if (!$auth) throw new ServiceException("INVALID_CONFIGURATION", "User auth info missing ".$userId);
 			
@@ -124,9 +137,7 @@
 			$authModule = $this->getAuthenticationModule($authType);
 			if (!$authModule) throw new ServiceException("INVALID_CONFIGURATION", "Invalid auth module: ".$auth);
 			
-			$authModule->authenticate($user, $pw, $auth);
-			$this->doAuth($user, $authType);
-			return $user;
+			return $authModule->authenticate($user, $pw, $auth);
 		}
 		
 		private function getAuthenticationModule($id) {
@@ -145,7 +156,7 @@
 			return $m[0];
 		}
 		
-		public function doAuth($user, $authType = NULL) {
+		public function setAuth($user, $authType = NULL) {
 			$this->env->session()->start($user, array("auth" => $authType));
 		}
 		
