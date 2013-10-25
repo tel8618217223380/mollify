@@ -8,10 +8,6 @@
  */
  
 var mollifyDefaults = {
-	"language": {
-		"default": "en",
-		"options": ["en"]	
-	},
 	"app-element-id" : "mollify",
 	"service-path": "backend/",
 	"limited-http-methods" : false,
@@ -73,9 +69,7 @@ var mollifyDefaults = {
 		mollify.settings = $.extend({}, mollifyDefaults, s);
 		mollify.service.init(mollify.settings["limited-http-methods"]);
 		
-		var onError = function() {
-			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
-		}
+		var onError = function() { new mollify.ui.FullErrorView('Failed to initialize Mollify').show(); }
 		
 		var doStart = function() {
 			mollify.service.get("session/info/3").done(function(s) {
@@ -97,12 +91,9 @@ var mollifyDefaults = {
 				doStart();
 			}
 		});
-		
-		mollify.ui.initialize().done(function() {
-			mollify.plugins.initialize().done(doStart).fail(onError);
-		}).fail(function(e) {
-			mollify.App.getElement().html("Failed to initialize Mollify");
-		});
+
+		mollify.ui.initialize();
+		mollify.plugins.initialize().done(doStart).fail(onError);
 	};
 	
 	mollify.App.getElement = function() { return $("#"+mollify.settings["app-element-id"]); };
@@ -660,12 +651,7 @@ var mollifyDefaults = {
 			if (p.initialize) p.initialize();
 			if (p.resources) {
 				var pid = p.backendPluginId || id;
-				if (p.resources.texts) {
-					if (mollify.settings.texts_js)
-						l.push(mollify.dom.importScript(mollify.plugins.getJsLocalizationUrl(pid)));
-					else
-						l.push(mollify.ui.texts.loadPlugin(pid));
-				}
+				if (p.resources.texts) l.push(mollify.dom.importScript(mollify.plugins.getLocalizationUrl(pid)));
 				if (p.resources.css) mollify.dom.importCss(mollify.plugins.getStyleUrl(pid));
 			}
 		}
@@ -694,12 +680,8 @@ var mollifyDefaults = {
 	pl.adminUrl = function(id, p) {
 		return pl.url(id)+"/admin/"+p;
 	};
-
+	
 	pl.getLocalizationUrl = function(id, admin) {
-		return pl.url(id, "localization/texts_" + mollify.ui.texts.locale + ".json", admin);
-	};
-		
-	pl.getJsLocalizationUrl = function(id, admin) {
 		return pl.url(id, "texts_" + mollify.ui.texts.locale + ".js", admin);
 	};
 	
@@ -792,20 +774,17 @@ var mollifyDefaults = {
 		return mollify.helpers.noncachedUrl(mollify.resourceUrl(base + name));
 	};
 	
-	mt.load = function(name, url) {
-		var df = $.Deferred();
+	mt.load = function(name, url, cb) {
 		if (mt._loaded.indexOf(name) >= 0) {
-			return df.resolve();
+			if (cb) cb();
+			return;
 		}
 		
-		$.get(url ? mollify.resourceUrl(url) : mt.url(name)).done(function(h) {
+		$.get(url ? mollify.resourceUrl(url) : mt.url(name), function(h) {
 			mt._loaded.push(name);
 			$("body").append(h);
-			df.resolve();
-		}).fail(function(f) {
-			df.reject();
+			if (cb) cb();
 		});
-		return df;
 	};
 	
 	/* DOM */

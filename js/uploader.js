@@ -129,7 +129,7 @@
 		
 		return {
 			initUploadWidget : function($e, o) {
-				mollify.templates.load("mollify-uploader", mollify.templates.url("uploader.html")).done(function() {
+				mollify.templates.load("mollify-uploader", mollify.templates.url("uploader.html"), function() {
 					t.initWidget($e, o);
 				});
 			},

@@ -40,7 +40,7 @@
 		}
 
 		this.onActivate = function(h) {
-			mollify.templates.load("configview", mollify.templates.url("configview.html")).done(function() {
+			mollify.templates.load("configview", mollify.templates.url("configview.html"), function() {
 				mollify.dom.template("mollify-tmpl-configview").appendTo(h.content);
 
 				var navBarItems = [];
@@ -102,11 +102,8 @@
 					var p = mollify.admin.plugins[pk];
 					if (!p || !p.views) continue;
 
-					if (p.resources && p.resources.texts) {
-						if (mollify.settings.texts_js)
-							o.push(mollify.dom.importScript(mollify.plugins.getJsLocalizationUrl(pk, true)));
-						else
-							o.push(mollify.ui.texts.loadPlugin(pk, true));
+					if (p.resources) {
+						if (p.resources.texts) o.push(mollify.dom.importScript(mollify.plugins.getLocalizationUrl(pk, true)));
 					}
 					$.each(p.views, addView);
 				}
@@ -229,7 +226,6 @@
 			that._authenticationOptions = opt.authentication_methods;
 			that._authFormatter = function(am) { return am; /* TODO */ }
 			that._defaultAuthMethod = opt.authentication_methods[0];
-			that._langFormatter = function(l) { return mollify.ui.texts.get('language_'+l); }
 		}
 		
 		this.onActivate = function($c) {
@@ -551,15 +547,13 @@
 			var $password = false;
 			var $permission = false;
 			var $authentication = false;
-			var $language = false;
 			var $expiration = false;
-			var showLanguages = (mollify.settings.language.options.length > 1);
 			
 			mollify.ui.dialogs.custom({
 				resizable: true,
 				initSize: [600, 400],
 				title: mollify.ui.texts.get(u ? 'configAdminUsersUserDialogEditTitle' : 'configAdminUsersUserDialogAddTitle'),
-				content: mollify.dom.template("mollify-tmpl-config-admin-userdialog", {user: u, showLanguages: showLanguages}),
+				content: mollify.dom.template("mollify-tmpl-config-admin-userdialog", {user: u}),
 				buttons: [
 					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
 					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
@@ -575,10 +569,8 @@
 					var expiration = mollify.helpers.formatInternalTime($expiration.get());
 					var auth = $authentication.selected();
 					if (!username || username.length === 0) return;
-					var lang = null;
-					if (showLanguages) lang = language.selected();
-										
-					var user = { name: username, email: email, permission_mode : permissionMode, expiration: expiration, auth: auth, lang: lang };
+					
+					var user = { name: username, email: email, permission_mode : permissionMode, expiration: expiration, auth: auth };
 					
 					if (u) {	
 						mollify.service.put("configuration/users/"+u.id, user).done(d.close).done(cb);
@@ -607,12 +599,6 @@
 						none: mollify.ui.texts.get('configAdminUsersUserDialogAuthDefault', that._defaultAuthMethod),
 						valueMapper: that._authFormatter
 					});
-					if (showLanguages)
-						$language = mollify.ui.controls.select("languageField", {
-							values: mollify.settings.language.options,
-							none: mollify.ui.texts.get('configAdminUsersUserDialogLangDefault', (mollify.settings.language.default || 'en')),
-							valueMapper: that._langFormatter
-						});
 					$expiration = mollify.ui.controls.datepicker("expirationField", {
 						format: mollify.ui.texts.get('shortDateTimeFormat'),
 						time: true
@@ -624,7 +610,6 @@
 						$permission.select(u.permission_mode.toLowerCase());
 						$authentication.select(u.auth ? u.auth.toLowerCase() : null);
 						$expiration.set(mollify.helpers.parseInternalTime(u.expiration));
-						if (showLanguages && u.lang) $language.select(u.lang);
 					} else {
 						$permission.select("no");	
 					}

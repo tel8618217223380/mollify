@@ -1,7 +1,7 @@
 <?php
 	require_once("vendor/phpass/PasswordHash.php");
 	/**
-	 * PasswordHash.class.php
+	 * FilesystemServices.class.php
 	 *
 	 * Copyright 2008- Samuli Järvelä
 	 * Released under GPL License.

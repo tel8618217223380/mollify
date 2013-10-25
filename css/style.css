@@ -421,8 +421,6 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 	float: left;
 	overflow: hidden;
 	overflow-y: auto;
-	min-height: 300px;
-	min-width: 90%;
 }
 
 #mollify-folderview-header-items {

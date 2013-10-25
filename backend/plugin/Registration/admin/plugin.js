@@ -66,7 +66,7 @@
 			};
 			
 			this.onAddRegistration = function(cb) {
-				mollify.templates.load("plugin-registration-content", mollify.helpers.noncachedUrl(mollify.plugins.adminUrl("Registration", "content.html"))).done(function() {
+				mollify.templates.load("plugin-registration-content", mollify.helpers.noncachedUrl(mollify.plugins.adminUrl("Registration", "content.html")), function() {
 					var $content = false;
 					var $name = false;
 					var $email = false;

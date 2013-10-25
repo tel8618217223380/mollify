@@ -1,7 +1,6 @@
 CREATE TABLE `{TABLE_PREFIX}user` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
-  `lang` char(2) NULL,
   `description` varchar(255) NOT NULL DEFAULT '',
   `password` varchar(128) NULL,
   `a1password` varchar(128) NULL,
@@ -12,15 +11,6 @@ CREATE TABLE `{TABLE_PREFIX}user` (
   `expiration` bigint(11) NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify users and groups';
-
-CREATE TABLE `{TABLE_PREFIX}user_auth` (
-  `id` int(11) NOT NULL,
-  `type` varchar(8) NULL,
-  `salt` char(128) NOT NULL,
-  `hash` char(128) NOT NULL,
-  `a1hash` char(128) NULL,
-  PRIMARY KEY (`id`)
-) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify user auth';
 
 CREATE TABLE `{TABLE_PREFIX}user_group` (
   `user_id` int(11) NOT NULL,

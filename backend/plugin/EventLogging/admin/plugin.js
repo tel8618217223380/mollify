@@ -93,7 +93,7 @@
 						}
 					});
 					var $options = $c.find(".mollify-configlistview-options");
-					mollify.templates.load("eventlogging-content", mollify.helpers.noncachedUrl(mollify.plugins.adminUrl("EventLogging", "content.html"))).done(function() {
+					mollify.templates.load("eventlogging-content", mollify.helpers.noncachedUrl(mollify.plugins.adminUrl("EventLogging", "content.html")), function() {
 						mollify.dom.template("mollify-tmpl-eventlogging-options").appendTo($options);
 						mollify.ui.process($options, ["localize"]);
 						

@@ -20,9 +20,8 @@
 			id: "plugin-core",
 			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
-				var writable = !root && (ctx.details.permission.toUpperCase() == "RW" || ctx.details.permission.toUpperCase() == "WD");
-				var deletable = !root && (ctx.details.permission.toUpperCase() == "RW");
-				var parentWritable = !root && (ctx.details.parent_permission.toUpperCase() == "RW" || ctx.details.parent_permission.toUpperCase() == "WD");
+				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
+				var parentWritable = !root && ctx.details.parent_permission.toUpperCase() == "RW";
 
 				var actions = [];				
 				if (item.is_file ) {
@@ -37,12 +36,11 @@
 				if (writable) {	
 					actions.push({ 'title-key': 'actionMoveItem', callback: function() { return mollify.filesystem.move(item); } });
 					actions.push({ 'title-key': 'actionRenameItem', callback: function() { return mollify.filesystem.rename(item); } });
-					if (deletable)
-						actions.push({ 'title-key': 'actionDeleteItem', callback: function() { var df = $.Deferred(); mollify.ui.dialogs.confirmation({
-							title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
-							message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
-							callback: function() { $.when(mollify.filesystem.del(item)).then(df.resolve, df.reject); }
-						});
+					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { var df = $.Deferred(); mollify.ui.dialogs.confirmation({
+						title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
+						message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
+						callback: function() { $.when(mollify.filesystem.del(item)).then(df.resolve, df.reject); }
+					});
 					return df.promise(); }});
 				}
 				return {
@@ -108,7 +106,7 @@
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
 			$content.addClass("loading");
-			mollify.templates.load("itemdetails-content", mollify.helpers.noncachedUrl(mollify.plugins.url("ItemDetails", "content.html"))).done(function() {
+			mollify.templates.load("itemdetails-content", mollify.helpers.noncachedUrl(mollify.plugins.url("ItemDetails", "content.html")), function() {
 				$content.removeClass("loading");
 				that.renderItemDetails(el, item, {element: $content.empty(), data: data});
 			});
@@ -578,9 +576,9 @@
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 				if (root) return false;
-				var writable = !root && (ctx.details.permission.toUpperCase() == "RW" || ctx.details.permission.toUpperCase() == "WD");
-				var parentWritable = !root && (ctx.details.parent_permission.toUpperCase() == "RW" || ctx.details.parent_permission.toUpperCase() == "WD");
-				var folderWritable = !root && ctx.folder_permission && (ctx.folder_permission.toUpperCase() == "RW" || ctx.folder_permission.toUpperCase() == "WD");
+				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
+				var parentWritable = !root && ctx.details.parent_permission.toUpperCase() == "RW";
+				var folderWritable = !root && ctx.folder_permission && ctx.folder_permission.toUpperCase() == "RW";
 
 				if (that._isArchive(item)) {
 					return {
@@ -841,7 +839,7 @@
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
 			$content.addClass("loading");
-			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html"))).done(function() {
+			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 				$content.removeClass("loading");
 				if (data.count === 0) {
 					that.renderItemContextComments(el, item, [], {element: $content.empty(), contentTemplate: 'comments-template'});
@@ -868,7 +866,7 @@
 		this.showCommentsBubble = function(item, e) {
 			var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name, container: $("#mollify-filelist-main-items")});
 			
-			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html"))).done(function() {
+			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 				bubble.content(mollify.dom.template("comments-template", item));
 		
 				$("#comments-dialog-add").click(function() { 
@@ -985,7 +983,6 @@
 		this.initialize = function() {
 			that.permissionOptions = [
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueWD'), value: "wd"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueNO'), value: "no"}
 			];
@@ -1619,7 +1616,7 @@
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
 			$content.addClass("loading");
-			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html"))).done(function() {
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
 				$content.removeClass("loading");
 				mollify.dom.template("mollify-tmpl-shares", {item: item}).appendTo($content);
 				that.loadShares(item).done(function(shares) {
@@ -1832,7 +1829,7 @@
 		}
 		
 		this.onOpenShares = function(item) {
-			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html"))).done(function() {
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
 				mollify.ui.dialogs.custom({
 					resizable: true,
 					initSize: [600, 470],
@@ -1916,7 +1913,7 @@
 		this.showShareBubble = function(item, cell) {
 			that.d = mollify.ui.controls.dynamicBubble({element:cell, title: item.name, container: $("#mollify-filelist-main-items")});
 			
-			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html"))).done(function() {
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
 				that.d.content(mollify.dom.template("mollify-tmpl-shares", {item: item, bubble: true}));
 				that.loadShares(item).done(function(shares) {
 					that.initContent(item, shares, that.d.element());

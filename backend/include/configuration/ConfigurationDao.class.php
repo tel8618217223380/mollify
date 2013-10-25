@@ -45,13 +45,13 @@
 		
 		public function checkProtocolVersion($version) {}
 	
-		public function findUser($username, $allowEmail = FALSE, $expiration = FALSE) {
+		public function findUser($username, $password, $allowEmail = FALSE, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
 			if ($allowEmail) {
-				$result = $this->db->query(sprintf("SELECT id, name, email, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s')".$expirationCriteria, $this->db->string($username), $this->db->string($username)));
+				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($username), $this->db->string($password)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name, email, auth FROM ".$this->db->table("user")." WHERE name='%s')".$expirationCriteria, $this->db->string($username)));
+				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE name='%s' AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($password)));
 			}
 			$matches = $result->count();
 			
@@ -71,10 +71,6 @@
 				return FALSE;
 			}
 			return $user;
-		}
-		
-		public function getUserAuth($id) {
-			return $this->db->query(sprintf("SELECT id, auth, hash, salt FROM ".$this->db->table("user_auth")." WHERE id=%s", $this->db->string($id, TRUE)))->firstRow();
 		}
 
 		public function getUserByName($username, $expiration = FALSE) {

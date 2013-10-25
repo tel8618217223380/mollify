@@ -95,7 +95,7 @@
 		}
 
 		public function currentVersion() {
-			return "2_2";
+			return "2_0";
 		}
 		
 		public function db() {

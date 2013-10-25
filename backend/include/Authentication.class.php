@@ -23,7 +23,6 @@
 		const RIGHTS_ADMIN = "A";
 	
 		protected $env;
-		protected $authModules = array();
 		
 		private $cachedDefaultPermission = FALSE;
 		
@@ -31,10 +30,7 @@
 			$this->env = $env;
 		}
 		
-		public function initialize() {
-			//$this->authModules["pw"] = "auth/AuthenticatorPW.class.php";
-			//LDAP $this->authModules["pw"] = "auth/AuthenticatorPW.class.php";
-		}
+		public function initialize() {}
 		
 		public function assertPermissionValue($value) {
 			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READWRITE_NODELETE and $value != self::PERMISSION_VALUE_READONLY and $value != self::PERMISSION_VALUE_NO_RIGHTS)
@@ -112,30 +108,7 @@
 		}
 		
 		public function authenticate($userId, $pw) {
-			$user = $this->env->configuration()->findUser($userId, $this->env->settings()->setting("email_login"), time());
-			if (!$user) {
-				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
-				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
-				throw new ServiceException("AUTHENTICATION_FAILED");
-			}
-			
-			$auth = $this->env->configuration()->getUserAuth($userId);
-			if (!$auth) throw new ServiceException("INVALID_CONFIGURATION", "User auth info missing ".$userId);
-			
-			$authType = $auth["type"];
-			if ($authType == NULL) $authType = $this->getDefaultAuthenticationMethod();
-			$authModule = $this->getAuthModule($authType);
-			if (!$authModule) throw new ServiceException("INVALID_CONFIGURATION", "Invalid auth module: ".$auth);
-			
-			$authModule->authenticate($user, $pw, $auth);
-			$this->doAuth($user, $authType);
-			return $user;
-			//TODO
-			// get user data without pw
-			// check authentication method
-			// load auth module
-			
-			/*$password = md5($pw);
+			$password = md5($pw);
 			
 			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings()->setting("email_login"), time());
 			if (!$user) {
@@ -156,18 +129,7 @@
 				}
 			}
 			$this->doAuth($user, $auth);
-			return $user;*/
-		}
-		
-		private function getAuthenticationModule($id) {
-			$setting = "auth_module_".$id;
-			if ($this->env->settings()->setting()->hasSetting($setting))
-				$cls = $this->env->settings()->setting($setting);
-			else
-				$cls = "auth/Authenticator".strtoupper($id);
-			require_once($cls);
-			$name = "Mollify_Authenticator_".strtoupper($id);
-			return new $name();
+			return $user;
 		}
 		
 		public function getDefaultAuthenticationMethod() {
@@ -175,7 +137,7 @@
 			return $m[0];
 		}
 		
-		/*private function authenticateLDAP($user, $pw) {
+		private function authenticateLDAP($user, $pw) {
 			$server = $this->env->settings()->setting("ldap_server");
 			$connString = $this->env->settings()->setting("ldap_conn_string");
 			if (strpos($connString, "[USER]") === FALSE) {
@@ -195,11 +157,11 @@
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
 			ldap_close($conn);
-		}*/
+		}
 
-		/*public function doAuth($user, $auth = NULL) {
+		public function doAuth($user, $auth = NULL) {
 			$this->env->session()->start($user, array("auth" => $auth));
-		}*/
+		}
 		
 		public function realm() {
 			return "mollify";
@@ -262,9 +224,5 @@
 		public function __toString() {
 			return "Authentication";
 		}
-	}
-	
-	abstract class Mollify_Authenticator {
-		abstract function authenticate($user, $pw, $auth);
 	}
 ?>
