@@ -478,7 +478,6 @@
 		public function delete($item) {
 			Logging::logDebug('deleting ['.$item->id().']');
 			
-			if (!$item->isFile()) $this->env->features()->assertFeature("folder_actions");
 			$this->assertRights($item, Authentication::RIGHTS_DELETE, "delete");
 			$this->validateAction(FileEvent::DELETE, $item);
 						
@@ -504,7 +503,6 @@
 		
 		public function createFolder($parent, $name) {
 			Logging::logDebug('creating folder ['.$parent->id().'/'.$name.']');
-			$this->env->features()->assertFeature("folder_actions");
 			$this->assertRights($parent, Authentication::RIGHTS_WRITE, "create folder");
 
 			$new = $parent->createFolder($name);
