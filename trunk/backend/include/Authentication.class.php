@@ -23,7 +23,6 @@
 		const RIGHTS_ADMIN = "A";
 	
 		protected $env;
-		protected $authModules = array();
 		
 		private $cachedDefaultPermission = FALSE;
 		
@@ -32,8 +31,6 @@
 		}
 		
 		public function initialize() {
-			//$this->authModules["pw"] = "auth/AuthenticatorPW.class.php";
-			//LDAP $this->authModules["pw"] = "auth/AuthenticatorPW.class.php";
 		}
 		
 		public function assertPermissionValue($value) {
@@ -119,12 +116,12 @@
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
 			
-			$auth = $this->env->configuration()->getUserAuth($userId);
+			$auth = $this->env->configuration()->getUserAuth($user["id"]);
 			if (!$auth) throw new ServiceException("INVALID_CONFIGURATION", "User auth info missing ".$userId);
 			
 			$authType = $auth["type"];
 			if ($authType == NULL) $authType = $this->getDefaultAuthenticationMethod();
-			$authModule = $this->getAuthModule($authType);
+			$authModule = $this->getAuthenticationModule($authType);
 			if (!$authModule) throw new ServiceException("INVALID_CONFIGURATION", "Invalid auth module: ".$auth);
 			
 			$authModule->authenticate($user, $pw, $auth);
@@ -160,14 +157,14 @@
 		}
 		
 		private function getAuthenticationModule($id) {
-			$setting = "auth_module_".$id;
-			if ($this->env->settings()->setting()->hasSetting($setting))
+			$setting = "auth_module_".strtolower($id);
+			if ($this->env->settings()->hasSetting($setting))
 				$cls = $this->env->settings()->setting($setting);
 			else
-				$cls = "auth/Authenticator".strtoupper($id);
+				$cls = "include/auth/Authenticator".strtoupper($id).".class.php";
 			require_once($cls);
 			$name = "Mollify_Authenticator_".strtoupper($id);
-			return new $name();
+			return new $name($this->env);
 		}
 		
 		public function getDefaultAuthenticationMethod() {
@@ -197,9 +194,9 @@
 			ldap_close($conn);
 		}*/
 
-		/*public function doAuth($user, $auth = NULL) {
-			$this->env->session()->start($user, array("auth" => $auth));
-		}*/
+		public function doAuth($user, $authType = NULL) {
+			$this->env->session()->start($user, array("auth" => $authType));
+		}
 		
 		public function realm() {
 			return "mollify";

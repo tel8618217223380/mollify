@@ -28,7 +28,7 @@
 				
 		public function getItemContextData($item, $details, $key, $data) {
 			$list = $this->getShareUsers($item);
-			Logging::logDebug(Util::array2str($list));
+			//Logging::logDebug(Util::array2str($list));
 			$users = Util::arrayCol($list, "user_id");
 			$count = count($users);
 			$own = FALSE;
@@ -47,7 +47,6 @@
 		public function getRequestData($parent, $items, $key, $dataRequest) {
 			if ($parent != NULL)
 				return $this->dao()->getUserSharesForChildren($parent, $this->env->session()->userId());
-			//TODO each item
 			return $this->dao()->getUserSharesForItems($items, $this->env->session()->userId());
 		}
 		

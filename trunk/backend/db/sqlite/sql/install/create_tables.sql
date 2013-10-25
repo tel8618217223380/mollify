@@ -10,6 +10,13 @@ CREATE TABLE user (
   is_group TINYINT(1) NOT NULL,
   expiration bigint(11) NULL
 );
+CREATE TABLE user_auth (
+  id INTEGER PRIMARY KEY,
+  type varchar(8) NULL,
+  salt char(128) NOT NULL,
+  hash char(128) NOT NULL,
+  a1hash char(128) NULL
+);
 CREATE TABLE user_group (
   user_id int(11) NOT NULL,
   group_id int(11) NOT NULL,
