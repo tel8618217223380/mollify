@@ -127,33 +127,6 @@
 			$authModule->authenticate($user, $pw, $auth);
 			$this->doAuth($user, $authType);
 			return $user;
-			//TODO
-			// get user data without pw
-			// check authentication method
-			// load auth module
-			
-			/*$password = md5($pw);
-			
-			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings()->setting("email_login"), time());
-			if (!$user) {
-				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
-				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
-				throw new ServiceException("AUTHENTICATION_FAILED");
-			}
-			
-			$auth = $user["auth"];
-			if ($auth == NULL) $auth = $this->getDefaultAuthenticationMethod();
-			
-			if (strcasecmp("PW", $auth) != 0) {
-				// handle other authentications
-				if (strcasecmp("LDAP", $auth) == 0) {
-					$this->authenticateLDAP($user, $pw);
-				} else {
-					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$auth);
-				}
-			}
-			$this->doAuth($user, $auth);
-			return $user;*/
 		}
 		
 		private function getAuthenticationModule($id) {
@@ -172,28 +145,6 @@
 			return $m[0];
 		}
 		
-		/*private function authenticateLDAP($user, $pw) {
-			$server = $this->env->settings()->setting("ldap_server");
-			$connString = $this->env->settings()->setting("ldap_conn_string");
-			if (strpos($connString, "[USER]") === FALSE) {
-				$connString = $user["name"].$connString;
-			} else {
-				$connString = str_replace("[USER]", $user["name"], $connString);
-			}
-			Logging::logDebug("Authenticating with LDAP (server ".$server."): ".$connString);
-			
-			$conn = @ldap_connect($server);
-			if (!$conn)
-				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to LDAP server");
-			
-			$bind = @ldap_bind($conn, $connString, $pw);
-			if (!$bind) {
-				Logging::logDebug("LDAP error: ".ldap_error($conn));
-				throw new ServiceException("AUTHENTICATION_FAILED");
-			}
-			ldap_close($conn);
-		}*/
-
 		public function doAuth($user, $authType = NULL) {
 			$this->env->session()->start($user, array("auth" => $authType));
 		}

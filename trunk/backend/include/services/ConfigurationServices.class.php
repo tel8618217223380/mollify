@@ -277,6 +277,7 @@
 							$userId = $this->env->session()->userId();
 							
 							//TODO hash
+							
 														
 							if (strcmp(md5(base64_decode($pw['old'])), $this->env->configuration()->getPassword($userId)) != 0)
 								throw new ServiceException("AUTHENTICATION_FAILED");
