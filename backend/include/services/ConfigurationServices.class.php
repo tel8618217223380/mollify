@@ -143,7 +143,7 @@
 			$start = isset($data["start"]) ? $data["start"] : 0;
 			
 			$sort = NULL;
-			$allowedFields = array("id", "name", "email", "auth", "permission_mode");
+			$allowedFields = array("id", "name", "email", "permission_mode");
 
 			if (isset($data["sort"]) and isset($data["sort"]["id"])) {
 				$sort = $data["sort"];
@@ -275,6 +275,8 @@
 						if ($userId === 'current') {
 							if (!isset($pw['old'])) throw $this->invalidRequestException();
 							$userId = $this->env->session()->userId();
+							
+							//TODO hash
 														
 							if (strcmp(md5(base64_decode($pw['old'])), $this->env->configuration()->getPassword($userId)) != 0)
 								throw new ServiceException("AUTHENTICATION_FAILED");
