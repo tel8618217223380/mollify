@@ -1,6 +1,8 @@
 #summary Client resource map
 
 
+== Mapping resources into different location ==
+
 Client resource map helps customizing the app, as any client resource can be mapped into custom location. For example any template file, css file or html file can be overridden to your custom version.
 
 {{{
@@ -14,6 +16,8 @@ mollify.App.init({
 
 This example overrides loading "mainview.html" template file to be loaded from folder "custom".
 
+== Ignoring resources ==
+
 Starting from version 2.2, resources can be also marked to be ignored by setting the resource mapping to false:
 {{{
 mollify.App.init({
@@ -25,6 +29,8 @@ mollify.App.init({
 }}}
 
 This example marks registration plugin localization file not to be loaded at all (for example if you have customized texts and added them into the main localization file).
+
+== Resource paths used in mappings ==
 
 To get the resource path, open for example Chrome Dev Tools and Network Inspector which shows you all loaded resources. Copy the url starting from the mollify root level.
 
