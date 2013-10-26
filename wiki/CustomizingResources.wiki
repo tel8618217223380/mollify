@@ -4,6 +4,22 @@
 
 Mollify allows storing customized versions of resources outside Mollify folders, which makes updates easier.
 
+= Suggested resource customization =
+
+To avoid losing customizations when updating Mollify version, set up a customizations folder in the mollify root, instead of inside any of the folders in the Mollify package.
+
+Suggested folder structure is:
+  * Mollify app root/
+    * custom (CREATE THIS)
+    * backend/
+    * js/
+    * localization/
+    * css/
+    * templates/
+    * index.html
+
+Under folder "custom", create all custom plugins, stylesheets and localizations.
+
 = Client resources =
 
 Using resource map feature ([ClientResourceMap]), different resources can be mapped into custom location. These include any client loaded resources:
@@ -18,7 +34,7 @@ For example, following loads custom "mainview.html" from folder "custom" :
 {{{
 	mollify.App.init({
 		"resource-map" : {
-			"templates/mainview.html" : "custom/mainview.html"
+			"templates/mainview.html" : "custom/templates/mainview.html"
 		},
 		...
 	});
@@ -28,7 +44,7 @@ For example, following loads custom localizations file for Registration plugin:
 {{{
 	mollify.App.init({
 		"resource-map" : {
-			"backend/plugin/Registration/admin/texts_en.js": "custom/texts_registration_en.js"
+			"backend/plugin/Registration/admin/texts_en.js": "custom/localization/texts_registration_en.json"
 		},
 		...
 	});
