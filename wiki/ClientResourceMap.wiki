@@ -14,6 +14,18 @@ mollify.App.init({
 
 This example overrides loading "mainview.html" template file to be loaded from folder "custom".
 
-To get the resource path, open for example Chrome Dev Tools and Network Inspector. There you can see all loaded resources. Copy the url starting from the mollify root level.
+Starting from version 2.2, resources can be also marked to be ignored by setting the resource mapping to false:
+{{{
+mollify.App.init({
+	"resource-map" : {
+		"backend/plugin/Registration/localization/texts_en.json" : false
+	},
+	...
+})
+}}}
+
+This example marks registration plugin localization file not to be loaded at all (for example if you have customized texts and added them into the main localization file).
+
+To get the resource path, open for example Chrome Dev Tools and Network Inspector which shows you all loaded resources. Copy the url starting from the mollify root level.
 
 For example, if the loaded resource is "http://yourhost/mollify/backend/plugin/Notificator/admin/texts_en.js", use resource path "backend/plugin/Notificator/admin/texts_en.js".
