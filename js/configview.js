@@ -102,12 +102,8 @@
 					var p = mollify.admin.plugins[pk];
 					if (!p || !p.views) continue;
 
-					if (p.resources && p.resources.texts) {
-						if (mollify.settings.texts_js)
-							o.push(mollify.dom.importScript(mollify.plugins.getJsLocalizationUrl(pk, true)));
-						else
-							o.push(mollify.ui.texts.loadPlugin(pk, true));
-					}
+					if (p.resources && p.resources.texts)
+						o.push(mollify.ui.texts.loadPlugin(pk));
 					$.each(p.views, addView);
 				}
 

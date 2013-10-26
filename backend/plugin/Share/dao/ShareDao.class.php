@@ -125,9 +125,8 @@
 		}
 		
 		private function createAuth($db, $id, $pw) {
-			$salt = uniqid('', TRUE);
-			$hash = $this->env->passwordHash()->createHash($pw, $salt);
-			$db->update(sprintf("INSERT INTO ".$db->table("share_auth")." (id, hash, salt) VALUES (%s, %s, %s)", $db->string($id, TRUE), $db->string($hash, TRUE), $db->string($salt, TRUE)));
+			$hash = $this->env->passwordHash()->createHash($pw);
+			$db->update(sprintf("INSERT INTO ".$db->table("share_auth")." (id, hash, salt) VALUES (%s, %s, %s)", $db->string($id, TRUE), $db->string($hash["hash"], TRUE), $db->string($hash["salt"], TRUE)));
 		}
 		
 		public function editShare($id, $name, $expirationTime, $active, $restriction) {

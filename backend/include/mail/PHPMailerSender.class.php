@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * MailNotificator.class.php
+	 * PHPMailerSender.class.php
 	 *
 	 * Copyright 2008- Samuli Järvelä
 	 * Released under GPL License.
@@ -33,7 +33,7 @@
 				return;
 			}
 			
-			set_include_path("PHPMailer".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path()); 
+			set_include_path("vendor/PHPMailer".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
 			require 'class.phpmailer.php';
 			
 			$mailer = new PHPMailer;
