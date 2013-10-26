@@ -192,7 +192,8 @@ var mollifyDefaults = {
 		if (!urlParts) return u;
 		
 		var mapped = mollify.settings["resource-map"][urlParts.path];
-		if (!mapped) return u;		
+		if (mapped === undefined) return u;
+		if (mapped === false) return false;
 		
 		return mapped + urlParts.paramsString;
 	};

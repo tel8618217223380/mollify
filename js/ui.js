@@ -60,7 +60,7 @@
 			try {
 				var t = JSON.parse(r);
 			} catch (e) {
-				new mollify.ui.FullErrorView('Localization file syntax error ('+url+'): '+e.message).show();
+				new mollify.ui.FullErrorView('<b>Localization file syntax error</b> (<code>'+url+'</code>): <p><code>'+e.message+'</code></p>').show();
 				return;
 			}
 			if (!tt.locale)
@@ -72,7 +72,11 @@
 				}
 			tt.add(t.locale, t.texts);
 			df.resolve(t.locale);			
-		}).fail(function(e){
+		}).fail(function(e) {
+			if (e.status == 404) {
+				new mollify.ui.FullErrorView('<b>Localization file missing</b>: <code>'+url+'</code>. <p>Either create the file or use <a href="https://code.google.com/p/mollify/wiki/ClientResourceMap">client resource map</a> to load it from different location, or to ignore it</p>').show();
+				return;
+			}
 			df.reject();
 		});
 		return df;
