@@ -46,7 +46,12 @@
 				df.reject();
 				return;
 			}
-			var t = JSON.parse(r);
+			try {
+				var t = JSON.parse(r);
+			} catch (e) {
+				new mollify.ui.FullErrorView('Localization file syntax error ('+url+'): '+e.message).show();
+				return;
+			}
 			if (!tt.locale)
 				tt.locale = t.locale;
 			else
@@ -145,7 +150,8 @@
 	mollify.ui.initialize = function() {
 		var list = [];
 		
-		list.push(mollify.ui.texts.load(mollify.settings.language.default).done(function(locale) {
+		var lang = mollify.session.lang || mollify.settings.language.default || 'en';
+		list.push(mollify.ui.texts.load(lang).done(function(locale) {
 			$("html").attr("lang", locale);
 			mollify.App.getElement().addClass("lang-"+locale);
 		}));
@@ -499,8 +505,11 @@
 			this.init(mollify.App.getElement());
 		};
 		
-		this.init = function($c) {				
-			mollify.dom.template("mollify-tmpl-fullpage-error", {message: e}).appendTo($c.empty());
+		this.init = function($c) {
+			if (mollify.App._initialized)
+				mollify.dom.template("mollify-tmpl-fullpage-error", {message: e}).appendTo($c.empty());
+			else
+				$c.html(e);
 		};
 	};
 	

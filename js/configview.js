@@ -576,7 +576,7 @@
 					var auth = $authentication.selected();
 					if (!username || username.length === 0) return;
 					var lang = null;
-					if (showLanguages) lang = language.selected();
+					if (showLanguages) lang = $language.selected();
 										
 					var user = { name: username, email: email, permission_mode : permissionMode, expiration: expiration, auth: auth, lang: lang };
 					

@@ -59,6 +59,7 @@ var mollifyDefaults = {
 	mollify.App.init = function(s, p) {
 		window.Modernizr.testProp("touch");
 		
+		mollify.App._initialized = false;
 		mollify.App._views = {};
 		mollify.App.pageUrl = mollify.request.getBaseUrl(window.location.href);
 		mollify.App.pageParams = mollify.request.getParams(window.location.href);
@@ -73,42 +74,50 @@ var mollifyDefaults = {
 		mollify.settings = $.extend({}, mollifyDefaults, s);
 		mollify.service.init(mollify.settings["limited-http-methods"]);
 		
-		var onError = function() {
-			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
-		}
-		
-		var doStart = function() {
-			mollify.service.get("session/info/3").done(function(s) {
-				mollify.App.setSession(s);
-			}).fail(onError);
+		var start = function() {
+			mollify.service.get("session/info/3").fail(function() {
+				new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
+			}).done(function(s) {
+				mollify.events.dispatch('session/start', s);
+			});
 		};
-		
 		mollify.events.addEventHandler(function(e) {
 			if (e.type == 'session/start') {
-				mollify.session = e.payload;
-				mollify.session.id = mollify.session.session_id;
-				mollify.session.admin = (mollify.session.default_permission == 'A');		
-				
-				mollify.filesystem.init(mollify.session.folders);
-				mollify.App._start();
+				mollify.App._onSessionStart(e.payload);
 			} else if (e.type == 'session/end') {
 				mollify.session = false;
 				mollify.filesystem.init([]);
-				doStart();
+				start();
 			}
 		});
-		
-		mollify.ui.initialize().done(function() {
-			mollify.plugins.initialize().done(doStart).fail(onError);
-		}).fail(function(e) {
-			mollify.App.getElement().html("Failed to initialize Mollify");
-		});
+		start();
 	};
 	
 	mollify.App.getElement = function() { return $("#"+mollify.settings["app-element-id"]); };
 	
-	mollify.App.setSession = function(s) {
-		mollify.events.dispatch("session/start", s);
+	mollify.App._onSessionStart = function(s) {
+		mollify.session = s;
+		mollify.session.id = mollify.session.session_id;
+		mollify.session.admin = (mollify.session.default_permission == 'A');
+		
+		mollify.filesystem.init(mollify.session.folders);
+		
+		var onError = function() {
+			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
+		}
+		
+		if (!mollify.App._initialized)
+			mollify.ui.initialize().done(function() {
+				mollify.plugins.initialize().done(function() {
+					mollify.App._initialized = true;
+					mollify.App._start();
+				}).fail(onError);
+			}).fail(onError);
+		else {
+			if (mollify.session.lang && mollify.ui.texts.locale != mollify.session.lang) alert("lang");
+			//TODO check lang
+			mollify.App._start();
+		}
 	};
 	
 	mollify.App._start = function() {
