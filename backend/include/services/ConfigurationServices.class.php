@@ -190,7 +190,7 @@
 				if (isset($user['expiration']) and $user['expiration'] != NULL)
 					$expiration = $user['expiration'];
 				
-				$id = $this->env->configuration()->addUser($user['name'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration);
+				$id = $this->env->configuration()->addUser($user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration);
 				$this->env->configuration()->storeUserAuth($id, $user['name'], $auth, base64_decode($user['password']));
 				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], isset($user['email']) ? $user['email'] : NULL));
 				$this->response()->success(TRUE);
@@ -248,13 +248,13 @@
 				if (isset($user['expiration']) and $user['expiration'] != NULL)
 					$expiration = $user['expiration'];
 
-				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration);
+				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration);
 				$auth = NULL;
 				if (isset($user['auth'])) {
 					$auth = strtoupper($user['auth']);
 					
 					//TODO verify $auth	
-					//TODO update user auth
+					$this->env->configuration()->updateUserAuthType($userId, $auth);
 				}
 				
 				$this->response()->success(TRUE);

@@ -102,12 +102,7 @@
 			$data = $user["id"].":".$this->getCookieAuthString($user);
 			$this->env->cookies()->add("login", $data, time()+60*60*24*30);
 		}
-		
-		public function logout() {
-			if (!$this->env->cookies()->exists("login")) return;
-			$this->env->cookies()->remove("login");
-		}
-		
+				
 		public function login($username, $pw) {
 			$user = $this->env->configuration()->findUser($username, $this->env->settings()->setting("email_login"), time());
 			if (!$user) {
@@ -115,22 +110,23 @@
 				$this->env->events()->onEvent(SessionEvent::failedLogin($username, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
-			if (!$this->auth($user, $pw)) {
+			$auth = $this->env->configuration()->getUserAuth($user["id"]);
+			if (!$this->auth($user, $auth, $pw)) {
 				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$username."]");
 				$this->env->events()->onEvent(SessionEvent::failedLogin($username, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");				
 			}
-			$this->setAuth($user, $authType);
+			$this->setAuth($user, $auth["type"]);
 			return $user;
 		}
 		
 		public function authenticate($userId, $pw) {
-			return $this->auth($this->env->configuration()->getUser($userId), $pw);
+			return $this->auth($this->env->configuration()->getUser($userId), $this->env->configuration()->getUserAuth($userId), $pw);
 		}
 		
-		private function auth($user, $pw) {
-			$auth = $this->env->configuration()->getUserAuth($user["id"]);
-			if (!$auth) throw new ServiceException("INVALID_CONFIGURATION", "User auth info missing ".$userId);
+		private function auth($user, $auth, $pw) {
+			if (!$user) throw new ServiceException("INVALID_CONFIGURATION", "User info missing");
+			if (!$auth) throw new ServiceException("INVALID_CONFIGURATION", "User auth info missing ".$user["id"]);
 			
 			$authType = $auth["type"];
 			if ($authType == NULL) $authType = $this->getDefaultAuthenticationMethod();
@@ -158,6 +154,11 @@
 		
 		public function setAuth($user, $authType = NULL) {
 			$this->env->session()->start($user, array("auth" => $authType));
+		}
+		
+		public function logout() {
+			if (!$this->env->cookies()->exists("login")) return;
+			$this->env->cookies()->remove("login");
 		}
 		
 		public function realm() {

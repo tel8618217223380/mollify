@@ -49,9 +49,9 @@
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
 			if ($allowEmail) {
-				$result = $this->db->query(sprintf("SELECT id, name, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s')".$expirationCriteria, $this->db->string($username), $this->db->string($username)));
+				$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s')".$expirationCriteria, $this->db->string($username), $this->db->string($username)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name, email FROM ".$this->db->table("user")." WHERE name='%s')".$expirationCriteria, $this->db->string($username)));
+				$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE name='%s')".$expirationCriteria, $this->db->string($username)));
 			}
 			$matches = $result->count();
 			
@@ -89,22 +89,21 @@
 			if ($type !== FALSE)
 				$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET hash=%s, salt=%s, a1hash=%s, type=%s WHERE id=%s", $this->db->string($hash, TRUE), $this->db->string($salt, TRUE), $this->db->string($a1hash, TRUE), $this->db->string($type, TRUE), $this->db->string($id, TRUE)));
 			else
-				$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET hash=%s, salt=%s, a1hash=%s WHERE id=%s", $this->db->string($hash, TRUE), $this->db->string($salt, TRUE), $this->db->string($a1hash, TRUE), $this->db->string($id, TRUE)));			
-
+				$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET hash=%s, salt=%s, a1hash=%s WHERE id=%s", $this->db->string($hash, TRUE), $this->db->string($salt, TRUE), $this->db->string($a1hash, TRUE), $this->db->string($id, TRUE)));
+		}
+		
+		public function updateUserAuthType($id, $type) {
+			$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET type=%s WHERE id=%s", $this->db->string($type, TRUE), $this->db->string($id, TRUE)));
 		}
 		
 		public function getUserLegacyPw($id) {
 			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id=%s", $this->db->string($id, TRUE)))->value();
 		}
-
-		public function removeUserLegacyPw($id) {
-			return $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='-', a1password='-' WHERE id=%s", $this->db->string($id, TRUE)));
-		}
 		
 		public function getUserByName($username, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
-			$result = $this->db->query(sprintf("SELECT id, name, email FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0".$expirationCriteria, $this->db->string($username)));
+			$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0".$expirationCriteria, $this->db->string($username)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -121,7 +120,7 @@
 		}
 
 		public function getUserByNameOrEmail($name) {
-			$result = $this->db->query(sprintf("SELECT id, name, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($name)));
+			$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($name)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -138,13 +137,13 @@
 		}
 		
 		public function getAllUsers($groups = FALSE) {
-			return $this->db->query("SELECT id, name, email, permission_mode, expiration, is_group FROM ".$this->db->table("user")." where ".($groups ? "1=1" : "is_group = 0")." ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, lang, email, permission_mode, expiration, is_group FROM ".$this->db->table("user")." where ".($groups ? "1=1" : "is_group = 0")." ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
-			return $this->db->query(sprintf("SELECT id, name, email FROM ".$this->db->table("user")." WHERE id='%s'".$expirationCriteria, $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE id='%s'".$expirationCriteria, $this->db->string($id)))->firstRow();
 		}
 		
 		public function userQuery($rows, $start, $criteria, $sort = NULL) {
@@ -175,12 +174,12 @@
 			}
 			
 			$count = $db->query("select count(id) ".$query)->value(0);
-			$result = $db->query("select id, name, email, permission_mode, expiration, is_group ".$query." limit ".$rows." offset ".$start)->rows();
+			$result = $db->query("select id, name, lang, email, permission_mode, expiration, is_group ".$query." limit ".$rows." offset ".$start)->rows();
 			
 			return array("start" => $start, "count" => count($result), "total" => $count, "data" => $result);
 		}
 		
-		public function addUser($name, $email, $permission, $expiration) {
+		public function addUser($name, $lang, $email, $permission, $expiration) {
 			if (isset($email) and strlen($email) > 0)
 				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value();
 			else
@@ -189,12 +188,12 @@
 			if ($matches > 0)
 				throw new ServiceException("INVALID_REQUEST", "Duplicate user found with name [".$name."] or email [".$email."]");
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, email, permission_mode, is_group, expiration) VALUES ('%s', '%s', '%s', %s, '%s', %s, 0, %s)", $this->db->string($name), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($expiration)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, lang, email, permission_mode, is_group, expiration) VALUES ('%s', '%s', '%s', %s, '%s', %s, 0, %s)", $this->db->string($name), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($expiration)));
 			return $this->db->lastId();
 		}
 	
-		public function updateUser($id, $name, $email, $permission, $expiration, $description = NULL) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', email=%s, permission_mode='%s', expiration=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($expiration), $this->db->string($description), $this->db->string($id)));
+		public function updateUser($id, $name, $lang, $email, $permission, $expiration, $description = NULL) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', lang=%s, email=%s, permission_mode='%s', expiration=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($expiration), $this->db->string($description), $this->db->string($id)));
 			return TRUE;
 		}
 		
@@ -247,7 +246,7 @@
 		}
 
 		public function getGroupUsers($id) {
-			return $this->db->query("SELECT user.id as id, user.name as name, user.permission_mode, user.email as email FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id as id, user.name as name, user.lang as lang, user.permission_mode, user.email as email FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addGroupUsers($groupId, $userIds) {
@@ -275,7 +274,7 @@
 		}
 
 		public function updateUserGroup($id, $name, $description) {
-			return $this->updateUser($id, $name, NULL, NULL, NULL, $description);
+			return $this->updateUser($id, $name, NULL, NULL, NULL, NULL, $description);
 		}
 		
 		public function removeUserGroup($id) {
@@ -285,15 +284,6 @@
 			$this->db->commit();
 			return TRUE;
 		}
-	
-		/*public function changePassword($id, $new) {
-			$user = $this->getUser($id);
-			$md5new = md5($new);
-			$a1new = md5($user["name"].":".$this->env->authentication()->realm().":".$new);
-			
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s', a1password='%s' WHERE id=%s", $this->db->string($md5new), $this->db->string($a1new), $this->db->string($id)));
-			return TRUE;
-		}*/
 	
 		public function getFolders() {
 			return $this->db->query("SELECT id, name, path FROM ".$this->db->table("folder")." ORDER BY id ASC")->rows();
