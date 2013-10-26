@@ -114,9 +114,7 @@ var mollifyDefaults = {
 				}).fail(onError);
 			}).fail(onError);
 		else {
-			if (mollify.session.lang && mollify.ui.texts.locale != mollify.session.lang) alert("lang");
-			//TODO check lang
-			mollify.App._start();
+			mollify.ui.initializeLang().done(mollify.App._start).fail(onError);
 		}
 	};
 	
@@ -705,11 +703,7 @@ var mollifyDefaults = {
 	};
 
 	pl.getLocalizationUrl = function(id) {
-		return pl.url(id, "localization/texts_" + mollify.ui.texts.locale + ".json");
-	};
-		
-	pl.getJsLocalizationUrl = function(id) {
-		return pl.url(id, "localization/texts_" + mollify.ui.texts.locale + ".js");
+		return mollify.settings["service-path"]+"plugin/"+id+"/localization/texts_" + mollify.ui.texts.locale + ".json";
 	};
 	
 	pl.getStyleUrl = function(id, admin) {
