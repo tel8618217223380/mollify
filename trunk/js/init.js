@@ -704,12 +704,12 @@ var mollifyDefaults = {
 		return pl.url(id)+"/admin/"+p;
 	};
 
-	pl.getLocalizationUrl = function(id, admin) {
-		return pl.url(id, "localization/texts_" + mollify.ui.texts.locale + ".json", admin);
+	pl.getLocalizationUrl = function(id) {
+		return pl.url(id, "localization/texts_" + mollify.ui.texts.locale + ".json");
 	};
 		
-	pl.getJsLocalizationUrl = function(id, admin) {
-		return pl.url(id, "texts_" + mollify.ui.texts.locale + ".js", admin);
+	pl.getJsLocalizationUrl = function(id) {
+		return pl.url(id, "localization/texts_" + mollify.ui.texts.locale + ".js");
 	};
 	
 	pl.getStyleUrl = function(id, admin) {

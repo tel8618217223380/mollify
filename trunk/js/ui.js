@@ -19,6 +19,7 @@
 	
 	tt.locale = null;
 	tt._dict = {};
+	tt._pluginTextsLoaded = [];
 	
 	tt.load = function(id) {
 		var df = $.Deferred();
@@ -29,8 +30,12 @@
 		return tt._load("localization/texts_"+(id || 'en')+".json", df);
 	};
 
-	tt.loadPlugin = function(pluginId, admin) {
-		return tt._load(mollify.plugins.getLocalizationUrl(pluginId, admin), $.Deferred());
+	tt.loadPlugin = function(pluginId) {
+		if (tt._pluginTextsLoaded.indexOf(pluginId) >= 0) return $.Deferred().resolve();
+		
+		return tt._load(mollify.plugins.getLocalizationUrl(pluginId), $.Deferred()).done(function() {
+			tt._pluginTextsLoaded.push(pluginId);
+		});
 	};
 	
 	tt._load = function(u, df) {
