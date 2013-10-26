@@ -35,15 +35,26 @@
 		}
 
 		private function convertCollection($c) {
-			return array("id" => $c["id"], "name" => $c["name"], "items" => $this->convertItems($c["items"]));
+			return array("id" => $c["id"], "name" => $c["name"], "items" => $this->convertItems($c["id"], $c["items"]));
 		}
 
-		private function convertItems($items) {			
+		private function convertItems($id, $items) {			
 			$result = array();
 			if (!$items or $items == NULL) return $result;
-
-			foreach($items as $i)
+			
+			$missing = array();
+			foreach($items as $i) {
+				if (!$i->exists()) {
+					$missing[] = array("id" => $i->id());
+					continue;
+				}
 				$result[] = $i->data();
+			}
+			
+			if (count($missing) > 0) {
+				Logging::logDebug("Items missing, removing: ".count($missing));
+				$this->handler()->removeCollectionItems($id, $missing);
+			}
 
 			return $result;
 		}

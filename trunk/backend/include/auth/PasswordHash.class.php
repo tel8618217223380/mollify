@@ -20,10 +20,8 @@
 			$this->hasher = new PasswordHash(self::$hash_cost_log2, self::$hash_portable);
 		}
 		
-		public function createHash($pw, $salt, $saltPrefix = '') {
+		public function createHash($pw, $saltPrefix = '') {
 			$salt = uniqid($saltPrefix, TRUE);
-			$hash = $this->env->passwordHash()->createHash($pw, $salt);
-
 			$hash = $this->hasher->HashPassword($this->serverSalt.$pw.$salt);
 			if (strlen($hash) < 20)
 				throw new ServiceException("REQUEST_FAILED");

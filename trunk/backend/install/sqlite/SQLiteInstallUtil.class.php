@@ -32,7 +32,7 @@
 			//$a1pw = md5($name.":mollify:".$pw);	//TODO
 			//$this->db->query("INSERT INTO ".$this->db->table("user")." (name, password, a1password, permission_mode, is_group) VALUES ('".$this->db->string($name)."','".md5($pw)."','".$a1pw."','".Authentication::PERMISSION_VALUE_ADMIN."', 0)", FALSE);
 			require_once("include/configuration/ConfigurationDao.class.php");
-			$conf = new ConfigurationDao($this->db)
+			$conf = new ConfigurationDao($this->db);
 			$id = $conf->addUser($name, NULL, Authentication::PERMISSION_VALUE_ADMIN, FALSE);
 			$conf->storeUserAuth($id, $name, 'pw', $pw);
 		}

@@ -141,7 +141,7 @@
 		public function getUser($id, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
-			return $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE id='%s'".$expirationCriteria, $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name, lang, email, permission_mode FROM ".$this->db->table("user")." WHERE id='%s'".$expirationCriteria, $this->db->string($id)))->firstRow();
 		}
 		
 		public function userQuery($rows, $start, $criteria, $sort = NULL) {

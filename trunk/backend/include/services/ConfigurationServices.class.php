@@ -122,7 +122,10 @@
 			}
 			$userId = $this->path[1];
 			if (count($this->path) == 2) {
-				$this->response()->success($this->env->configuration()->getUser($userId));
+				$user = $this->env->configuration()->getUser($userId);
+				$auth = $this->env->configuration()->getUserAuth($userId);
+				$user["auth"] = $auth["type"];
+				$this->response()->success($user);
 				return;
 			}
 			if (count($this->path) == 3)
@@ -255,6 +258,8 @@
 					
 					//TODO verify $auth	
 					$this->env->configuration()->updateUserAuthType($userId, $auth);
+				} else {
+					$this->env->configuration()->updateUserAuthType($userId, NULL);
 				}
 				
 				$this->response()->success(TRUE);
