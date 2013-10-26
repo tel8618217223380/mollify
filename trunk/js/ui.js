@@ -29,6 +29,12 @@
 
 		return tt._load("localization/texts_"+(id || 'en')+".json", df);
 	};
+	
+	tt.clear = function() {
+		tt.locale = null;
+		tt._dict = {};
+		tt._pluginTextsLoaded = [];		
+	};
 
 	tt.loadPlugin = function(pluginId) {
 		if (tt._pluginTextsLoaded.indexOf(pluginId) >= 0) return $.Deferred().resolve();
@@ -153,13 +159,8 @@
 	mollify.ui._activePopup = false;
 	
 	mollify.ui.initialize = function() {
-		var list = [];
-		
-		var lang = mollify.session.lang || mollify.settings.language.default || 'en';
-		list.push(mollify.ui.texts.load(lang).done(function(locale) {
-			$("html").attr("lang", locale);
-			mollify.App.getElement().addClass("lang-"+locale);
-		}));
+		var list = [];		
+		list.push(mollify.ui.initializeLang());
 		
 		// add invisible download frame
 		$("body").append('<div style="width: 0px; height: 0px; overflow: hidden;"><iframe id="mollify-download-frame" src=""></iframe></div>');
@@ -183,6 +184,33 @@
 		});
 		
 		var df = $.Deferred();
+		$.when.apply($, list).done(df.resolve).fail(df.reject);
+		return df;
+	};
+	
+	mollify.ui.initializeLang = function() {
+		var df = $.Deferred();
+		var lang = mollify.session.lang || mollify.settings.language.default || 'en';
+		
+		if (mollify.ui.texts.locale && mollify.ui.texts.locale == lang) return df.resolve();
+		
+		var pluginTextsLoaded = mollify.ui.texts._pluginTextsLoaded;
+		if (mollify.ui.texts.locale) {
+			mollify.App.getElement().removeClass("lang-"+mollify.ui.texts.locale);
+			mollify.ui.texts.clear();
+		}
+		
+		var list = [];
+		list.push(mollify.ui.texts.load(lang).done(function(locale) {
+			$("html").attr("lang", locale);
+			mollify.App.getElement().addClass("lang-"+locale);
+		}));
+		
+		if (pluginTextsLoaded) {
+			$.each(pluginTextsLoaded, function(i, id) {
+				list.push(mollify.ui.texts.loadPlugin(id));
+			});
+		}
 		$.when.apply($, list).done(df.resolve).fail(df.reject);
 		return df;
 	};
