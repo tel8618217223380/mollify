@@ -288,7 +288,9 @@
 					],
 					onRowAction: function(id, u) {
 						if (id == "edit") {
-							that.onAddEditUser(u, updateUsers);
+							mollify.service.get("configuration/users/"+u.id).done(function(user){
+								that.onAddEditUser(user, updateUsers);
+							});
 						} else if (id == "pw") {
 							that.onChangePassword(u);
 						} else if (id == "remove") {

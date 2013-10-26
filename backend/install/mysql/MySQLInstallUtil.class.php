@@ -62,7 +62,7 @@
 			//$this->db->query("INSERT INTO ".$this->db->table("user")." (name, permission_mode, is_group) VALUES ('".$this->db->string($name)."','".Authentication::PERMISSION_VALUE_ADMIN."', 0)", FALSE);
 			
 			require_once("include/configuration/ConfigurationDao.class.php");
-			$conf = new ConfigurationDao($this->db)
+			$conf = new ConfigurationDao($this->db);
 			$id = $conf->addUser($name, NULL, Authentication::PERMISSION_VALUE_ADMIN, FALSE);
 			$conf->storeUserAuth($id, $name, 'pw', $pw);
 		}
