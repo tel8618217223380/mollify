@@ -98,7 +98,7 @@
 		}
 
 		public function currentVersion() {
-			return "2_0";
+			return "2_2";
 		}
 		
 		public function db() {
@@ -260,7 +260,7 @@
 
 			$this->processor->createEnvironment($this->db);
 			try {
-				$this->util()->createAdminUser($this->data("name"), $this->data("password"));
+				$this->processor->createAdminUser($this->data("name"), $this->data("password"));
 			} catch (ServiceException $e) {
 				$this->processor->setError("Could not create admin user", '<code>'.$e->details().'</code>');
 				$this->processor->showPage("install_error");

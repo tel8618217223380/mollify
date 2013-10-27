@@ -1447,7 +1447,7 @@
 								df.resolve(false);
 								return;
 							}
-						} else if (result.restriction == "pw") {
+						} else if (result.restriction == "pw" && !result.auth) {
 							df.resolve(new that.ShareAccessPasswordView(shareId, result));
 							return;
 						}
@@ -1461,13 +1461,12 @@
 			});
 		};
 		
-		this._getShareView = function(id, info, key) {
+		this._getShareView = function(id, info) {
 			var serviceUrl = mollify.service.url("public/"+id, true);			
 			var urlProvider = {
 				get : function(path, param) {
 					var url = serviceUrl;
 					if (path) url = url + path;
-					if (key) url = mollify.helpers.urlWithParam(url, "ak", key);
 					if (param) url = mollify.helpers.urlWithParam(url, param);
 					return mollify.helpers.noncachedUrl(url);
 				}
