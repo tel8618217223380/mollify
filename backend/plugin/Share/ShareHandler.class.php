@@ -141,7 +141,15 @@
 			}
 			
 			//TODO processed download
-			return array("type" => $type, "name" => $name, "restriction" => $share["restriction"]);
+			$info = array("type" => $type, "name" => $name, "restriction" => $share["restriction"]);
+			
+			if ($share["restriction"] == "pw") {
+				$hash = $this->dao()->getShareHash($share["id"]);
+				if ($hash and $this->checkStoredCookieAuth($share["id"], $hash))
+					$info["auth"] = TRUE;
+			}
+			
+			return $info;
 		}
 		
 		public function checkPublicShareAccessKey($id, $key) {
@@ -152,7 +160,33 @@
 			$hash = $this->dao()->getShareHash($id);
 			if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");				
 
-			return $this->env->passwordHash()->isEqual(base64_decode($key), $hash["hash"], $hash["salt"]);
+			if ($this->env->passwordHash()->isEqual(base64_decode($key), $hash["hash"], $hash["salt"])) {
+				$this->storeShareAccessCookie($id, $hash);
+				return TRUE;
+			}
+			return FALSE;
+		}
+		
+		private function checkStoredCookieAuth($shareId, $hash) {
+			if (!$this->env->cookies()->exists("share_access_".$shareId)) return FALSE;
+			$key = $this->env->cookies()->get("share_access_".$shareId);
+			Logging::logDebug("Share access cookie key ".$key);
+			if (!$key or strlen($key) == 0) return FALSE;
+						
+			$check = $this->getCookieShareAuthString($shareId, $hash);
+			if (strcmp($key, $check) != 0) {
+				Logging::logDebug("Share access cookie found for share ".$shareId.", but auth key did not match");
+				return FALSE;
+			}
+			return TRUE;
+		}
+		
+		private function getCookieShareAuthString($shareId, $hash) {
+			return md5($shareId."/".$hash["salt"].$hash["hash"]);
+		}
+		
+		private function storeShareAccessCookie($shareId, $hash) {
+			$this->env->cookies()->add("share_access_".$shareId, $this->getCookieShareAuthString($shareId, $hash), time()+60*60);
 		}
 		
 		private function assertAccess($share) {
@@ -163,13 +197,15 @@
 				throw new ServiceException("UNAUTHORIZED");
 			}
 			if ($share["restriction"] == "pw") {
-				$pw = $this->env->request()->param("ak");
-				if (!$pw or strlen($pw) == 0) throw new ServiceException("REQUEST_FAILED", "No access key in request");
-				
 				$hash = $this->dao()->getShareHash($share["id"]);
-				if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");				
-				
-				if ($this->env->passwordHash()->isEqual(base64_decode($pw), $hash["hash"], $hash["salt"])) return;
+				if ($hash == NULL or !isset($hash["hash"])) throw new ServiceException("REQUEST_FAILED", "No share hash found");
+
+				$pw = $this->env->request()->hasParam("ak") ? $this->env->request()->param("ak") : NULL;
+				if ($pw != NULL and strlen($pw) > 0) {
+					if ($this->env->passwordHash()->isEqual(base64_decode($pw), $hash["hash"], $hash["salt"])) return;
+				} else {
+					if ($this->checkStoredCookieAuth($share["id"], $hash)) return;
+				}
 				throw new ServiceException("UNAUTHORIZED");
 			}
 			

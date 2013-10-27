@@ -67,6 +67,7 @@
 		
 		public function updatePluginVersionStep($id, $from, $to) {
 			$file = "plugin/".$id."/".$this->db->type()."/".$from."-".$to.".sql";
+			Logging::logDebug("Executing sql file:".$file);
 			$this->db->execSqlFile($file);
 		}
 	}

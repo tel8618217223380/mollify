@@ -114,21 +114,10 @@
 		}
 		
 		public function queries($sql) {	
-				/*@mysqli_multi_query($this->db, $sql);
-			    do {
-			        if ($result = @mysqli_store_result($this->db))
-			        	mysqli_free_result($result);
-			        
-			        if (mysqli_error($this->db))
-			        	throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."): ".mysqli_error($this->db));
-			    } while (mysqli_next_result($this->db));
-			} catch (mysqli_sql_exception $e) {
-				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
-				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."...): ".mysqli_error($this->db));
-			}*/
+			if (Logging::isDebug()) Logging::logDebug("DB: ".$sql);
 			try {
-				$stmt = $this->db->prepare($sql);
-				$stmt->execute();
+				$this->db->exec($sql);
+				//$stmt->execute();
 			} catch(PDOException $e) {
 				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e->getMessage());
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."...): ".$e->getMessage());
