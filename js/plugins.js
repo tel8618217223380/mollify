@@ -2177,10 +2177,14 @@
 			
 			this._confirm = function(email, key, fromForm) {
 				$("#mollify-registration-main").addClass("loading");
-				mollify.service.post("registration/confirm", {email:email, key:key}).done(function() {
+				mollify.service.post("registration/confirm", {email:email, key:key}).done(function(r) {
 					$("#mollify-registration-confirm-form").hide();
 					$("#mollify-registration-main").removeClass("loading").addClass("wide");
-					$("#mollify-registration-confirm-success").show();
+					
+					if (!r.require_approval)
+						$("#mollify-registration-confirm-success").show();
+					else
+						$("#mollify-registration-confirm-success-wait-approval").show();
 				}).fail(function(error) {
 					$("#mollify-registration-main").removeClass("loading");
 					this.handled = true;

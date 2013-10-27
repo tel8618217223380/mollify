@@ -139,6 +139,7 @@
 		},
 		Timestamp : function(fmt) {
 			this.format = function(ts) {
+				if (ts == null) return "";
 				if (typeof(ts) === 'string') ts = mollify.helpers.parseInternalTime(ts);
 				return ts.toString(fmt);
 			};
