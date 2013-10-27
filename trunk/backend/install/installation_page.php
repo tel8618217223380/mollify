@@ -61,7 +61,7 @@
 		<?php } ?>
 
 		<form id="page-data" method="post">
-		<?php if (isset($installer)) foreach ($installer->data() as $key => $val) if ($key != 'action') echo '<input type="hidden" name="'.$key.'" value="'.$val.'">';?>
+		<?php if (isset($installer)) foreach ($installer->data() as $key => $val) if ($key != 'action' and $key != 'updates') echo '<input type="hidden" name="'.$key.'" value="'.$val.'">';?>
 		</form><?php
  	}
  	
