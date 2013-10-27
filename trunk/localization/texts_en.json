@@ -369,6 +369,17 @@
 		"registrationConfirmFailed": "Registration could not be confirmed",
 		"registrationConfirmSuccessTitle": "Registration complete",
 		"registrationConfirmSuccessMessage": "Your registration is now complete, and you can log into Mollify.",
-		"registrationContinueButton": "Log into Mollify"
+		"registrationConfirmSuccessWaitApprovalTitle": "Registration complete",
+		"registrationConfirmSuccessWaitApprovalMessage": "Your registration is now complete, but is waiting for approval.",
+		"registrationContinueButton": "Log into Mollify",
+		
+		"pluginRegistrationAdminNavTitle" : "Registrations",
+		"pluginRegistrationAdminAddRegistrationTitle" : "Add Registration",
+		"pluginRegistrationAdminNameTitle" : "Name",
+		"pluginRegistrationAdminEmailTitle" : "Email",
+		"pluginRegistrationAdminKeyTitle" : "Registration Key",
+		"pluginRegistrationAdminTimeTitle" : "Registered",
+		"pluginRegistrationAdminConfirmedTitle" : "Confirmed",
+		"pluginRegistrationAdminApproveTitle" : "Approve"
 	}
 }

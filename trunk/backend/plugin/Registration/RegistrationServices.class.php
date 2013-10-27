@@ -23,7 +23,7 @@
 			$this->env->authentication()->assertAdmin();
 			
 			$db = $this->env->db();
-			$result = $db->query("select `id`, `name`, `email`, `key`, `time` from ".$db->table("pending_registrations")." order by id asc")->rows();
+			$result = $db->query("select `id`, `name`, `email`, `key`, `time`, `confirmed` from ".$db->table("registration")." order by id asc")->rows();
 			$this->response()->success($result);
 		}
 
@@ -38,13 +38,13 @@
 				if (!$ids or !is_array($ids) or count($ids) == 0) throw $this->invalidRequestException();
 				
 				$db = $this->env->db();
-				$result = $db->update("delete from ".$db->table("pending_registrations")." where id in (".$db->arrayString($ids).")");
+				$result = $db->update("delete from ".$db->table("registration")." where id in (".$db->arrayString($ids).")");
 				$this->response()->success(array());
 				return;
 			} else if (count($this->path) == 2) {
 				$id = $this->path[1];
 				$db = $this->env->db();
-				$result = $db->update("delete from ".$db->table("pending_registrations")." where id=".$db->string($id, TRUE));
+				$result = $db->update("delete from ".$db->table("registration")." where id=".$db->string($id, TRUE));
 				$this->response()->success(array());
 				return;
 			}
@@ -56,7 +56,12 @@
 				$this->processRegister();
 			} else if (count($this->path) >= 1 and $this->path[0] === 'confirm') {
 				if (count($this->path) == 1) $this->processConfirm();
-				else $this->processConfirmById($this->path[1]);
+				//else $this->processConfirmById($this->path[1]);
+			} else if (count($this->path) == 2 and $this->path[0] === 'approve') {
+				$requireApproval = $this->getPluginSetting("require_approval", TRUE);
+				if (!$requireApproval) throw $this->invalidRequestException();
+				$this->env->authentication()->assertAdmin();				
+				$this->processApprove($this->path[1]);
 			}
 			else throw $this->invalidRequestException();
 		}
@@ -73,7 +78,7 @@
 			$time = date('YmdHis', time());
 			$key = str_replace(".", "", uniqid("", TRUE));
 			
-			$db->update(sprintf("INSERT INTO ".$db->table("pending_registrations")." (`name`, `password`, `email`, `key`, `time`) VALUES (%s, %s, %s, %s, %s)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
+			$db->update(sprintf("INSERT INTO ".$db->table("registration")." (`name`, `password`, `email`, `key`, `time`, `confirmed`) VALUES (%s, %s, %s, %s, %s, NULL)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
 			$registration["id"] = $db->lastId();
 			
 			//if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
@@ -86,7 +91,7 @@
 
 		private function assertUniqueNameAndEmail($name, $email) {
 			$db = $this->env->db();
-			$query = "select count(id) from ".$db->table("pending_registrations")." where name=".$db->string($name,TRUE)." or email=".$db->string($email,TRUE);
+			$query = "select count(id) from ".$db->table("registration")." where name=".$db->string($name,TRUE)." or email=".$db->string($email,TRUE);
 			$count = $db->query($query)->value(0);
 			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already registered with same name or email");
 			
@@ -101,10 +106,10 @@
 			$this->assertEmailNotRegistered($confirmation['email']);
 			
 			$db = $this->env->db();
-			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `email`=".$db->string($confirmation['email'],TRUE)." and `key`=".$db->string($confirmation['key'],TRUE);
+			$query = "select `id`, `name`, `password`, `email` from ".$db->table("registration")." where `email`=".$db->string($confirmation['email'],TRUE)." and `confirmed` IS NULL and `key`=".$db->string($confirmation['key'],TRUE);
 			$result = $db->query($query);
 			
-			if ($result->count() != 1) throw new ServiceException("REQUEST_FAILED", "Email and confirmation key don't match");
+			if ($result->count() != 1) throw new ServiceException("REQUEST_FAILED", "No registration found with email and key");
 			$this->confirm($result->firstRow());
 		}
 		
@@ -116,32 +121,64 @@
 			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already registered");
 		}
 		
-		private function processConfirmById($id) {
+		/*private function processConfirmById($id) {
 			$this->env->authentication()->assertAdmin();
 			
 			$db = $this->env->db();
-			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `id`=".$db->string($id,TRUE);
+			$query = "select `id`, `name`, `password`, `email` from ".$db->table("registration")." where `id`=".$db->string($id,TRUE);
 			$result = $db->query($query);
 			
 			if ($result->count() != 1) throw new ServiceException("Registration not found");
 			$this->confirm($result->firstRow());
+		}*/
+
+		private function processApprove($id) {
+			$this->env->authentication()->assertAdmin();
+			
+			$db = $this->env->db();
+			$query = "select `id`, `name`, `password`, `email` from ".$db->table("registration")." where `id`=".$db->string($id,TRUE);
+			$result = $db->query($query);
+			
+			if ($result->count() != 1) throw new ServiceException("Registration not found");
+			$this->createUser($result->firstRow());
+			
+			$requireApproval = $this->getPluginSetting("require_approval", TRUE);
+			//TODO if ($requireApproval) sendEmailUserCreated
+			
+			$this->response()->success(array());
 		}
 		
 		private function confirm($registration) {
+			$requireApproval = $this->getPluginSetting("require_approval", TRUE);
+			if ($requireApproval) {
+				$db = $this->env->db();
+				$time = date('YmdHis', time());
+				$db->update("UPDATE ".$db->table("registration")." SET `confirmed`=".$time." where `id`=".$db->string($registration['id'],TRUE));
+				$this->env->events()->onEvent(RegistrationEvent::confirmed($registration['name'], $registration['email']));
+			} else {
+				$this->env->events()->onEvent(RegistrationEvent::confirmed($registration['name'], $registration['email']));
+				$this->createUser($registration);
+			}
+
+			$this->response()->success(array("require_approval" => $requireApproval));
+		}
+		
+		private function createUser($registration) {
 			$db = $this->env->db();
 			$plugin = $this->env->plugins()->getPlugin("Registration");
 			$permission = $plugin->getSetting("permission", Authentication::PERMISSION_VALUE_READONLY);
 			
-			$id = $this->env->configuration()->addUser($registration['name'], $registration['password'], $registration['email'], $permission, NULL);
-			$db->update("DELETE from ".$db->table("pending_registrations")." where `id`=".$db->string($registration['id'],TRUE));
+			$lang = $this->getPluginSetting("language", NULL);
+			$id = $this->env->configuration()->addUser($registration['name'], $lang, $registration['email'], $permission, NULL);
+			$this->env->configuration()->storeUserAuth($id, $registration['name'], NULL, $registration['password']);
+			$db->update("DELETE from ".$db->table("registration")." where `id`=".$db->string($registration['id'],TRUE));
 			
 			$this->addUserProperties($id, $registration['name'], $plugin);
 			
-			if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
-			if (function_exists("onConfirmCustomData")) onConfirmCustomData($registration, $id);
+			//if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
+			//if (function_exists("onConfirmCustomData")) onConfirmCustomData($registration, $id);
 			
-			$this->env->events()->onEvent(RegistrationEvent::confirmed($id, $registration['name']));
-			$this->response()->success(array());
+			$this->env->events()->onEvent(RegistrationEvent::userCreated($id, $registration['name']));
 		}
 		
 		private function addUserProperties($id, $name, $plugin) {
@@ -217,6 +254,11 @@
 			$recipient = array(array("name" => $name, "email" => $email));
 			
 			$this->env->mailer()->send($recipient, $subject, $msg);
+		}
+		
+		private function getPluginSetting($k, $dv) {
+			$plugin = $this->env->plugins()->getPlugin("Registration");
+			return $plugin->getSetting($k, $dv);
 		}
 				
 		public function __toString() {

@@ -12,7 +12,7 @@
 	"use strict"; // jshint ;_;
 
 	mollify.view.config.admin.Registration = {
-		PendingRegistrationsView : function() {
+		RegistrationsView : function() {
 			var that = this;
 
 			this.init = function() {
@@ -45,19 +45,27 @@
 						narrow: true,
 						columns: [
 							{ type:"selectrow" },
-							{ id: "icon", title:"", type:"static", content: '<i class="icon-pencil"></i>' },
+							{ id: "icon", title:"", valueMapper: function(r) {
+								return (r.confirmed) ? '<i class="icon-ok"></i>' : '<i class="icon-pencil"></i>';
+							} },
+//							{ id: "icon", title:"", type:"static", content: '<i class="icon-pencil"></i>' },
 							{ id: "name", title: mollify.ui.texts.get('pluginRegistrationAdminNameTitle') },
 							{ id: "email", title: mollify.ui.texts.get('pluginRegistrationAdminEmailTitle') },
 							{ id: "key", title: mollify.ui.texts.get('pluginRegistrationAdminKeyTitle') },
 							{ id: "time", title: mollify.ui.texts.get('pluginRegistrationAdminTimeTitle'), formatter: that._timestampFormatter },
-							{ id: "confirm", title: mollify.ui.texts.get('pluginRegistrationAdminConfirmTitle'), type: "action", content: '<i class="icon-ok"></i>' },
+							{ id: "confirmed", title: mollify.ui.texts.get('pluginRegistrationAdminConfirmedTitle'), formatter: that._timestampFormatter },
+							{ id: "approve", title: mollify.ui.texts.get('pluginRegistrationAdminApproveTitle'), type: "action", content: '<i class="icon-thumbs-up"></i>' },
 							{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 						],
+						onRow: function($r, r) {
+							if (r.confirmed) $r.addClass("success");
+							else $r.addClass("warning");
+						},
 						onRowAction: function(id, r) {
 							if (id == "remove") {
 								mollify.service.del("registration/list/"+r.id).done(updateList);
-							} else if (id == "confirm") {
-								mollify.service.post("registration/confirm/"+r.id).done(updateList);
+							} else if (id == "approve") {
+								mollify.service.post("registration/approve/"+r.id).done(updateList);
 							}
 						}
 					}
@@ -135,10 +143,10 @@
 
 	mollify.admin.plugins.Registration = {
 		resources : {
-			texts: true
+			texts: false
 		},
 		views: [
-			new mollify.view.config.admin.Registration.PendingRegistrationsView()
+			new mollify.view.config.admin.Registration.RegistrationsView()
 		]
 	};
 }(window.jQuery, window.mollify);
