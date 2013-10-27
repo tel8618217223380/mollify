@@ -1,6 +1,7 @@
 CREATE TABLE user (
   id INTEGER PRIMARY KEY,
   name varchar(255) NOT NULL,
+  lang char(2) NULL,
   description varchar(255) NOT NULL DEFAULT '',
   password varchar(128) NULL,
   a1password varchar(128) NULL,

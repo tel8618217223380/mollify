@@ -158,7 +158,7 @@
 		private function checkInstalled() {
 			if (!$this->isInstalled()) return;
 			
-			$this->processor->createEnvironment();
+			$this->processor->createEnvironment($this->db);
 			if (!$this->processor->authentication()->isAdmin()) die("Mollify Installer requires administrator user");
 			
 			$this->processor->showPage("installed");
@@ -237,8 +237,9 @@
 				$this->processor->showPage("install_error");
 			}
 
+			$this->processor->createEnvironment($this->db);
 			try {
-				$this->util()->createAdminUser($this->data("name"), $this->data("password"));
+				$this->processor->createAdminUser($this->data("name"), $this->data("password"));
 			} catch (ServiceException $e) {
 				$this->processor->setError("Could not create admin user", '<code>'.$e->details().'</code>');
 				$this->processor->showPage("install_error");

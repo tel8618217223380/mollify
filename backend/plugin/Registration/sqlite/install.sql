@@ -5,6 +5,6 @@ CREATE TABLE registration (
   email varchar(128) NOT NULL,
   key char(64) NOT NULL,
   time bigint(11) NOT NULL,
-  confirmed bigint(11) NULL,
+  confirmed bigint(11) NULL
 );
 INSERT INTO parameter (name, value) VALUES ('plugin_Registration_version', '1_1');

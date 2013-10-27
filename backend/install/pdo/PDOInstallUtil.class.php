@@ -55,12 +55,7 @@
 		public function execInsertParams() {
 			$this->db->execSqlFile("db/".$this->db->type()."/sql/install/params.sql");
 		}
-		
-		public function createAdminUser($name, $pw) {
-			$a1pw = md5($name.":mollify:".$pw);	//TODO
-			$this->db->query("INSERT INTO ".$this->db->table("user")." (name, password, a1password, permission_mode, is_group) VALUES ('".$this->db->string($name)."','".md5($pw)."','".$a1pw."','".Authentication::PERMISSION_VALUE_ADMIN."', 0)", FALSE);
-		}
-		
+				
 		public function updateVersionStep($from, $to) {
 			$file = "db/".$this->db->type()."/sql/update/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
