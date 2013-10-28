@@ -988,7 +988,8 @@ var mollifyDefaults = {
 		},
 	
 		formatDateTime : function(time, fmt) {
-			return time.toString(fmt);
+			var ft = time.toString(fmt);
+			return ft;
 		},
 		
 		parseInternalTime : function(time) {

@@ -36,6 +36,8 @@
 			$data = $this->request->data;
 			if (!isset($data)) throw $this->invalidRequestException();
 			
+			//TODO assert time numeric
+			
 			$db = $this->env->db();
 			$query = "from ".$db->table("event_log")." where 1=1";
 			
