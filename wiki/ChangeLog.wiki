@@ -1,6 +1,15 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.2 ===
+Released 2013/10/28
+  * Automatic language loading
+  * Support for user language
+  * More secure password hashing
+  * Registration plugin updated to 1.1: by default registrations require admin approval
+
+*BREAKING CHANGES* In index.html language is no more loaded with "texts_xx.js", and this line should be removed. See example index.html in "backend/example".
+
 === Version 2.1.9 ===
 Released 2013/10/25
   * Added support for new file permission: read&write&no delete.
