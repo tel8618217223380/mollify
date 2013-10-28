@@ -7,10 +7,13 @@ Registration plugin is built-in plugin that provides functionality for user self
 = Configuration =
 
 Registration has following settings:
+  * require_approval (by default TRUE)
   * permission
   * groups
   * folders
   * user_folder
+
+If approval is required, confirmed registration will not create user yet. Instead, confirmed registrations are listed in admin view, where admin user can approve. Using notificator plugin, admins can get email notifications for confirmed registrations.
 
 Permission is the permission mode for the created user, possible values "ro" (read only), "rw" (read and write) and "a" (admin). If not given, users are added with read only permission.
 
@@ -27,6 +30,7 @@ For example:
 		...,
 		"plugins" => array(
 			"Registration" => array(
+				"require_approval" => TRUE,
 				"permission" => "rw",
 				"folders" => array("1", "3"),
 				"user_folder" => array("path" => "/foo/users", "folder_name" => "User Folder", "add_to_users" 
