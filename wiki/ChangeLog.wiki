@@ -8,7 +8,7 @@ Released 2013/10/28
   * More secure password hashing
   * Registration plugin updated to 1.1: by default registrations require admin approval
 
-*BREAKING CHANGES* In index.html language is no more loaded with "texts_xx.js", and this line should be removed. See example index.html in "backend/example".
+*BREAKING CHANGES* Localizations are no longer in js files, but instead in json files which are loaded automatically based on selected language. For the same reason, in index.html language is no more loaded by importing "texts_xx.js" in the head section, and this line should be removed. See example index.html in "backend/example".
 
 === Version 2.1.9 ===
 Released 2013/10/25
