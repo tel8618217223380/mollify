@@ -84,7 +84,7 @@
 			//if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
 			//if (function_exists("onRegisterCustomData")) onRegisterCustomData($registration);
 			
-			$this->notify($name, $email, $key, $password);
+			$this->notifyRegister($name, $email, $key, $password);
 			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
 			$this->response()->success(array());
 		}
@@ -140,10 +140,11 @@
 			$result = $db->query($query);
 			
 			if ($result->count() != 1) throw new ServiceException("Registration not found");
-			$this->createUser($result->firstRow());
+			$r = $result->firstRow();
+			$this->createUser($r);
 			
 			$requireApproval = $this->getPluginSetting("require_approval", TRUE);
-			//TODO if ($requireApproval) sendEmailUserCreated
+			if ($requireApproval) $this->notifyApproved($r);
 			
 			$this->response()->success(array());
 		}
@@ -244,7 +245,7 @@
 			}
 		}
 		
-		private function notify($name, $email, $key, $password) {
+		private function notifyRegister($name, $email, $key, $password) {
 			$texts = $this->env->resources()->loadTexts("PluginRegistrationMessages", dirname(__FILE__));
 			$link = $this->env->getClientUrl("?v=registration/confirm&email=".urlencode($email)."&key=".$key);
 			$values = array("name" => $name, "email" => $email, "link" => $link, "password" => $password);
@@ -252,6 +253,23 @@
 			$subject = Util::replaceParams($texts["registration_notification_subject"], $values);
 			$msg = Util::replaceParams($texts["registration_notification_message"], $values);
 			$recipient = array(array("name" => $name, "email" => $email));
+			
+			$this->env->mailer()->send($recipient, $subject, $msg);
+		}
+
+		private function notifyApproved($registration) {
+			$texts = $this->env->resources()->loadTexts("PluginRegistrationMessages", dirname(__FILE__));
+			if (!isset($texts["registration_notification_approved_subject"]) or !isset($texts["registration_notification_approved_message"])) {
+				Logging::logDebug("No approved messages found, notification mail not sent");
+				return;
+			}
+			
+			$loginLink = $this->env->getClientUrl("");
+			$values = array("name" => $registration["name"], "email" => $registration["email"], "link" => $loginLink);
+			
+			$subject = Util::replaceParams($texts["registration_notification_approved_subject"], $values);
+			$msg = Util::replaceParams($texts["registration_notification_approved_message"], $values);
+			$recipient = array(array("name" => $registration["name"], "email" => $registration["email"]));
 			
 			$this->env->mailer()->send($recipient, $subject, $msg);
 		}
