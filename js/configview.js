@@ -551,7 +551,7 @@
 			var $authentication = false;
 			var $language = false;
 			var $expiration = false;
-			var showLanguages = (mollify.settings.language.options.length > 1);
+			var showLanguages = (mollify.settings.language.options && mollify.settings.language.options.length > 1);
 			
 			mollify.ui.dialogs.custom({
 				resizable: true,
