@@ -4,7 +4,7 @@
 === Version 2.2 ===
 Released 2013/10/28
   * Automatic language loading
-  * Support for user language
+  * Support for user language (https://code.google.com/p/mollify/wiki/ClientLanguages)
   * More secure password hashing
   * Registration plugin updated to 1.1: by default registrations require admin approval
 
