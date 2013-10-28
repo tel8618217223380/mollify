@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.2.1 ===
+Released 2013/10/28
+  * Fixed issue with registration and new password hash
+
 === Version 2.2 ===
 Released 2013/10/28
   * Automatic language loading
