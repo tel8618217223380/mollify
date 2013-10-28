@@ -30,10 +30,11 @@
 			}
 			
 			$pw = $this->createNewPassword();
-			if (!$this->env->configuration()->changePassword($user['id'], $pw)) {
+			$this->env->configuration()->updateUserAuth($user['id'], $user['name'], $pw, FALSE);
+			/*if (!$this->env->configuration()->changePassword($user['id'], $pw)) {
 				$this->response()->fail(108, "PASSWORD_RESET_FAILED");
 				return;
-			}
+			}*/
 			
 			$this->notify($data['email'], $user, $pw);
 			$this->response()->success(array());
