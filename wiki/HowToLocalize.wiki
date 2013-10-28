@@ -1,10 +1,24 @@
 #summary Instructions for how to localize Mollify
 
+= Languages =
+
+By default, Mollify opens in english. To change default language, use following client option:
+{{{
+			$(document).ready(function(){	
+				mollify.App.init({
+					"language": {
+						default: "de"
+					},
+					...
+				});
+			});
+}}}
+
 = How to correct localization errors =
 
 To correct localization errors, do following steps:
 
-1) Open your copy of the localization file, Mollify localization files are located at "js/localization/texts_xx.js"
+1) Open your copy of the localization file, Mollify localization files are located at "localization/texts_xx.json"
 
 2) Find the incorrect value, and correct it. Save the file
 
@@ -21,12 +35,12 @@ If your language is not found, see next chapter on how to create a new localizat
 
 To localize into new language, do following steps:
 
-1) Copy English version "js/localization/texts_en.js" into a new file with your locale identifier (from installation package, or from [https://code.google.com/p/mollify/source/browse/trunk/js/localization/texts_en.js version control])
+1) Copy English version "localization/texts_en.json" into a new file with your locale identifier (from installation package, or from [https://code.google.com/p/mollify/source/browse/trunk/localization/texts_en.json version control])
 
-2) Edit the file, and change the locale identifier in the first line
+2) Edit the file, and change the locale identifier in the beginning of file
 
 3) Localize all the values in the file
 
-4) Edit the index.html page, and change the localization file import to match your new language
+4) Edit the index.html page, and change the default language
 
 5) Send the localization file to me, and I will include it in the next version
