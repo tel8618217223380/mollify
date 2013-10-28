@@ -608,7 +608,7 @@
 					if (showLanguages)
 						$language = mollify.ui.controls.select("languageField", {
 							values: mollify.settings.language.options,
-							none: mollify.ui.texts.get('configAdminUsersUserDialogLangDefault', (mollify.settings.language.default || 'en')),
+							none: mollify.ui.texts.get('configAdminUsersUserDialogLangDefault', (mollify.settings.language["default"] || 'en')),
 							valueMapper: that._langFormatter
 						});
 					$expiration = mollify.ui.controls.datepicker("expirationField", {
