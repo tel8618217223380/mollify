@@ -719,7 +719,7 @@
 		
 		this._canWrite = function() {
 			if (!that._currentFolderInfo) return false;
-			return (that._currentFolderInfo.permission == 'RW');
+			return (that._currentFolderInfo.permission == 'RW' || that._currentFolderInfo.permission == 'WD');
 		}
 		
 		this.onRetrieveUrl = function(url) {
