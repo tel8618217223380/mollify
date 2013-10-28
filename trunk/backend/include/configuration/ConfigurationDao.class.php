@@ -69,29 +69,29 @@
 		}
 		
 		public function getUserAuth($id) {
-			return $this->db->query(sprintf("SELECT id, type, hash, salt FROM ".$this->db->table("user_auth")." WHERE id=%s", $this->db->string($id, TRUE)))->firstRow();
+			return $this->db->query(sprintf("SELECT user_id, type, hash, salt FROM ".$this->db->table("user_auth")." WHERE user_id=%s", $this->db->string($id, TRUE)))->firstRow();
 		}
 		
 		public function storeUserAuth($id, $username, $type, $pw) {
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_auth")." WHERE id=%s", $this->db->string($id, TRUE)));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_auth")." WHERE user_id=%s", $this->db->string($id, TRUE)));
 			
 			$hash = $this->env->passwordHash()->createHash($pw);
 			$a1hash = md5($username.":".$this->env->authentication()->realm().":".$pw);
 			
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_auth")." (id, type, hash, salt, a1hash) VALUES (%s, %s, %s, %s, %s)", $this->db->string($id, TRUE), $this->db->string($type, TRUE), $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_auth")." (user_id, type, hash, salt, a1hash) VALUES (%s, %s, %s, %s, %s)", $this->db->string($id, TRUE), $this->db->string($type, TRUE), $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE)));
 		}
 		
 		public function updateUserAuth($id, $username, $pw, $type=FALSE) {
 			$hash = $this->env->passwordHash()->createHash($pw);
 			$a1hash = md5($username.":".$this->env->authentication()->realm().":".$pw);
 			if ($type !== FALSE)
-				$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET hash=%s, salt=%s, a1hash=%s, type=%s WHERE id=%s", $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE), $this->db->string($type, TRUE), $this->db->string($id, TRUE)));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET hash=%s, salt=%s, a1hash=%s, type=%s WHERE user_id=%s", $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE), $this->db->string($type, TRUE), $this->db->string($id, TRUE)));
 			else
-				$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET hash=%s, salt=%s, a1hash=%s WHERE id=%s", $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE), $this->db->string($id, TRUE)));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET hash=%s, salt=%s, a1hash=%s WHERE user_id=%s", $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE), $this->db->string($id, TRUE)));
 		}
 		
 		public function updateUserAuthType($id, $type) {
-			$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET type=%s WHERE id=%s", $this->db->string($type, TRUE), $this->db->string($id, TRUE)));
+			$this->db->update(sprintf("UPDATE ".$this->db->table("user_auth")." SET type=%s WHERE user_id=%s", $this->db->string($type, TRUE), $this->db->string($id, TRUE)));
 		}
 		
 		public function getUserLegacyPw($id) {
@@ -202,7 +202,7 @@
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_group")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE user_id='%s'", $id));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_auth")." WHERE id='%s'", $id));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_auth")." WHERE user_id='%s'", $id));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("user")." WHERE id='%s'", $id));
 			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST", "Invalid delete user request, user ".$id." not found");

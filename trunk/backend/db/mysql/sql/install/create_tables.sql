@@ -3,8 +3,6 @@ CREATE TABLE `{TABLE_PREFIX}user` (
   `name` varchar(255) NOT NULL,
   `lang` char(2) NULL,
   `description` varchar(255) NOT NULL DEFAULT '',
-  `password` varchar(128) NULL,
-  `a1password` varchar(128) NULL,
   `permission_mode` char(2) NULL,
   `email` varchar(128) NULL,
   `auth` varchar(8) NULL,
@@ -14,12 +12,13 @@ CREATE TABLE `{TABLE_PREFIX}user` (
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify users and groups';
 
 CREATE TABLE `{TABLE_PREFIX}user_auth` (
-  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `type` varchar(8) NULL,
   `salt` char(128) NOT NULL,
   `hash` char(128) NOT NULL,
   `a1hash` char(128) NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`user_id`),
+  KEY `fk_ua_user` (`user_id`)
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify user auth';
 
 CREATE TABLE `{TABLE_PREFIX}user_group` (
