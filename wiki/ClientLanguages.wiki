@@ -8,7 +8,8 @@ By default, Mollify opens in english. To change default language, use following 
 	$(document).ready(function(){	
 		mollify.App.init({
 			"language": {
-				default: "de"
+				default: "de",
+				options: ["en"]
 			},
 			...
 		});
