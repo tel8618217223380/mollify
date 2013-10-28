@@ -1,8 +1,8 @@
-VERSION=2.1
+VERSION=2.2
 DATE=$(shell date +%I:%M%p)
 CHECK=\033[32m✔\033[39m
 VERSIONF=$(shell echo ${VERSION} | sed 's/\./_/g')
-REVISION=$(shell svnversion | cut -s -d: -f2 | tr -d MS)
+REVISION=2177#$(shell svnversion | cut -s -d: -f2 | tr -d MS)
 HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 
@@ -17,7 +17,7 @@ build:
 	rm -rf out
 	mkdir -p out/mollify/js
 	mkdir -p out/mollify/js/lib
-	mkdir -p out/mollify/js/localization
+	mkdir -p out/mollify/localization
 	mkdir -p out/mollify/css
 	mkdir -p out/mollify/templates
 	
@@ -30,7 +30,7 @@ build:
 	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.full.js > out/mollify/js/mollify.full.min.js
 	rm -rf out/mollify/js/libs.tmp.js
 	@cp js/lib/*.js js/lib/*.swf out/mollify/js/lib
-	@cp js/localization/*.js out/mollify/js/localization
+	@cp localization/*.json out/mollify/localization
 	@cp templates/*.html out/mollify/templates
 	@echo "Compiling and minifying javascript...       ${CHECK} Done"
 	
