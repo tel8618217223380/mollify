@@ -3,8 +3,6 @@ CREATE TABLE user (
   name varchar(255) NOT NULL,
   lang char(2) NULL,
   description varchar(255) NOT NULL DEFAULT '',
-  password varchar(128) NULL,
-  a1password varchar(128) NULL,
   permission_mode char(2) NULL,
   email varchar(128) NULL,
   auth varchar(8) NULL,
@@ -12,11 +10,12 @@ CREATE TABLE user (
   expiration bigint(11) NULL
 );
 CREATE TABLE user_auth (
-  id INTEGER PRIMARY KEY,
+  user_id INTEGER PRIMARY KEY,
   type varchar(8) NULL,
   salt char(128) NOT NULL,
   hash char(128) NOT NULL,
-  a1hash char(128) NULL
+  a1hash char(128) NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id)
 );
 CREATE TABLE user_group (
   user_id int(11) NOT NULL,
