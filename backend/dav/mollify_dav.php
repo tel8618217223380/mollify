@@ -211,7 +211,15 @@
 			}
 			
 			$user = $env->configuration()->getUserByNameOrEmail($result[0]);
-			if (!$user or strcmp($user["password"], md5($result[1])) != 0) {
+			if (!$user) {
+				Logging::logDebug("DAV authentication failure");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
+			
+			$userAuth = $env->configuration()->getUserAuth($user["id"]);
+			if ($env->passwordHash()->isEqual($pw, $userAuth["hash"], $userAuth["salt"])) {
 				Logging::logDebug("DAV authentication failure");
 				$auth->requireLogin();
 				echo "Authentication required\n";
@@ -232,8 +240,15 @@
 			}
 			
 			$user = $env->configuration()->getUserByNameOrEmail($username);
+			if (!$user) {
+				Logging::logDebug("DAV digest authentication failure");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
 			
-			if (!$user or !$auth->validateA1($user["a1password"])) {
+			$userAuth = $env->configuration()->getUserAuth($user["id"]);			
+			if (!$auth->validateA1($userAuth["a1hash"])) {
 				Logging::logDebug("DAV digest authentication failure");
 				$auth->requireLogin();
 				echo "Authentication required\n";
