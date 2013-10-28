@@ -225,7 +225,6 @@
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
 			
-			//TODO check auth/pw
 			$this->assertAccess($share);
 
 			$itemId = $share["item_id"];
@@ -247,7 +246,7 @@
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
 			
-			//TODO check auth/pw
+			$this->assertAccess($share);
 			
 			$info = $this->doGetSharePublicInfo($share);
 			if ($info == NULL or $info["type"] != "prepared_download") throw new ServiceException("INVALID_REQUEST");
@@ -298,7 +297,7 @@
 			$share = $this->dao()->getShare($id);
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
 			
-			//TODO check auth/pw
+			$this->assertAccess($share);
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
 			$item = $this->env->filesystem()->item($share["item_id"]);

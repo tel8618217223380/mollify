@@ -57,8 +57,9 @@
 				df.reject();
 				return;
 			}
+			var t = false;
 			try {
-				var t = JSON.parse(r);
+				t = JSON.parse(r);
 			} catch (e) {
 				new mollify.ui.FullErrorView('<b>Localization file syntax error</b> (<code>'+url+'</code>): <p><code>'+e.message+'</code></p>').show();
 				return;
@@ -195,7 +196,7 @@
 	
 	mollify.ui.initializeLang = function() {
 		var df = $.Deferred();
-		var lang = mollify.session.lang || mollify.settings.language.default || 'en';
+		var lang = mollify.session.lang || mollify.settings.language["default"] || 'en';
 		
 		if (mollify.ui.texts.locale && mollify.ui.texts.locale == lang) return df.resolve();
 		
