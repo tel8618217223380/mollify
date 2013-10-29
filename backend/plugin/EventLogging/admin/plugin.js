@@ -15,8 +15,10 @@
 		AllEventsView : function() {
 			var that = this;
 
-			this.init = function() {
+			this.init = function(s, cv) {
+				that._cv = cv;
 				that.title = mollify.ui.texts.get("pluginEventLoggingAdminNavTitle");
+				
 				that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 				mollify.service.get("events/types/").done(function(t) {
 					that._types = [];
@@ -29,11 +31,11 @@
 			}
 
 			this.onActivate = function($c) {
-				$c.addClass("loading");
+				that._cv.showLoading(true);
 				that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 				
 				mollify.service.get("configuration/users/").done(function(users) {
-					$c.removeClass("loading");
+					that._cv.showLoading(false);
 
 					var listView = false;
 					var $optionType = false;
@@ -57,10 +59,15 @@
 						
 						return params;
 					}
+					
+					var refresh = function() {
+						that._cv.showLoading(true);
+						listView.table.refresh().done(function(){ that._cv.showLoading(false); });
+					}
 		
 					listView = new mollify.view.ConfigListView($c, {
 						actions: [
-							{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: function() { listView.table.refresh(); } }
+							{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: refresh }
 						],
 						table: {
 							id: "config-admin-folders",
@@ -121,7 +128,7 @@
 							format: mollify.ui.texts.get('shortDateTimeFormat'),
 							time: true
 						});
-						listView.table.refresh();
+						refresh();
 					});
 				});
 			};

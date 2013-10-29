@@ -15,8 +15,10 @@
 		NotificationsView : function() {
 			var that = this;
 
-			this.init = function() {
+			this.init = function(cv) {
+				that._cv = cv;
 				that.title = mollify.ui.texts.get("pluginNotificatorAdminNavTitle");
+				
 				mollify.service.get("events/types/").done(function(t) {
 					that._events = [];
 					that._eventTexts = t;
@@ -33,11 +35,11 @@
 				that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 							
 				var updateList = function() {
-					$c.addClass("loading");
+					that._cv.showLoading(true);
 					mollify.service.get("notificator/list/").done(function(l) {
-						$c.removeClass("loading");
 						list = l;
 						listView.table.set(list);
+						that._cv.showLoading(false);
 					});
 				};
 	
