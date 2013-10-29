@@ -201,7 +201,7 @@
 				title: mollify.ui.texts.get('mainviewChangePasswordTitle'),
 				content: $("#mollify-tmpl-main-changepassword").tmpl({message: mollify.ui.texts.get('mainviewChangePasswordMessage')}),
 				buttons: [
-					{ id: "yes", "title": mollify.ui.texts.get('mainviewChangePasswordAction') },
+					{ id: "yes", "title": mollify.ui.texts.get('mainviewChangePasswordAction'), cls: "btn-primary" },
 					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
 				],
 				"on-button": function(btn, d) {
@@ -453,9 +453,7 @@
 			this._customFolderTypes[id] = h;
 		}
 		
-		this.onResize = function() {
-			//$("#mollify-folderview").height($("#mollify-mainview-content").height());
-		}
+		this.onResize = function() {}
 		
 		this.onActivate = function(h) {
 			mollify.dom.template("mollify-tmpl-fileview").appendTo(h.content);
@@ -522,7 +520,6 @@
 				var params = mollify.request.getParams();
 				if (params.id) {
 					mollify.filesystem.folderInfo({id: params.id}, that.getDataRequest()).done(that._updateFolder).fail(function() {
-						//this.handled = true;	//TODO show better error
 						that.hideProgress();
 						that.openInitialFolder();
 					});
@@ -546,7 +543,6 @@
 				start: function(files, ready) {
 					that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), function() {
 						ready();
-						//if (c) c.hide(false);
 					});
 				},
 				progress: function(pr, br) {
@@ -567,22 +563,6 @@
 				}
 			};
 		};
-		/*
-					start: function(files, ready) {
-						that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), ready);
-					},
-					progress: function(pr) {
-						that.uploadProgress.set(pr);
-					},
-					finished: function() {
-						that.uploadProgress.hide();
-						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadComplete'), type: "success"});
-						that.refresh();
-					},
-					failed: function() {
-						that.uploadProgress.hide();
-						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadFailed'), type: "error"});
-					}*/
 		
 		this._updateScroll = function() {
 			var s = $(window).scrollTop();			
@@ -807,14 +787,17 @@
 							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
 								onRenderBubble: function(b) {
 									var $i = $("#mollify-mainview-createfolder-name-input");
-									$("#mollify-mainview-createfolder-button").click(function(){
+									var onCreate = function(){
 										var name = $i.val();
 										if (!name) return;
 
 										b.hide();
 										mollify.filesystem.createFolder(that._currentFolder, name);
-									});
-									$i.focus();
+									};
+									$("#mollify-mainview-createfolder-button").click(onCreate);
+									$i.bind('keypress', function(e) {
+										if ((e.keyCode || e.which) == 13) onCreate();
+									}).focus();
 								}
 							}});
 							return false;
