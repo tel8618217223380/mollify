@@ -1036,12 +1036,13 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 }
 
 #mollify-dropbox {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 	width: 0;
 	background-color: #eeeeee;
 	float: left;
+	z-index: 15;
 }
 
 #mollify-dropbox-handle {

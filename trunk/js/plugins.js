@@ -591,9 +591,9 @@
 				}
 				
 				var actions = [
-					{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { that.onDownloadCompressed([item]); } }
+					{"title-key":"pluginArchiverDownloadCompressed", icon: 'archive', type:"primary", group:"download", callback: function() { that.onDownloadCompressed([item]); } }
 				];
-				if (ctx.folder && folderWritable) actions.push({"title-key":"pluginArchiverCompress", callback: function() { return that.onCompress(item, ctx.folder); } });
+				if (ctx.folder && folderWritable) actions.push({"title-key":"pluginArchiverCompress", icon: 'archive', callback: function() { return that.onCompress(item, ctx.folder); } });
 				return {
 					actions: actions
 				};
@@ -601,8 +601,8 @@
 			itemCollectionHandler : function(items, ctx) {
 				return {
 					actions: [
-						{"title-key":"pluginArchiverCompress", callback: function() { return that.onCompress(items) } },
-						{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { return that.onDownloadCompressed(items) } }
+						{"title-key":"pluginArchiverCompress", icon: 'archive', callback: function() { return that.onCompress(items) } },
+						{"title-key":"pluginArchiverDownloadCompressed", icon: 'archive', type:"primary", group:"download", callback: function() { return that.onDownloadCompressed(items) } }
 					]
 				};
 			}
@@ -2016,7 +2016,7 @@
 			itemContextHandler : function(item, ctx, data) {
 				return {
 					actions: [
-						{ id: 'pluginShare', 'title-key': 'itemContextShareMenuTitle', callback: function() { that.onOpenShares(item); } }
+						{ id: 'pluginShare', 'title-key': 'itemContextShareMenuTitle', icon: 'external-link', callback: function() { that.onOpenShares(item); } }
 					]
 				};
 			},
