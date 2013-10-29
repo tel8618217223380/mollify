@@ -1419,7 +1419,7 @@
 			title: spec.title,
 			content: $("#mollify-tmpl-dialog-info").tmpl({message: spec.message}),
 			buttons: [
-				{ id: "ok", "title-key": "ok" }
+				{ id: "ok", "title-key": "ok", cls:"btn-primary" }
 			],
 			"on-button": function(btn, d) {
 				d.close();
@@ -1460,7 +1460,7 @@
 			title: mollify.ui.texts.get('errorDialogTitle'),
 			content: msg,
 			buttons: [
-				{ id: "yes", "title-key": "yes" },
+				{ id: "yes", "title-key": "yes", cls:"btn-primary" },
 				{ id: "no", "title-key": "no" }
 			],
 			"on-button": function(btn, d) {
@@ -1483,7 +1483,7 @@
 					debug: error.trace.join("<br/>")}
 				),
 				buttons: [
-					{ id: "ok", "title-key": "ok" }
+					{ id: "ok", "title-key": "ok", cls:"btn-primary" }
 				],
 				"on-button": function(btn, d) {
 					d.close();
@@ -1504,7 +1504,7 @@
 			initSize: spec.initSize,
 			content: $("#mollify-tmpl-dialog-select").tmpl({message: spec.message}),
 			buttons: [
-				{ id: "ok", "title-key": "ok" },
+				{ id: "ok", "title-key": "ok", cls:"btn-primary" },
 				{ id: "cancel", "title-key": "dialogCancel" }
 			],
 			"on-button": function(btn, d) {
@@ -1535,7 +1535,7 @@
 			title: spec.title,
 			content: $("#mollify-tmpl-dialog-error").tmpl({message: spec.message}),
 			buttons: [
-				{ id: "ok", "title-key": "ok" }
+				{ id: "ok", "title-key": "ok", cls:"btn-primary" }
 			],
 			"on-button": function(btn, d) {
 				d.close();
@@ -1549,7 +1549,7 @@
 			title: spec.title,
 			content: spec.message,
 			buttons: [
-				{ id: "yes", "title-key": "yes" },
+				{ id: "yes", "title-key": "yes", cls:"btn-primary" },
 				{ id: "no", "title-key": "no" }
 			],
 			"on-button": function(btn, d) {
@@ -1565,7 +1565,7 @@
 			title: spec.title,
 			content: $("#mollify-tmpl-dialog-input").tmpl({message: spec.message}),
 			buttons: [
-				{ id: "yes", "title": spec.yesTitle },
+				{ id: "yes", "title": spec.yesTitle, cls:"btn-primary" },
 				{ id: "no", "title": spec.noTitle }
 			],
 			"on-button": function(btn, d) {
@@ -1738,7 +1738,7 @@
 			title: spec.title,
 			content: content,
 			buttons: [
-				{ id: "action", "title": spec.actionTitle },
+				{ id: "action", "title": spec.actionTitle, cls:"btn-primary" },
 				{ id: "cancel", "title-key": "dialogCancel" }
 			],
 			"on-button": function(btn, d) {
