@@ -577,12 +577,11 @@
 			},
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
-				if (root) return false;
 				var writable = !root && (ctx.details.permission.toUpperCase() == "RW" || ctx.details.permission.toUpperCase() == "WD");
 				var parentWritable = !root && (ctx.details.parent_permission.toUpperCase() == "RW" || ctx.details.parent_permission.toUpperCase() == "WD");
 				var folderWritable = !root && ctx.folder_permission && (ctx.folder_permission.toUpperCase() == "RW" || ctx.folder_permission.toUpperCase() == "WD");
 
-				if (that._isArchive(item)) {
+				if (parentWritable && that._isArchive(item)) {
 					return {
 						actions: [
 							{"title-key":"pluginArchiverExtract", callback: function() { return that._onExtract(item) } }
