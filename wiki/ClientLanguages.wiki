@@ -8,8 +8,7 @@ By default, Mollify opens in english. To change default language, use following 
 	$(document).ready(function(){	
 		mollify.App.init({
 			"language": {
-				default: "de",
-				options: ["de"]
+				default: "de"
 			},
 			...
 		});
@@ -23,7 +22,7 @@ By default all users use the default language. To enable user specific language,
 	$(document).ready(function(){	
 		mollify.App.init({
 			"language": {
-				default: "en",
+				default: "de",
 				options: ["en", "de"]
 			},
 			...
@@ -31,7 +30,7 @@ By default all users use the default language. To enable user specific language,
 	});
 }}}
 
-Now user admin will allow choosing from these language options.
+This will use Deutsch as default language for all users, but in user admin view it is possible to set user language to English as well.
 
 = How to correct localization errors =
 
