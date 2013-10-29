@@ -51,7 +51,7 @@
 			if ($allowEmail) {
 				$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s')".$expirationCriteria, $this->db->string($username), $this->db->string($username)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE name='%s')".$expirationCriteria, $this->db->string($username)));
+				$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE name='%s'".$expirationCriteria, $this->db->string($username)));
 			}
 			$matches = $result->count();
 			
