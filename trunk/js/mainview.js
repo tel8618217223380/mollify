@@ -1052,6 +1052,7 @@
 							item: item,
 							element: that.itemWidget.getItemContextElement(item),
 							viewport: that.itemWidget.getContainerElement(),
+							container: $("#mollify-folderview-items"),
 							folder: that._currentFolder,
 							folder_permission: that._currentFolderInfo ? that._currentFolderInfo.permission : false
 						});
