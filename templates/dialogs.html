@@ -94,7 +94,7 @@
 			{{tmpl($item.data) "#mollify-tmpl-popupmenu"}}
 		</li>
 	{{else}}
-	<li class="dropdown-item"><a href="#">${$item.data.title}</a></li>
+	<li class="dropdown-item"><a href="#">{{if $item.data.icon}}<i class="icon-${$item.data.icon}"></i>&nbsp;&nbsp;{{/if}}${$item.data.title}</a></li>
 	{{/if}}
 </script>
 

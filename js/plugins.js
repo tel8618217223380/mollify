@@ -26,19 +26,19 @@
 
 				var actions = [];				
 				if (item.is_file ) {
-					actions.push({ 'title-key': 'actionDownloadItem', type:"primary", group:"download", callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
+					actions.push({ 'title-key': 'actionDownloadItem', icon: 'download', type:"primary", group:"download", callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
 					actions.push({ title: '-' });
 				}
 				
-				actions.push({ 'title-key': 'actionCopyItem', callback: function() { return mollify.filesystem.copy(item); }});
+				actions.push({ 'title-key': 'actionCopyItem', icon: 'copy', callback: function() { return mollify.filesystem.copy(item); }});
 				if (parentWritable)
-					actions.push({ 'title-key': 'actionCopyItemHere', callback: function() { return mollify.filesystem.copyHere(item); } });
+					actions.push({ 'title-key': 'actionCopyItemHere', icon: 'copy', callback: function() { return mollify.filesystem.copyHere(item); } });
 				
 				if (writable) {	
-					actions.push({ 'title-key': 'actionMoveItem', callback: function() { return mollify.filesystem.move(item); } });
-					actions.push({ 'title-key': 'actionRenameItem', callback: function() { return mollify.filesystem.rename(item); } });
+					actions.push({ 'title-key': 'actionMoveItem', icon: 'mail-forward', callback: function() { return mollify.filesystem.move(item); } });
+					actions.push({ 'title-key': 'actionRenameItem', icon: 'pencil', callback: function() { return mollify.filesystem.rename(item); } });
 					if (deletable)
-						actions.push({ 'title-key': 'actionDeleteItem', callback: function() { var df = $.Deferred(); mollify.ui.dialogs.confirmation({
+						actions.push({ 'title-key': 'actionDeleteItem', icon: 'trash', callback: function() { var df = $.Deferred(); mollify.ui.dialogs.confirmation({
 							title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
 							message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
 							callback: function() { $.when(mollify.filesystem.del(item)).then(df.resolve, df.reject); }
@@ -52,9 +52,9 @@
 			itemCollectionHandler : function(items) {
 				return {
 					actions: [
-						{ 'title-key': 'actionCopyMultiple', callback: function() { return mollify.filesystem.copy(items); } },
-						{ 'title-key': 'actionMoveMultiple', callback: function() { return mollify.filesystem.move(items); } },
-						{ 'title-key': 'actionDeleteMultiple', callback: function() { return mollify.filesystem.del(items); } }
+						{ 'title-key': 'actionCopyMultiple', icon: 'copy', callback: function() { return mollify.filesystem.copy(items); } },
+						{ 'title-key': 'actionMoveMultiple', icon: 'mail-forward', callback: function() { return mollify.filesystem.move(items); } },
+						{ 'title-key': 'actionDeleteMultiple', icon: 'trash', callback: function() { return mollify.filesystem.del(items); } }
 					]
 				};
 			}
