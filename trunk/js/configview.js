@@ -42,6 +42,8 @@
 		this.onActivate = function(h) {
 			mollify.templates.load("configview", mollify.templates.url("configview.html")).done(function() {
 				mollify.dom.template("mollify-tmpl-configview").appendTo(h.content);
+				
+				that.showLoading(true);
 
 				var navBarItems = [];
 				$.each(that._views, function(i, v) {
@@ -116,7 +118,7 @@
 			if (!mollify.session.admin || that._adminViews.length === 0) return;
 
 			$.each(that._adminViews, function(i, v) {
-				if (v.init) v.init(that._settings);
+				if (v.init) v.init(that._settings, that);
 			});
 
 			var navBarItems = [];
@@ -139,13 +141,24 @@
 			if (admin) that._adminNav.setActive(v);
 			else that._userNav.setActive(v);
 
+			that.showLoading(false);
+			
 			that._activeView = v;
 			$("#mollify-configview-header").html(v.title);
-			v.onActivate($("#mollify-configview-content").empty());
+			v.onActivate(that._getContentElement().empty(), that);
+		}
+		
+		this._getContentElement = function() {
+			return $("#mollify-configview-content");
 		}
 
 		this.onDeactivate = function() {
 			if (that._activeView && that._activeView.onDeactivate) that._activeView.onDeactivate();
+		}
+		
+		this.showLoading = function(s) {
+			if (s) that._getContentElement().find(".mollify-configlistview").addClass("loading");
+			else that._getContentElement().find(".mollify-configlistview").removeClass("loading");
 		}
 	}
 
@@ -210,8 +223,9 @@
 	mollify.view.config.admin.UsersView = function() {
 		var that = this;
 		
-		this.init = function(opt) {
-			this.title = mollify.ui.texts.get("configAdminUsersNavTitle");
+		this.init = function(opt, cv) {
+			that._cv = cv;
+			that.title = mollify.ui.texts.get("configAdminUsersNavTitle");
 	
 			that._permissionOptions = ["a", "rw", "wd", "ro", "no"];
 			that._permissionTexts = {
@@ -232,11 +246,6 @@
 			var users = false;
 			var listView = false;
 			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
-
-			var updateUsers = function() {
-				that._details.hide();
-				listView.table.refresh();
-			};
 			
 			var getQueryParams = function(i) {
 				var params = { criteria: {} };
@@ -249,6 +258,16 @@
 				
 				return params;
 			}
+			
+			var refresh = function() {
+				that._cv.showLoading(true);
+				listView.table.refresh().done(function(){ that._cv.showLoading(false); });
+			};
+			
+			var updateUsers = function() {
+				that._details.hide();
+				refresh();
+			};
 						
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
@@ -260,7 +279,7 @@
 							callback: function() { that._removeUsers(sel).done(updateUsers); }
 						});
 					}},
-					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: function() { listView.table.refresh() } }
+					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: refresh }
 				],
 				table: {
 					id: "config-admin-users",
@@ -312,7 +331,7 @@
 				}
 			});
 
-			$c.addClass("loading");
+			that._cv.showLoading(true);
 						
 			var $options = $c.find(".mollify-configlistview-options");
 			mollify.dom.template("mollify-tmpl-config-admin-user-searchoptions").appendTo($options);
@@ -324,10 +343,7 @@
 			var fp = mollify.service.get("configuration/folders").done(function(f) {
 				that._allFolders = f;
 			});
-			$.when(gp, fp).done(function() {
-				$c.removeClass("loading");
-				listView.table.refresh();
-			});
+			$.when(gp, fp).done(refresh);
 		}
 		
 		this.onChangePassword = function(u, cb) {
@@ -638,20 +654,21 @@
 	mollify.view.config.admin.GroupsView = function() {
 		var that = this;
 		
-		this.init = function(s) {
-			this.title = mollify.ui.texts.get("configAdminGroupsNavTitle");	
+		this.init = function(s, cv) {
+			that._cv = cv;
+			that.title = mollify.ui.texts.get("configAdminGroupsNavTitle");	
 		}
 		
 		this.onActivate = function($c) {
 			var groups = false;
 			var listView = false;
 			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
-
+			
 			var updateGroups = function() {
 				that._details.hide();
-				$c.addClass("loading");
+				that._cv.showLoading(true);
 				mollify.service.get("configuration/usergroups/").done(function(l) {
-					$c.removeClass("loading");
+					that._cv.showLoading(false);
 					groups = l;
 					listView.table.set(groups);
 				});
@@ -705,14 +722,14 @@
 			});
 			updateGroups();
 
-			$c.addClass("loading");
+			that._cv.showLoading(true);
 			var up = mollify.service.get("configuration/users").done(function(u) {
 				that._allUsers = u;
 			});
 			var fp = mollify.service.get("configuration/folders").done(function(f) {
 				that._allFolders = f;
 			});
-			$.when(up, fp).done(function(){$c.removeClass("loading");});
+			$.when(up, fp).done(function(){ that._cv.showLoading(false); });
 		}
 		
 		this.onDeactivate = function() {
@@ -916,7 +933,8 @@
 	mollify.view.config.admin.FoldersView = function() {
 		var that = this;
 		
-		this.init = function(s) {
+		this.init = function(s, cv) {
+			that._cv = cv;
 			that._settings = s;
 			that.title = mollify.ui.texts.get("configAdminFoldersNavTitle");
 		}
@@ -927,9 +945,10 @@
 			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"), { resizable: true });
 
 			var updateFolders = function() {
-				$c.addClass("loading");
+				that._cv.showLoading(true);
+				
 				mollify.service.get("configuration/folders/").done(function(l) {
-					$c.removeClass("loading");
+					that._cv.showLoading(false);
 					folders = l;
 					listView.table.set(folders);
 				});
@@ -983,11 +1002,11 @@
 			});
 			updateFolders();
 			
-			$c.addClass("loading");
+			that._cv.showLoading(true);
 			var gp = mollify.service.get("configuration/usersgroups").done(function(r) {
 				that._allUsers = r.users;
 				that._allGroups = r.groups;
-				$c.removeClass("loading");
+				that._cv.showLoading(false);
 			});
 		}
 		

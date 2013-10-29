@@ -1140,7 +1140,8 @@
 					updateHint();
 				},
 				refresh: function() {
-					if (!o.remote || !o.remote.path) return;
+					var df = $.Deferred();
+					if (!o.remote || !o.remote.path) return df.resolve();
 					var queryParams = { count: perPageMax, start: dataInfo ? dataInfo.start : 0, sort: sortKey };
 					if (o.remote.queryParams) {
 						var p = o.remote.queryParams(dataInfo);
@@ -1152,8 +1153,10 @@
 							refreshPagingControls();
 						} else dataInfo = false;
 						api.set(r.data);
-					});
+						df.resolve();
+					}).fail(df.reject);
 					if (o.remote.onLoad) o.remote.onLoad(pr);
+					return df;
 				}
 			};
 			return api;

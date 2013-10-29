@@ -1924,20 +1924,22 @@
 			});
 		};
 
-		this.onActivateConfigView = function($c) {
+		this.onActivateConfigView = function($c, cv) {
 			var shares = false;
 			var items = false;
 			var invalid = [];
 			var listView = false;
 
 			var updateShares = function() {
-				$c.addClass("loading");
+				cv.showLoading(true);
+				
 				that.loadShares().done(function(l) {
-					$c.removeClass("loading");
 					shares = l.shares[mollify.session.user_id];
 					items = l.items;
 					invalid = l.invalid;
 					listView.table.set(items);
+					
+					cv.showLoading(false);
 				});
 			};
 			var isValid = function(i) {

@@ -1196,6 +1196,16 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	margin-bottom: 12px;
 }
 
+.mollify-configview-content {
+	float: left;
+}
+
+.mollify-configlistview {
+	float: left;
+	width: 100%;
+	min-height: 300px;
+}
+
 .mollify-configlistview-header {
 	float: left;
 	clear: both;

@@ -15,7 +15,8 @@
 		RegistrationsView : function() {
 			var that = this;
 
-			this.init = function() {
+			this.init = function(s, cv) {
+				that._cv = cv;
 				that.title = mollify.ui.texts.get("pluginRegistrationAdminNavTitle");
 				that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 			}
@@ -25,11 +26,11 @@
 				var listView = false;
 							
 				var updateList = function() {
-					$c.addClass("loading");
+					that._cv.showLoading(true);
 					mollify.service.get("registration/list/").done(function(l) {
-						$c.removeClass("loading");
 						list = l;
 						listView.table.set(list);
+						that._cv.showLoading(false);
 					});
 				};
 	
