@@ -1549,7 +1549,7 @@
 			title: spec.title,
 			content: spec.message,
 			buttons: [
-				{ id: "yes", "title-key": "yes", cls:"btn-primary" },
+				{ id: "yes", "title-key": "yes" },
 				{ id: "no", "title-key": "no" }
 			],
 			"on-button": function(btn, d) {
