@@ -423,6 +423,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 	overflow-y: auto;
 	min-height: 300px;
 	min-width: 90%;
+	max-width: 100%;
 }
 
 #mollify-folderview-header-items {
@@ -637,6 +638,7 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	overflow: hidden;
 	margin-right: 4px;
 	vertical-align: middle;
+	display: inline-block;
 }
 
 .mollify-filelist-col-item-description {
