@@ -25,15 +25,15 @@
 # requirements (there can be none), but merely suggestions.
 #
 class PasswordHash {
-	var $no_udevrandom;
+	var $no_devurandom;
 	var $itoa64;
 	var $iteration_count_log2;
 	var $portable_hashes;
 	var $random_state;
 
-	function PasswordHash($iteration_count_log2, $portable_hashes, $no_udevrandom=FALSE)
+	function PasswordHash($iteration_count_log2, $portable_hashes, $no_devurandom=FALSE)
 	{
-		$this->no_udevrandom = $no_udevrandom;
+		$this->no_devurandom = $no_devurandom;
 		$this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 		if ($iteration_count_log2 < 4 || $iteration_count_log2 > 31)
@@ -71,10 +71,13 @@ class PasswordHash {
 	}
 	
 	function is_devurandom() {
-		if ($this->no_udevrandom) return FALSE;
+		if (Logging::isDebug()) Logging::logDebug("/dev/urandom: ".($this->no_devurandom ? "0" : "1"));
+		if ($this->no_devurandom) return FALSE;
+		if (Logging::isDebug()) Logging::logDebug("Trying /dev/urandom");
 		try {
 			if (@is_readable('/dev/urandom')) return TRUE;
 		} catch (Exception $e) {}
+		if (Logging::isDebug()) Logging::logDebug("/dev/urandom not accessible");
 		return FALSE;
 	}
 

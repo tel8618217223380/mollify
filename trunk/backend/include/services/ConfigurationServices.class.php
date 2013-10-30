@@ -189,9 +189,10 @@
 				if (isset($user['auth']) and $user['auth'] != NULL) $auth = strtoupper($user['auth']);
 
 				$expiration = NULL;
-				//TODO validate time
-				if (isset($user['expiration']) and $user['expiration'] != NULL)
+				if (isset($user['expiration']) and $user['expiration'] != NULL) {
+					if (!is_numeric($user["expiration"])) throw $this->invalidRequestException("Invalid data type: expiration");
 					$expiration = $user['expiration'];
+				}
 				
 				$id = $this->env->configuration()->addUser($user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration);
 				$this->env->configuration()->storeUserAuth($id, $user['name'], $auth, base64_decode($user['password']));

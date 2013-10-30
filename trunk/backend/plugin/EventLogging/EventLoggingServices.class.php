@@ -36,15 +36,15 @@
 			$data = $this->request->data;
 			if (!isset($data)) throw $this->invalidRequestException();
 			
-			//TODO assert time numeric
-			
 			$db = $this->env->db();
 			$query = "from ".$db->table("event_log")." where 1=1";
 			
 			if (isset($data['start_time'])) {
+				if (!is_numeric($data['start_time'])) throw $this->invalidRequestException("Invalid data type: start_time");
 				$query .= ' and time >= '.$db->string($data['start_time']);
 			}
 			if (isset($data['end_time'])) {
+				if (!is_numeric($data['end_time'])) throw $this->invalidRequestException("Invalid data type: end_time");
 				$query .= ' and time < '.$db->string($data['end_time']);
 			}
 			if (isset($data['user'])) {
