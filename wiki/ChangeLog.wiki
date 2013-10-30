@@ -3,7 +3,7 @@
 
 === Version 2.2.4 ===
 Released 2013/10/29
-  * Added option to disable PHPPass library trying to access /dev/urandom (https://code.google.com/p/mollify/wiki/BackendSettings?ts=1383134368&updated=BackendSettings#Disable_/dev/urandom_access_(_no_udev_random_))
+  * Added option to disable PHPPass library trying to access /dev/urandom (https://code.google.com/p/mollify/wiki/BackendSettings#Disable_/dev/urandom_access_(_no_udev_random_))
 
 === Version 2.2.3 ===
 Released 2013/10/29
