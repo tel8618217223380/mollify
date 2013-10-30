@@ -25,13 +25,15 @@
 # requirements (there can be none), but merely suggestions.
 #
 class PasswordHash {
+	var $no_udevrandom;
 	var $itoa64;
 	var $iteration_count_log2;
 	var $portable_hashes;
 	var $random_state;
 
-	function PasswordHash($iteration_count_log2, $portable_hashes)
+	function PasswordHash($iteration_count_log2, $portable_hashes, $no_udevrandom=FALSE)
 	{
+		$this->no_udevrandom = $no_udevrandom;
 		$this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 		if ($iteration_count_log2 < 4 || $iteration_count_log2 > 31)
@@ -48,7 +50,7 @@ class PasswordHash {
 	function get_random_bytes($count)
 	{
 		$output = '';
-		if (@is_readable('/dev/urandom') &&
+		if ($this->is_devurandom() &&
 		    ($fh = @fopen('/dev/urandom', 'rb'))) {
 			$output = fread($fh, $count);
 			fclose($fh);
@@ -66,6 +68,14 @@ class PasswordHash {
 		}
 
 		return $output;
+	}
+	
+	function is_devurandom() {
+		if (!$this->no_udevrandom) return FALSE;
+		try {
+			if (@is_readable('/dev/urandom')) return TRUE;
+		} catch (Exception $e) {}
+		return FALSE;
 	}
 
 	function encode64($input, $count)

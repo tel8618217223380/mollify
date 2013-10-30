@@ -17,7 +17,7 @@
 
 		public function __construct($settings) {
 			$this->serverSalt = $settings->setting("server_hash_salt");
-			$this->hasher = new PasswordHash(self::$hash_cost_log2, self::$hash_portable);
+			$this->hasher = new PasswordHash(self::$hash_cost_log2, self::$hash_portable, $settings->setting("no_udev_random"));
 		}
 		
 		public function createHash($pw, $saltPrefix = '') {

@@ -50,7 +50,8 @@
 			"debug_log" => NULL,
 			"mail_smtp" => NULL,
 			"published_folders_root" => NULL,
-			"customizations_folder" => NULL
+			"customizations_folder" => NULL,
+			"no_udev_random" => FALSE
 		);
 		
 		function __construct($settings) {
