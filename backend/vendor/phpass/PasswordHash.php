@@ -71,7 +71,7 @@ class PasswordHash {
 	}
 	
 	function is_devurandom() {
-		if (!$this->no_udevrandom) return FALSE;
+		if ($this->no_udevrandom) return FALSE;
 		try {
 			if (@is_readable('/dev/urandom')) return TRUE;
 		} catch (Exception $e) {}
