@@ -12,4 +12,4 @@ CREATE TABLE user_auth (
   FOREIGN KEY(user_id) REFERENCES user(id)
 );
 
-INSERT INTO user_auth (user_id, type, salt, hash) SELECT id, auth, '-' as salt, '-' as hash FROM user;
+INSERT INTO user_auth (user_id, type, salt, hash) SELECT id as user_id, auth as type, '-' as salt, '-' as hash FROM user;
