@@ -73,12 +73,14 @@
 		}
 		
 		public function storeUserAuth($id, $username, $type, $pw) {
+			$this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_auth")." WHERE user_id=%s", $this->db->string($id, TRUE)));
 			
 			$hash = $this->env->passwordHash()->createHash($pw);
 			$a1hash = md5($username.":".$this->env->authentication()->realm().":".$pw);
 			
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_auth")." (user_id, type, hash, salt, a1hash) VALUES (%s, %s, %s, %s, %s)", $this->db->string($id, TRUE), $this->db->string($type, TRUE), $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE)));
+			$this->db->commit();
 		}
 		
 		public function updateUserAuth($id, $username, $pw, $type=FALSE) {
