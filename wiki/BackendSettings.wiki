@@ -32,7 +32,9 @@ $CONFIGURATION = array(
 	"upload_temp_dir" => NULL,					
 	"enable_thumbnails" => TRUE,
 	"enable_folder_protection" => FALSE,				// enable folder protection,
-	"published_folders_root" => NULL				// published folders root
+	"published_folders_root" => NULL				// published folders root,
+	"customizations_folder" => NULL,				// customizations folder location
+	"no_udev_random" => FALSE				// disable PHPPass lib /dev/urandom
 );
 }}}
 
