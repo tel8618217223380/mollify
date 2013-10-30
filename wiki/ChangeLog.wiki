@@ -1,7 +1,7 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Version 2.2.4 ===
+=== Version 2.2.4 and 2.2.5 ===
 Released 2013/10/29
   * Added option to disable PHPPass library trying to access /dev/urandom (https://code.google.com/p/mollify/wiki/BackendSettings#Disable_/dev/urandom_access_(_no_udev_random_))
 
