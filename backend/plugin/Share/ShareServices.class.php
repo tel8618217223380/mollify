@@ -87,7 +87,7 @@
 			$itemId = $data["item"];
 			if (strpos($itemId, "_") < 0) $this->item($itemId);
 			
-			if ($data["expiration"] and !is_int($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration");
+			if ($data["expiration"] and !is_numeric($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration");
 			
 			$this->handler()->addShare($itemId, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE, $data["restriction"]);
 			$this->response()->success($this->handler()->getShares($itemId));
