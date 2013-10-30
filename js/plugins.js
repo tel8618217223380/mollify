@@ -1800,6 +1800,9 @@
 			else
 				$("#share-access-norestriction").attr('checked', true);
 			
+			if (share.expiration)
+				$("#share-validity-expirationdate-value").data("mollify-datepicker").set(mollify.helpers.parseInternalTime(share.expiration));
+			
 			if (oldRestrictionPw) $("#share-access-public-password-value").attr("placeholder", mollify.ui.texts.get("shareDialogShareAccessChangePwTitle"));
 			else $("#share-access-public-password-value").attr("placeholder", mollify.ui.texts.get("shareDialogShareAccessEnterPwTitle"));
 						
@@ -1863,7 +1866,7 @@
 				var share = that.getShare(id);
 				share.name = name;
 				share.active = active;
-				share.expiration = expiration;
+				share.expiration = mollify.helpers.formatInternalTime(expiration);
 				share.restriction = restriction ? restriction.type : false;
 				that.updateShareList(item);
 			}).fail(that.d.close);

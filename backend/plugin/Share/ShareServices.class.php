@@ -99,7 +99,7 @@
 			$id = $this->path[0];
 			$data = $this->request->data;
 			if (!isset($data["name"])) throw $this->invalidRequestException("No data");
-			if ($data["expiration"] and !is_int($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration");
+			if ($data["expiration"] and !is_numeric($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration ".$data["expiration"]);
 			
 			$this->handler()->editShare($id, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE, $data["restriction"]);
 			$this->response()->success(array());
