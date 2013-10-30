@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.2.4 ===
+Released 2013/10/29
+  * Added option to disable PHPPass library trying to access /dev/urandom
+
 === Version 2.2.3 ===
 Released 2013/10/29
   * Added menu action icons 
