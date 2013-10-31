@@ -993,9 +993,15 @@ var mollifyDefaults = {
 		},
 		
 		parseInternalTime : function(time) {
-			if (!time || time == null) return null;
+			if (!time || time == null || typeof(time) !== 'string' || time.length != 14) return null;
 			
 			var ts = new Date();
+			/*ts.setUTCFullYear(time.substring(0,4));
+			ts.setUTCMonth(time.substring(4,6) - 1);
+			ts.setUTCDate(time.substring(6,8));
+			ts.setUTCHours(time.substring(8,10));
+			ts.setUTCMinutes(time.substring(10,12));
+			ts.setUTCSeconds(time.substring(12,14));*/
 			ts.setYear(time.substring(0,4));
 			ts.setMonth(time.substring(4,6) - 1);
 			ts.setDate(time.substring(6,8));
@@ -1007,6 +1013,15 @@ var mollifyDefaults = {
 	
 		formatInternalTime : function(time) {
 			if (!time) return null;
+			
+			/*var year = pad(""+time.getUTCFullYear(), 4, '0', STR_PAD_LEFT);
+			var month = pad(""+(time.getUTCMonth() + 1), 2, '0', STR_PAD_LEFT);
+			var day = pad(""+time.getUTCDate(), 2, '0', STR_PAD_LEFT);
+			var hour = pad(""+time.getUTCHours(), 2, '0', STR_PAD_LEFT);
+			var min = pad(""+time.getUTCMinutes(), 2, '0', STR_PAD_LEFT);
+			var sec = pad(""+time.getUTCSeconds(), 2, '0', STR_PAD_LEFT);
+			return year + month + day + hour + min + sec;*/
+			//var timeUTC = new Date(Date.UTC(time.getYear(), time.getMonth(), time.getDay(), time.getHours(), time.getMinutes(), time.getSeconds()));
 			return mollify.helpers.formatDateTime(time, 'yyyyMMddHHmmss');
 		},
 		
@@ -1101,6 +1116,42 @@ var mollifyDefaults = {
 		// +   improved by: Brett Zamir (http://brett-zamir.me)
 		var i = (haystack + '').indexOf(needle, (offset || 0));
 		return i === -1 ? false : i;
+	}
+	
+	var STR_PAD_LEFT = 1;
+	var STR_PAD_RIGHT = 2;
+	var STR_PAD_BOTH = 3;
+	
+	function pad(str, len, pad, dir) {
+	
+	    if (typeof(len) == "undefined") { var len = 0; }
+	    if (typeof(pad) == "undefined") { var pad = ' '; }
+	    if (typeof(dir) == "undefined") { var dir = STR_PAD_RIGHT; }
+	
+	    if (len + 1 >= str.length) {
+	
+	        switch (dir){
+	
+	            case STR_PAD_LEFT:
+	                str = Array(len + 1 - str.length).join(pad) + str;
+	            break;
+	
+	            case STR_PAD_BOTH:
+	                var right = Math.ceil((padlen = len - str.length) / 2);
+	                var left = padlen - right;
+	                str = Array(left+1).join(pad) + str + Array(right+1).join(pad);
+	            break;
+	
+	            default:
+	                str = str + Array(len + 1 - str.length).join(pad);
+	            break;
+	
+	        } // switch
+	
+	    }
+	
+	    return str;
+	
 	}
 	
 	/**

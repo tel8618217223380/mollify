@@ -15,7 +15,7 @@
 		NotificationsView : function() {
 			var that = this;
 
-			this.init = function(cv) {
+			this.init = function(s, cv) {
 				that._cv = cv;
 				that.title = mollify.ui.texts.get("pluginNotificatorAdminNavTitle");
 				
