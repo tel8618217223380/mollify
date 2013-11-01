@@ -1637,7 +1637,10 @@
 		if (spec.element) $dlg.find(".modal-body").append(spec.element);
 		
 		mollify.ui.handlers.localize($dlg);
-		$dlg.on('hidden', function() { $dlg.remove(); }).modal({
+		$dlg.on('hidden', function(e) {
+			if (e.target != $dlg[0]) return;
+			$dlg.remove();
+		}).modal({
 			backdrop: 'static', //!!spec.backdrop,
 			show: true,
 			keyboard: true
