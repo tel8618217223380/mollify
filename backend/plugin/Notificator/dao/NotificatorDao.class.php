@@ -34,6 +34,7 @@
 			$rows = $db->query($query)->rows();
 			if (count($rows) == 0) return FALSE;
 			
+			$users = array();
 			$first = $rows[0];
 			$result = array(
 				"id" => $first["id"],
@@ -51,8 +52,10 @@
 					$result["events"][] = $event;
 
 				$userId = $row["ntf_usr_id"];
-				if ($userId != NULL and !in_array($userId, $result["users"]))
+				if ($userId != NULL and !in_array($userId, $users)) {
+					$users[] = $userId;
 					$result["users"][] = array("id" => $userId, "name" => $row["ntf_usr_name"], "email" => $row["ntf_usr_email"]);
+				}
 					
 				$recipient = $row["ntf_rcp_usr_id"];
 				if ($recipient != NULL and !in_array($recipient, $result["recipients"])) {
