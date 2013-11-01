@@ -993,6 +993,33 @@
 		
 		this.isListView = function() { return that._viewStyle === 0; };
 		
+		this._handleCustomAction = function(action, item, t) {
+			if (!mollify.settings["file-view"] || !mollify.settings["file-view"]["actions"]) return false;
+			var actions = mollify.settings["file-view"]["actions"];
+			if (!actions[action] || (typeof(actions[action]) !== "function")) return false;
+			
+			var ctx = {
+				item: item,
+				viewtype: that.isListView() ? "list" : "icon",
+				target: t,
+				element: that.itemWidget.getItemContextElement(item),
+				viewport: that.itemWidget.getContainerElement(),
+				container: $("#mollify-folderview-items"),
+				folder: that._currentFolder,
+				folder_permission: that._currentFolderInfo ? that._currentFolderInfo.permission : false
+			};
+
+			var response = actions[action](item, ctx);
+			if (!response) return false;
+
+			if (typeof(response) == "string") {
+				if (response == "open_popup") that.itemContext.open(ctx);
+				else if (response == "open_menu") that.showActionMenu(item, ctx.element);
+				else if (!item.is_file && response == "go_into_folder") that.changeToFolder(item);
+			}
+			return true;
+		};
+		
 		this.initList = function() {
 			var $h = $("#mollify-folderview-header-items").empty();
 			if (that.isListView()) {
@@ -1009,6 +1036,8 @@
 				dropType : that.dropType,
 				onDrop : that.onDragAndDrop,
 				onClick: function(item, t, e) {
+					if (that._handleCustomAction("onClick", item, t)) return;
+					
 					if (that.isListView() && t != 'icon') {
 						var col = that._filelist.columns[t];
 						if (col["on-click"]) {
@@ -1031,21 +1060,26 @@
 					}
 					
 					if (showContext) {
-						that.itemContext.open({
+						var ctx = {
 							item: item,
+							viewtype: that.isListView() ? "list" : "icon",
+							target: t,
 							element: that.itemWidget.getItemContextElement(item),
 							viewport: that.itemWidget.getContainerElement(),
 							container: $("#mollify-folderview-items"),
 							folder: that._currentFolder,
 							folder_permission: that._currentFolderInfo ? that._currentFolderInfo.permission : false
-						});
+						};
+						that.itemContext.open(ctx);
 					}
 				},
 				onDblClick: function(item) {
+					if (that._handleCustomAction("onDblClick", item)) return;
 					if (item.is_file) return;
 					that.changeToFolder(item);
 				},
 				onRightClick: function(item, t, e) {
+					if (that._handleCustomAction("onRightClick", item, t)) return;
 					that.showActionMenu(item, that.itemWidget.getItemContextElement(item));
 				},
 				onContentRendered : function(items, data) {
