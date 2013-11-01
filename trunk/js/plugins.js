@@ -2209,6 +2209,4 @@
 			}
 		};
 	}
-
-
 }(window.jQuery, window.mollify);

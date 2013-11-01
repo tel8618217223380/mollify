@@ -866,7 +866,10 @@ var mollifyDefaults = {
 	};
 		
 	md.template = function(id, data, opt) {
-		return $("#"+id).tmpl(data, opt);
+		var templateId = id;
+		if (mollify.settings["resource-map"] && mollify.settings["resource-map"]["template:"+id])
+			templateId = mollify.settings["resource-map"]["template:"+id];
+		return $("#"+templateId).tmpl(data, opt);
 	};
 
 	/* HELPERS */
