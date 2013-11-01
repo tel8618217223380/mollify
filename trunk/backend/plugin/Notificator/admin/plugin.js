@@ -202,7 +202,8 @@
 					}
 
 					var onAddEventUsersgroups = function() {
-						var selectable = mollify.helpers.filter(that._allUsersgroups, function(f) { return nd.users.indexOf(f.id) < 0; });
+						var userIds = mollify.helpers.extractValue(nd.users, "id");
+						var selectable = mollify.helpers.filter(that._allUsersgroups, function(f) { return userIds.indexOf(f.id) < 0; });
 						if (selectable.length === 0) return;
 		
 						mollify.ui.dialogs.select({
@@ -217,7 +218,7 @@
 							],
 							list: selectable,
 							onSelect: function(sel, o) {
-								mollify.service.put("notificator/list/"+nd.id, {users: nd.users.concat(mollify.helpers.extractValue(sel, "id"))}).done(update);
+								mollify.service.put("notificator/list/"+nd.id, {users: userIds.concat(mollify.helpers.extractValue(sel, "id"))}).done(update);
 							}
 						});
 					}

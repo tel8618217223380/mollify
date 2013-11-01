@@ -1291,8 +1291,6 @@
 				pickSeconds: (fmt.indexOf('s') >= 0)
 			}).on("changeDate", function(ev) {
 				val = ev.date;
-				if (val)
-					val = new Date(val.getUTCFullYear(), val.getUTCMonth(), val.getUTCDate(), val.getUTCHours(), val.getUTCMinutes(), val.getUTCSeconds());
 			});
 			
 			var picker = $dp.data('datetimepicker');
@@ -1300,10 +1298,12 @@
 			
 			var api = {
 				get: function() {
+					if (val)
+						return new Date(val.getUTCFullYear(), val.getUTCMonth(), val.getUTCDate(), val.getUTCHours(), val.getUTCMinutes(), val.getUTCSeconds());
 					return val;
 				},
 				set: function(d) {
-					val = d != null ? new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds())) : null;
+					val = (d != null ? new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds())) : null);
 					picker.setDate(val);
 				}
 			};
