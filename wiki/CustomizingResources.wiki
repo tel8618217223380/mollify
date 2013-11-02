@@ -44,7 +44,7 @@ For example, following loads custom localizations file for Registration plugin:
 {{{
 	mollify.App.init({
 		"resource-map" : {
-			"backend/plugin/Registration/admin/texts_en.js": "custom/localization/texts_registration_en.json"
+			"backend/plugin/Registration/localization/texts_en.json": "custom/localization/texts_registration_en.json"
 		},
 		...
 	});
