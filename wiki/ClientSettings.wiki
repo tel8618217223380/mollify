@@ -12,6 +12,9 @@ Following settings are available in client (and their default values), used in i
 			"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
 			"list-view-columns": {
 				...			// file list column setup
+			},
+			"file-view": {
+				...			// file view options
 			}},
 			[
 				...			// client plugins
@@ -78,3 +81,47 @@ Example configuration (the default):
 	});
 </script>
 }}}
+
+= File view options =
+
+== Actions customizations ==
+
+File list actions can be customized with following syntax:
+
+{{{
+	mollify.App.init({
+		"file-view": {	
+			actions: {
+				onClick: function(item, ctx) {
+					return "open_menu";
+				},
+				onDblClick: function(item, ctx) {
+					if (item.is_file) return "open_popup";
+					return "go_into_folder";
+				},
+				onRightClick: function(item, ctx) {
+					...
+				}
+			}
+		},
+		...
+}}}
+
+The object "actions" has can define following actions:
+- onClick (for regular click in file list)
+- onDblClick (for double click in file list)
+- onRightClick (for right click in file list)
+
+These action functions are called with following parameters:
+- item (the file or folder)
+- ctx (info on what was clicked and where, in what kind of view, the DOM jQuery element etc)
+
+Possible return value for the action functions:
+- `"open_popup"`: opens the popup
+- `"open_menu"`: opens the action menu
+- `"go_into_folder"`: goes into the folder (if item is folder)
+
+- `false` or no return value: default action
+- `true`: default action is skipped (used for custom actions)
+
+The options with string value are shortcuts for most common options, but by returning `true` you can define your own action handler.
