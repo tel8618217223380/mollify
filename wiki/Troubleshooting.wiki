@@ -40,6 +40,12 @@ NOTE! Once the logs are reported, remember to disable server side debug logging 
 
 = Most Common Errors =
 
+== Error "Localization file missing" with IIS ==
+
+With IIS server, JSON file downloads may require configuration:
+  * make sure "Application Development Features" are enabled
+  * make sure JSON file type has mime type configured (application/json)
+
 == Error "Cannot modify header information" or "Got malformed JSON response" ==
 
 Error "Cannot modify header information, headers already sent" means PHP output is started prematurely before the Mollify session is initialized.
