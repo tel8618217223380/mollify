@@ -994,8 +994,8 @@
 		this.isListView = function() { return that._viewStyle === 0; };
 		
 		this._handleCustomAction = function(action, item, t) {
-			if (!mollify.settings["file-view"] || !mollify.settings["file-view"]["actions"]) return false;
-			var actions = mollify.settings["file-view"]["actions"];
+			if (!mollify.settings["file-view"] || !mollify.settings["file-view"].actions) return false;
+			var actions = mollify.settings["file-view"].actions;
 			if (!actions[action] || (typeof(actions[action]) !== "function")) return false;
 			
 			var ctx = {

@@ -34,11 +34,14 @@
 		}
 		
 		private function addPlugin($id, $settings) {
-			$cls = $id."/".$id.".plugin.class.php";
-			$path = dirname(__FILE__).DIRECTORY_SEPARATOR.$cls;
-			if (!file_exists($path)) throw new ServiceException("INVALID_CONFIGURATION", "Plugin not found: ".$id);
-			
-			require_once($cls);
+			if (isset($settings["custom"]) and $settings["custom"] == TRUE) {
+				$this->env->resources()->loadCustomPlugin($id);	
+			} else {
+				$cls = $id."/".$id.".plugin.class.php";
+				$path = dirname(__FILE__).DIRECTORY_SEPARATOR.$cls;
+				if (!file_exists($path)) throw new ServiceException("INVALID_CONFIGURATION", "Plugin not found: ".$id);
+				require_once($cls);
+			}
 			$p = new $id($this->env, $id, $settings);
 			$this->plugins[$id] = $p;
 		}

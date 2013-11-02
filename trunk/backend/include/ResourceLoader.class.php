@@ -52,6 +52,15 @@
 			return $result;
 		}
 		
+		public function loadCustomPlugin($id) {
+			if ($this->customizationsFolder == NULL) throw new ServiceException("INVALID_CONFIGURATION", "Cannot load custom plugin, no customization folder defined");
+			$cls = "plugin".DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$id.".plugin.class.php";
+			
+			$path = $this->getCustomizationsAbsoluteLocation($cls);
+			if (!file_exists($path)) throw new ServiceException("INVALID_CONFIGURATION", "Plugin not found in customization folder: ".$path);
+			require_once($cls);
+		}
+		
 		private function truepath($path){
 		    // whether $path is unix or not
 		    $unipath=strlen($path)==0 || $path{0}!='/';
