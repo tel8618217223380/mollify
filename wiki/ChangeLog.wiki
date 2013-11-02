@@ -3,7 +3,7 @@
 
 === Version 2.2.8 ===
 Released 2013/11/1
-  * Added customization options
+  * Added customization options: file view action customization (https://code.google.com/p/mollify/wiki/ClientSettings#File_view_options) and individual template overriding
 
 === Version 2.2.7 ===
 Released 2013/11/1
