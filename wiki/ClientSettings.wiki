@@ -113,8 +113,15 @@ The object "actions" has can define following actions:
   * onRightClick (for right click in file list)
 
 These action functions are called with following parameters:
-  * item (the file or folder)
-  * ctx (info on what was clicked and where, in what kind of view, the DOM jQuery element etc)
+  * `item`: the file or folder
+  * `ctx`: context with following properties
+    * `viewtype`: file list type "list" or "icon"
+    * `target`: action target, in list view the column
+    * `element`: jQuery object for the element representing the file or folder
+    * `viewport`: jQuery object for the viewport (used when displaying UI popups etc)
+    * `container`: jQuery object for the container (used when displaying UI popups etc)
+    * `folder`: folder that is currently displayed
+    * `folder_permission`: current user permission for the item
 
 Possible return value for the action functions:
   * `"open_popup"`: opens the popup
