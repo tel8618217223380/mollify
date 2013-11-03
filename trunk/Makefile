@@ -24,7 +24,7 @@ build:
 	@./node_modules/.bin/jshint js/*.js --config js/.jshintrc
 	@echo "Running JSHint on javascript...             ${CHECK} Done"
 	@cat js/init.js js/ui.js js/mainview.js js/configview.js js/loginview.js js/uploader.js js/plugins.js > out/mollify/js/mollify.js
-	@cat js/lib/jquery.min.js js/lib/jquery.tmpl.min.js js/lib/jquery-ui.js js/lib/bootstrap.js js/lib/bootstrap-datetimepicker.js js/lib/bootstrap-lightbox.js js/lib/modernizr.js js/lib/date.js js/lib/jquery-file-uploader.js js/lib/jquery-singledoubleclick.js js/lib/ZeroClipboard.js > out/mollify/js/libs.tmp.js
+	@cat js/lib/jquery.min.js js/lib/json.js js/lib/jquery.tmpl.min.js js/lib/jquery-ui.js js/lib/bootstrap.js js/lib/bootstrap-datetimepicker.js js/lib/bootstrap-lightbox.js js/lib/modernizr.js js/lib/date.js js/lib/jquery-file-uploader.js js/lib/jquery-singledoubleclick.js js/lib/ZeroClipboard.js > out/mollify/js/libs.tmp.js
 	@cat out/mollify/js/libs.tmp.js out/mollify/js/mollify.js > out/mollify/js/mollify.full.js
 	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.js > out/mollify/js/mollify.min.js
 	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.full.js > out/mollify/js/mollify.full.min.js
