@@ -215,7 +215,7 @@
 			$basePath = $userFolder["path"];
 			$folderName = $name;
 			if (isset($userFolder["folder_name"])) $folderName = $userFolder["folder_name"];
-			$folderPath = $basePath.DIRECTORY_SEPARATOR.$name;
+			$folderPath = rtrim($basePath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$name;
 			
 			$fs = $this->env->filesystem()->filesystem(array("path" => $folderPath, "name" => $folderName), FALSE);
 			if ($fs->exists()) {

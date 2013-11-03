@@ -16,6 +16,7 @@
 		function __construct($env) {
 			$this->env = $env;
 			$this->customizationsFolder = $env->settings()->setting("customizations_folder");
+			if ($this->customizationsFolder != NULL) set_include_path($this->getCustomizationsAbsoluteLocation("").PATH_SEPARATOR.get_include_path());
 		}
 		
 		public function loadTexts($file, $curDir) {

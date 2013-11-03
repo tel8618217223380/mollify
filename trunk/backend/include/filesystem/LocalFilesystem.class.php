@@ -28,13 +28,15 @@
 		}
 		
 		public function exists() {
-			return file_exists($this->rootPath);
+			return file_exists($this->filesystemInfo->env()->convertCharset($this->rootPath));
 		}
 		
 		public function create() {
-			if (!mkdir($this->rootPath, 0755)) return FALSE;
+			$rootPath = $this->filesystemInfo->env()->convertCharset($this->rootPath);
+			
+			if (!mkdir($rootPath, 0755)) return FALSE;
 			if ($this->filesystemInfo->env()->features()->isFeatureEnabled("folder_protection")) {
-				copy($this->filesystemInfo->env()->getScriptRootPath()."/include/apache/htaccess", $this->rootPath.'.htaccess');
+				copy($this->filesystemInfo->env()->getScriptRootPath()."/include/apache/htaccess", $rootPath.'.htaccess');
 			}
 			return TRUE;
 		}
