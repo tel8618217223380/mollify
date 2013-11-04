@@ -160,7 +160,7 @@
 			$files = scandir($nativePath);
 			if (!$files) throw new ServiceException("INVALID_PATH", $this->path);
 			
-			$ignored = $this->ignoredItems($this->publicPath($path));
+			$ignored = $this->ignoredItems($this->publicPath($nativePath));
 			$result = array();
 			
 			foreach($files as $i => $name) {
