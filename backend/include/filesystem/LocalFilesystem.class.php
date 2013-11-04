@@ -48,7 +48,7 @@
 		public function createItemWithInternalPath($id, $path) {
 			if (strpos($path, $this->rootPath) === FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Illegal filesystem (".$this->rootPath.") for path: ".$path);
-			return $this->createItem($id, $this->publicPath($path));
+			return $this->createItem($id, $this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
 		}
 				
 		public function createItem($id, $path) {
@@ -66,15 +66,16 @@
 		}
 		
 		public function internalPath($item) {
-			return $this->localPath($item);
-		}
-		
-		public function localPath($item) {
 			return self::joinPath($this->rootPath, $item->path());
 		}
 		
+		/* Returns item path in native charset */
+		public function localPath($item) {
+			return $this->filesystemInfo->env()->convertCharset(self::joinPath($this->rootPath, $item->path()), FALSE);
+		}
+		
 		public function itemExists($item) {
-			return file_exists($this->internalPath($item));
+			return file_exists($this->localPath($item));
 		}
 		
 		public function details($item) {
@@ -82,7 +83,7 @@
 			
 			$details = array("id" => $item->id());
 			if ($item->isFile()) {
-				$path = $this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE);
+				$path = $this->localPath($item);
 				$details["last_changed"] = date($datetimeFormat, filectime($path));
 				$details["last_modified"] = date($datetimeFormat, filemtime($path));
 				$details["last_accessed"] = date($datetimeFormat, fileatime($path));
@@ -100,8 +101,8 @@
 		}
 
 		public function items($parent) {
-			$parentPath = $this->localPath($parent);
-			$nativeParentPath = $this->filesystemInfo->env()->convertCharset($parentPath, FALSE);
+			$parentPath = $this->internalPath($parent);	//TODO tarvitaanko
+			$nativeParentPath = $this->localPath($parent);
 			
 			$items = scandir($nativeParentPath);
 			if (!$items) throw new ServiceException("INVALID_PATH", $parent->id());
@@ -131,17 +132,13 @@
 		
 		public function hierarchy($item) {
 			$result = array();
-			
-			$root = $item->root();
-			$result[] = $root;
+			$result[] = $item->root();
 
 			$to = $item->isFile() ? $item->parent() : $item;
-			
-			$toPath = $this->localPath($to);
-			$rootPath = $root->internalPath();
+			$toPath = $this->internalPath($to);
 						
-			$parts = preg_split("/[\/]/", substr($toPath, strlen($rootPath)), -1, PREG_SPLIT_NO_EMPTY);
-			$current = $rootPath;
+			$parts = preg_split("/[\/]/", substr($toPath, strlen($this->rootPath)), -1, PREG_SPLIT_NO_EMPTY);
+			$current = $this->rootPath;
 			
 			foreach($parts as $part) {
 				$current .= $part.DIRECTORY_SEPARATOR;
@@ -181,42 +178,50 @@
 		public function parent($item) {
 			if ($item->path() === '') return NULL;
 			
-			$path = $this->localPath($item);
+			//TODO ei voi tarvita internal->folder->public
+			$path = $this->internalPath($item);
 			return $this->itemWithPath($this->publicPath(self::folderPath(dirname($path))));
 		}
 
 		public function rename($item, $name) {
 			self::assertFilename($name);
 			
-			$old = $this->localPath($item);
+			$old = $this->internalPath($item);
+			$nativeOld = $this->filesystemInfo->env()->convertCharset($old, FALSE);
+			
 			$new = self::joinPath(dirname($old), $name);
+			$nativeNew = $this->filesystemInfo->env()->convertCharset($new, FALSE);
 			
 			if (!$item->isFile()) $new = self::folderPath($new);
 
-			if (file_exists($this->filesystemInfo->env()->convertCharset($new, FALSE)))
+			if (file_exists($nativeNew))
 				throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists (".$new.")");
 
-			if (!rename($this->filesystemInfo->env()->convertCharset($old, FALSE), $this->filesystemInfo->env()->convertCharset($new, FALSE))) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
+			if (!rename($nativeOld, $nativeNew)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
 			
 			return $this->createItem($item->id(), $this->publicPath($new));
 		}
 
 		public function copy($item, $to) {			
-			$target = $to->internalPath();
+			$nativeTarget = $to->localPath();
+			//$nativeTarget = $this->filesystemInfo->env()->convertCharset($target, FALSE);
 
-			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
+			if (file_exists($nativeTarget)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists (".$nativeTarget.")");
 			
 			$result = FALSE;
+			$nativePath = $item->localPath();
+			
 			if ($item->isFile()) {
-				$result = copy($this->filesystemInfo->env()->convertCharset($item->internalPath(), FALSE), $this->filesystemInfo->env()->convertCharset($target, FALSE));
+				$result = copy($nativePath, $nativeTarget);
 			} else {
-				$result = $this->copyFolderRecursively($this->filesystemInfo->env()->convertCharset($item->internalPath(), FALSE), $this->filesystemInfo->env()->convertCharset($target, FALSE));
+				$result = $this->copyFolderRecursively($nativePath, $nativeTarget);
 			}
 			if (!$result) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()." to .".$to->id()."]");
 			
 			return $to;
 		}
 		
+		/* assumes paths are native charset, not utf8 */
 		private function copyFolderRecursively($from, $to) { 
 			$dir = opendir($from); 
 			@mkdir($to);
@@ -239,21 +244,26 @@
 		public function move($item, $to) {			
 			$target = self::joinPath($to->internalPath(), $item->name());
 			if (!$item->isFile()) $target = self::folderPath($target);
-			if (file_exists($this->filesystemInfo->env()->convertCharset($target, FALSE))) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
-			if (!rename($this->filesystemInfo->env()->convertCharset($item->internalPath(), FALSE), $this->filesystemInfo->env()->convertCharset($target, FALSE))) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
+			$nativeTarget = $this->filesystemInfo->env()->convertCharset($target, FALSE);
 			
-			return $to->filesystem()->createItemWithInternalPath($item->id(), $target);
+			if (file_exists($nativeTarget)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
+			
+			$nativeFrom = $item->localPath();
+			if (!rename($nativeFrom, $nativeTarget)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
+			
+			return $to->filesystem()->createItemWithInternalPath($item->id(), $nativeTarget);
 		}
 		
 		public function delete($item) {
 			if ($item->isFile()) {
-				if (!unlink($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE)))
+				if (!unlink($this->localPath($item)))
 					throw new ServiceException("REQUEST_FAILED", "Cannot delete [".$item->id()."]");				
 			} else {		
-				$this->deleteFolderRecursively($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE));
+				$this->deleteFolderRecursively($this->localPath($item));
 			}
 		}
 		
+		/* assumes native path, not utf8 */
 		private function deleteFolderRecursively($path) {
 			$path = self::folderPath($path);
 			$handle = opendir($path);
@@ -285,12 +295,14 @@
 		public function createFolder($folder, $name) {
 			self::assertFilename($name);
 			
-			$path = self::folderPath(self::joinPath($this->localPath($folder), $name));
-			if (file_exists($this->filesystemInfo->env()->convertCharset($path, FALSE))) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
-			if (!mkdir($this->filesystemInfo->env()->convertCharset($path, FALSE), $this->filesystemInfo->setting("new_folder_permission_mask"))) {
+			$path = self::folderPath(self::joinPath($this->internalPath($folder), $name));
+			$nativePath = $this->filesystemInfo->env()->convertCharset($path, FALSE);
+			
+			if (file_exists($nativePath)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
+			if (!mkdir($nativePath, $this->filesystemInfo->setting("new_folder_permission_mask"))) {
 				throw new ServiceException("CANNOT_CREATE_FOLDER", $folder->id()."/".$name);
 			} else {
-				chmod($this->filesystemInfo->env()->convertCharset($path, FALSE), $this->filesystemInfo->setting("new_folder_permission_mask"));
+				chmod($nativePath, $this->filesystemInfo->setting("new_folder_permission_mask"));
 			}
 			return $this->itemWithPath($this->publicPath($path));
 		}
@@ -298,42 +310,46 @@
 		public function createFile($folder, $name) {
 			self::assertFilename($name);
 			
-			$target = self::joinPath($this->localPath($folder), $name);
-			if (file_exists($this->filesystemInfo->env()->convertCharset($target, FALSE))) throw new ServiceException("FILE_ALREADY_EXISTS");
+			$target = self::joinPath($this->internalPath($folder), $name);
+			$nativeTarget = $this->filesystemInfo->env()->convertCharset($target, FALSE);
+			
+			if (file_exists($nativeTarget)) throw new ServiceException("FILE_ALREADY_EXISTS");
 			return $this->itemWithPath($this->publicPath($target));
 		}
 
 		public function fileWithName($folder, $name) {
 			self::assertFilename($name);
 			
-			$path = self::joinPath($this->localPath($folder), $name);
+			//TODO ei voi tarvita internal->public
+			$path = self::joinPath($this->internalPath($folder), $name);
 			return $this->itemWithPath($this->publicPath($path));
 		}
 
 		public function folderWithName($folder, $name) {
 			self::assertFilename($name);
 			
-			$path = self::joinPath($this->localPath($folder), $name.DIRECTORY_SEPARATOR);
+			// TODO ei voi tarvita internal->public
+			$path = self::joinPath($this->internalPath($folder), $name.DIRECTORY_SEPARATOR);
 			return $this->itemWithPath($this->publicPath($path));
 		}
 		
 		public function size($file) {
-			return sprintf("%u", filesize($this->filesystemInfo->env()->convertCharset($this->localPath($file), FALSE)));
+			return sprintf("%u", filesize($this->localPath($file)));
 		}
 		
 		public function lastModified($item) {
-			return filemtime($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE));
+			return filemtime($this->localPath($item));
 		}
 
 		public function read($item, $range = NULL) {
-			$handle = @fopen($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE), "rb");
+			$handle = @fopen($this->localPath($item), "rb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for reading: ".$item->id());
 			return $handle;
 		}
 		
 		public function write($item, $s, $append = FALSE) {
-			$handle = @fopen($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE), ($append ? "ab" : "wb"));
+			$handle = @fopen($this->localPath($item), ($append ? "ab" : "wb"));
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
 			while (!feof($s)) {
@@ -344,18 +360,20 @@
 		}
 		
 		public function put($item, $content) {
-			file_put_contents($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE), $content);
+			file_put_contents($this->localPath($item), $content);
 		}
 
 		public function addTo($item, $c) {
+			$nativePath = $this->localPath($item);
+			
 			if ($item->isFile()) {
-				$c->add($item->name(), $this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE), $item->size());
+				$c->add($item->name(), $nativePath, $item->size());
 			} else {
 				if ($c->acceptFolders()) {
-					$c->add($item->name(), $this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE));
+					$c->add($item->name(), $nativePath);
 				} else {					
 					$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
-					$files = $this->allFilesRecursively($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE));	//TODO rights!
+					$files = $this->allFilesRecursively($nativePath);	//TODO rights!
 					
 					foreach($files as $file) {
 						$st = stat($file);
