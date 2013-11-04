@@ -28,11 +28,11 @@
 		}
 		
 		public function exists() {
-			return file_exists($this->filesystemInfo->env()->convertCharset($this->rootPath));
+			return file_exists($this->filesystemInfo->env()->convertCharset($this->rootPath, FALSE));
 		}
 		
 		public function create() {
-			$rootPath = $this->filesystemInfo->env()->convertCharset($this->rootPath);
+			$rootPath = $this->filesystemInfo->env()->convertCharset($this->rootPath, FALSE);
 			
 			if (!mkdir($rootPath, 0755)) return FALSE;
 			if ($this->filesystemInfo->env()->features()->isFeatureEnabled("folder_protection")) {
@@ -113,11 +113,9 @@
 				if (substr($name, 0, 1) == '.') continue;
 				if (in_array(strtolower($name), $ignored)) continue;
 				
-				//TODO charset
 				$path = self::joinPath($parentPath, $this->filesystemInfo->env()->convertCharset($name));
 				$nativePath = self::joinPath($nativeParentPath, $name);
 				$itemName = $this->filesystemInfo->env()->convertCharset($name);
-				//$path = $this->filesystemInfo->env()->convertCharset($nativePath);
 				
 				if (!is_dir($nativePath)) {	
 					$p = $this->publicPath($path);
@@ -142,7 +140,7 @@
 			$toPath = $this->localPath($to);
 			$rootPath = $root->internalPath();
 						
-			$parts = preg_split("/\//", substr($toPath, strlen($rootPath)), -1, PREG_SPLIT_NO_EMPTY);
+			$parts = preg_split("/[\/]/", substr($toPath, strlen($rootPath)), -1, PREG_SPLIT_NO_EMPTY);
 			$current = $rootPath;
 			
 			foreach($parts as $part) {
