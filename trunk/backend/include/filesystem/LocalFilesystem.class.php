@@ -155,9 +155,9 @@
 			return $result;
 		}
 		
-		private function allFilesRecursively($path) {
-			//TODO charset
-			$files = scandir($path);
+		/* nativePath assumes path in local charset, not utf8 */
+		private function allFilesRecursively($nativePath) {
+			$files = scandir($nativePath);
 			if (!$files) throw new ServiceException("INVALID_PATH", $this->path);
 			
 			$ignored = $this->ignoredItems($this->publicPath($path));
@@ -167,7 +167,7 @@
 				if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored))
 					continue;
 	
-				$fullPath = self::joinPath($path, $name);
+				$fullPath = self::joinPath($nativePath, $name);
 				if (is_dir($fullPath)) {
 					$result = array_merge($result, $this->allFilesRecursively($fullPath));
 					continue;
@@ -181,8 +181,8 @@
 		public function parent($item) {
 			if ($item->path() === '') return NULL;
 			
-			$path = $this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE);
-			return $this->itemWithPath($this->publicPath(self::folderPath($this->filesystemInfo->env()->convertCharset(dirname($path)))));
+			$path = $this->localPath($item);
+			return $this->itemWithPath($this->publicPath(self::folderPath(dirname($path))));
 		}
 
 		public function rename($item, $name) {
@@ -349,17 +349,17 @@
 
 		public function addTo($item, $c) {
 			if ($item->isFile()) {
-				$c->add($item->name(), $this->localPath($item), $item->size());
+				$c->add($item->name(), $this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE), $item->size());
 			} else {
 				if ($c->acceptFolders()) {
-					$c->add($item->name(), $this->localPath($item));
-				} else {
+					$c->add($item->name(), $this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE));
+				} else {					
 					$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
-					$files = $this->allFilesRecursively($this->localPath($item));	//TODO rights!
+					$files = $this->allFilesRecursively($this->filesystemInfo->env()->convertCharset($this->localPath($item), FALSE));	//TODO rights!
 					
 					foreach($files as $file) {
 						$st = stat($file);
-						$c->add(substr($file, $offset), $file, $st['size']);
+						$c->add($this->filesystemInfo->env()->convertCharset(substr($file, $offset)), $file, $st['size']);
 					}
 				}
 			}
