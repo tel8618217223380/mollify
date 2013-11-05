@@ -111,7 +111,8 @@
 				
 			$result = array();
 			foreach($items as $i => $name) {
-				if (substr($name, 0, 1) == '.') continue;
+				if ($name == "." or $name == ".." or (strcmp(substr($name, 0, 1), '.') == 0)) continue;
+				
 				if (in_array(strtolower($name), $ignored)) continue;
 				
 				$path = self::joinPath($parentPath, $this->filesystemInfo->env()->convertCharset($name));
@@ -178,9 +179,8 @@
 		public function parent($item) {
 			if ($item->path() === '') return NULL;
 			
-			$path = $this->publicPath($item->internalPath());
-			$parentPath = self::folderPath(dirname($path));
-			return $this->itemWithPath($parentPath);
+			$parentPath = self::folderPath(dirname($item->internalPath()));
+			return $this->itemWithPath($this->publicPath($parentPath));
 		}
 
 		public function rename($item, $name) {
@@ -251,7 +251,7 @@
 			$nativeFrom = $this->localPath($item);
 			if (!rename($nativeFrom, $nativeTarget)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
 			
-			$newPath = self::joinPath($this->publicPath($to->internalPath()), $item->name());
+			$newPath = $this->publicPath(self::joinPath($to->internalPath(), $item->name()));
 			return $to->filesystem()->createItem($item->id(), $newPath);
 		}
 		

@@ -90,9 +90,13 @@
 				return $db->update("UPDATE ".$db->table("item_id")." SET path = ".$db->string($this->itemPath($to), TRUE) ." where path = ".$db->string($this->itemPath($item), TRUE));
 			else {
 				$path = $this->itemPath($item);
+				$toPath = $this->itemPath($to);
+				
 				$len = mb_strlen($path, "UTF-8");
+				//Logging::logDebug("len ".$path." = ".$len);
+				//Logging::logDebug("to ".$toPath);
 
-				return $db->update(sprintf("UPDATE ".$db->table("item_id")." SET path=CONCAT('%s', SUBSTR(path, %d)) WHERE path like '%s%%'", $db->string($this->itemPath($to)), $len+1, $db->string(str_replace("\\", "\\\\", $path))));
+				return $db->update(sprintf("UPDATE ".$db->table("item_id")." SET path=('%s' || SUBSTR(path, %d)) WHERE path like '%s%%'", $db->string($toPath), $len, $db->string(str_replace("\\", "\\\\", $path))));
 			}
 		}
 		
