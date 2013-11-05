@@ -45,11 +45,11 @@
 			return MollifyFilesystem::TYPE_LOCAL;
 		}
 
-		public function createItemWithInternalPath($id, $path) {
+		/*public function createItemWithInternalPath($id, $path) {
 			if (strpos($path, $this->rootPath) === FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Illegal filesystem (".$this->rootPath.") for path: ".$path);
 			return $this->createItem($id, $this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
-		}
+		}*/
 				
 		public function createItem($id, $path) {
 			self::assertPath($path);
@@ -71,7 +71,7 @@
 		
 		/* Returns item path in native charset */
 		public function localPath($item) {
-			return $this->filesystemInfo->env()->convertCharset(self::joinPath($this->rootPath, $item->path()), FALSE);
+			return $this->filesystemInfo->env()->convertCharset($this->internalPath($item), FALSE);
 		}
 		
 		public function itemExists($item) {
@@ -101,7 +101,7 @@
 		}
 
 		public function items($parent) {
-			$parentPath = $this->internalPath($parent);	//TODO tarvitaanko
+			$parentPath = $this->internalPath($parent);
 			$nativeParentPath = $this->localPath($parent);
 			
 			$items = scandir($nativeParentPath);
@@ -178,9 +178,9 @@
 		public function parent($item) {
 			if ($item->path() === '') return NULL;
 			
-			//TODO ei voi tarvita internal->folder->public
-			$path = $this->internalPath($item);
-			return $this->itemWithPath($this->publicPath(self::folderPath(dirname($path))));
+			$path = $this->publicPath($item->internalPath());
+			$parentPath = self::folderPath(dirname($path));
+			return $this->itemWithPath($parentPath);
 		}
 
 		public function rename($item, $name) {
@@ -203,13 +203,13 @@
 		}
 
 		public function copy($item, $to) {			
-			$nativeTarget = $to->localPath();
+			$nativeTarget = $this->localPath($to);
 			//$nativeTarget = $this->filesystemInfo->env()->convertCharset($target, FALSE);
 
 			if (file_exists($nativeTarget)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists (".$nativeTarget.")");
 			
 			$result = FALSE;
-			$nativePath = $item->localPath();
+			$nativePath = $this->localPath($item);
 			
 			if ($item->isFile()) {
 				$result = copy($nativePath, $nativeTarget);
@@ -248,10 +248,11 @@
 			
 			if (file_exists($nativeTarget)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
 			
-			$nativeFrom = $item->localPath();
+			$nativeFrom = $this->localPath($item);
 			if (!rename($nativeFrom, $nativeTarget)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
 			
-			return $to->filesystem()->createItemWithInternalPath($item->id(), $nativeTarget);
+			$newPath = self::joinPath($this->publicPath($to->internalPath()), $item->name());
+			return $to->filesystem()->createItem($item->id(), $newPath);
 		}
 		
 		public function delete($item) {
@@ -320,17 +321,15 @@
 		public function fileWithName($folder, $name) {
 			self::assertFilename($name);
 			
-			//TODO ei voi tarvita internal->public
-			$path = self::joinPath($this->internalPath($folder), $name);
-			return $this->itemWithPath($this->publicPath($path));
+			$path = self::joinPath($this->publicPath($folder->internalPath()), $name);
+			return $this->itemWithPath($path);
 		}
 
 		public function folderWithName($folder, $name) {
 			self::assertFilename($name);
 			
-			// TODO ei voi tarvita internal->public
-			$path = self::joinPath($this->internalPath($folder), $name.DIRECTORY_SEPARATOR);
-			return $this->itemWithPath($this->publicPath($path));
+			$path = self::folderPath(self::joinPath($this->publicPath($folder->internalPath()), $name));
+			return $this->itemWithPath($path);
 		}
 		
 		public function size($file) {
