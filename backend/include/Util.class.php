@@ -69,6 +69,18 @@
 			return $result;
 		}
 		
+		static function charStr($v, $e) {
+			$cl = "";
+			$chars = array();
+			if ($e == "UTF-8") {
+				preg_match_all('/./u', $v, $chars);
+				foreach($chars[0] as $c) $cl .= '['.$c.']('.ord($c).')';
+			} else {
+				for($i=0;$i<strlen($v);$i++) $cl .= '['.$v[$i].']('.ord($v[$i]).')';
+			}
+			return $cl;
+		}
+		
 		static function convertCharset($v, $charset = NULL, $encode = TRUE) {
 			if (!$charset or $charset === NULL) {
 				if ($encode)
@@ -77,8 +89,8 @@
 			}
 			if ($charset == "windows") {
 				if ($encode)
-					return winCpToUtf8($v);
-				return utf8ToWinCp($v);				
+					return self::winCpToUtf8($v);
+				return self::utf8ToWinCp($v);				
 			}
 			$from = $encode ? $charset : 'UTF-8';
 			$to = $encode ? 'UTF-8' : $charset;
