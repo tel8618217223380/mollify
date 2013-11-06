@@ -631,7 +631,7 @@
 				
 		            $info[] = $this->upload(
 		            	$folder,
-		            	$name ? name : (isset($files['name']) ? $files['name'] : null),
+		            	$this->filesystemInfo->env()->convertCharset($name ? $name : (isset($files['name']) ? $files['name'] : null), FALSE),
 		                isset($files['tmp_name']) ? $files['tmp_name'] : null,
 		                $size ? $size : (isset($files['size']) ? $files['size'] : $_SERVER['CONTENT_LENGTH']),
 		                $type ? $type : (isset($files['type']) ? $files['type'] : $_SERVER['CONTENT_TYPE']),
@@ -649,7 +649,7 @@
 			foreach ($_FILES['uploader-http']['name'] as $key => $value) { 
 				$name = $_FILES['uploader-http']['name'][$key];
 				$origin = $_FILES['uploader-http']['tmp_name'][$key];
-				$this->upload($folder, $name, $origin);
+				$this->upload($folder, $this->filesystemInfo->env()->convertCharset($name, FALSE), $origin);
 			}
 		}
 		
