@@ -147,7 +147,7 @@
 				$public = $this->publicPath(self::folderPath($current));
 				$itemId = $this->itemId($public);
 
-				$result[] = new Folder($itemId, $this->rootId(), $public, $part, $this);
+				$result[] = new Folder($itemId, $this->rootId(), $public, rtrim($part, "/\\"), $this);
 			}
 			
 			return $result;
