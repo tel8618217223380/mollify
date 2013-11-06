@@ -468,7 +468,7 @@
 					$hierarchyQuery = "REGEX(i.path, '#^".str_replace("'", "\'", str_replace("\\", "\\\\", $rootLocation));
 				
 				$hierarchyQueryEnd = "";
-				$parts = preg_split("/\//", substr($parentLocation, strlen($rootLocation)), -1, PREG_SPLIT_NO_EMPTY);
+				$parts = preg_split("/[\/\\\\]+/", substr($parentLocation, strlen($rootLocation)), -1, PREG_SPLIT_NO_EMPTY);
 				//Logging::logDebug(Util::array2str($parts));
 				foreach($parts as $part) {
 					$hierarchyQuery .= "(".str_replace("'", "\'", $part).DIRECTORY_SEPARATOR;

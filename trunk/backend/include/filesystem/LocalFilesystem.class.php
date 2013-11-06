@@ -138,7 +138,7 @@
 			$to = $item->isFile() ? $item->parent() : $item;
 			$toPath = $this->internalPath($to);
 						
-			$parts = preg_split("/[\/]/", substr($toPath, strlen($this->rootPath)), -1, PREG_SPLIT_NO_EMPTY);
+			$parts = preg_split("/[\/\\\\]+/", substr($toPath, strlen($this->rootPath)), -1, PREG_SPLIT_NO_EMPTY);
 			$current = $this->rootPath;
 			
 			foreach($parts as $part) {
