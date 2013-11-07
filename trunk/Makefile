@@ -2,7 +2,7 @@ VERSION=2.2
 DATE=$(shell date +%I:%M%p)
 CHECK=\033[32m✔\033[39m
 VERSIONF=$(shell echo ${VERSION} | sed 's/\./_/g')
-REVISION=2221#$(shell svnversion | cut -s -d: -f2 | tr -d MS)
+REVISION=2245#$(shell svnversion | cut -s -d: -f2 | tr -d MS)
 HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 
@@ -16,6 +16,7 @@ build:
 	@echo "${HR}\n"
 	rm -rf out
 	mkdir -p out/mollify/js
+	mkdir -p out/mollify/js/src
 	mkdir -p out/mollify/js/lib
 	mkdir -p out/mollify/localization
 	mkdir -p out/mollify/css
@@ -32,6 +33,7 @@ build:
 	@cp js/lib/*.js js/lib/*.swf out/mollify/js/lib
 	@cp localization/*.json out/mollify/localization
 	@cp templates/*.html out/mollify/templates
+	@cp js/*.js out/mollify/js/src
 	@echo "Compiling and minifying javascript...       ${CHECK} Done"
 	
 	./node_modules/.bin/recess --compress css/style.css > out/mollify/css/mollify.css
