@@ -54,6 +54,12 @@ var mollifyDefaults = {
 	mollify.settings = false;
 	mollify.session = false;
 	
+	window.onpopstate = function(event) {
+		mollify.App.onRestoreState(document.location.href, event.state);
+		//mollify.App._state = event.state;
+		//alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
+	};
+	
 	/* APP */
 
 	mollify.App.init = function(s, p) {
@@ -120,34 +126,62 @@ var mollifyDefaults = {
 	
 	mollify.App._start = function() {
 		mollify.App.activeView = false;
+		mollify.App.activeViewId = null;
 		
-		mollify.App._getView(function(v) {
-			mollify.App.activeView = v;
-			
-			if (!mollify.App.activeView) {
+		var id = false;
+		if (mollify.App.pageParams.v && mollify.App.pageParams.v.length > 0)
+			id = mollify.App.pageParams.v.split("/");
+		mollify.App._activateView(id);
+	};
+	
+	mollify.App._activateView = function(id) {
+		var onView = function(v, viewId) {
+			if (v) {
+				mollify.App.activeView = v;
+				mollify.App.activeViewId = viewId;
+			} else {
 				if (!mollify.session || !mollify.session.authenticated) {
 					mollify.App.activeView = new mollify.view.LoginView();
+					mollify.App.activeViewId = "login";
 				} else {
 					mollify.App.activeView = new mollify.view.MainView();
+					mollify.App.activeViewId = "main";
 				}
 			}
 			
-			mollify.App.activeView.init(mollify.App.getElement());			
-		});
+			mollify.App.activeView.init(mollify.App.getElement(), id);
+		};
+		if (id) mollify.App._getView(id, onView);
+		else onView();
 	};
 	
-	mollify.App._getView = function(cb) {
-		if (mollify.App.pageParams.v && mollify.App.pageParams.v.length > 0) {
-			var idParts = mollify.App.pageParams.v.split("/");
-			var h = mollify.App._views[idParts[0]];
-			if (h && h.getView) {
-				var view = h.getView(idParts, mollify.App.pageParams);
-				
-				if (view && view.done) view.done(cb);
-				else cb(view);
-			} else cb(false);
+	mollify.App._getView = function(id, cb) {
+		var h = mollify.App._views[id[0]];
+		if (h && h.getView) {
+			var view = h.getView(idParts, mollify.App.pageParams);
+			
+			if (view && view.done) view.done(function(v) {
+				cb(v, id[0]);
+			});
+			else cb(view, id[0]);
 		} else cb(false);
-	}
+	};
+	
+	mollify.App.onRestoreState = function(url, o) {
+		// if no view active, app is not loaded -> don't restore
+		if (!mollify.App.activeView) return;
+		
+		//baseUrl = mollify.request.getBaseUrl(url);
+		var params = mollify.request.getParams(url);
+		if (!params.v || params.v.length < 1) return;
+		
+		var id = params.v.split("/");
+		mollify.App._activateView(id);
+	};
+	
+	mollify.App.storeView = function(viewId, o) {
+		if (window.history) window.history.pushState(o, "", "?v="+viewId);	
+	};
 	
 	mollify.App.registerView = function(id, h) {
 		mollify.App._views[id] = h;
