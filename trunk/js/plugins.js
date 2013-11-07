@@ -402,6 +402,9 @@
 				getFolderPublicId : function(f) {
 					return f.ic.id;
 				},
+				getFolderObjById : function(id) {
+					return { ic: { id: id } };	
+				},
 				
 				onFolderDeselect : function(f) {
 					that._collectionsNav.setActive(false);
