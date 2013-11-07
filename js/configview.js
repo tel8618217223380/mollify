@@ -13,6 +13,8 @@
 
 	mollify.view.MainViewConfigView = function() {
 		var that = this;
+		this.viewId = "admin";
+		
 		this._views = [];
 		this._adminViews = [];
 		this._adminViewsLoaded = false;

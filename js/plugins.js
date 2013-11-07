@@ -399,6 +399,10 @@
 		this._onFileViewInit = function(fv) {
 			that._fileView = fv;
 			that._fileView.addCustomFolderType("ic", {
+				getFolderPublicId : function(f) {
+					return f.ic.id;
+				},
+				
 				onFolderDeselect : function(f) {
 					that._collectionsNav.setActive(false);
 				},
