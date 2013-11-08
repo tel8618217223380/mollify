@@ -12,6 +12,7 @@ var mollifyDefaults = {
 		"default": "en",
 		"options": ["en"]	
 	},
+	"view-url" : false,
 	"app-element-id" : "mollify",
 	"service-path": "backend/",
 	"limited-http-methods" : false,
@@ -53,13 +54,7 @@ var mollifyDefaults = {
 	mollify._hiddenInd = 0;
 	mollify.settings = false;
 	mollify.session = false;
-	
-	window.onpopstate = function(event) {
-		mollify.App.onRestoreState(document.location.href, event.state);
-		//mollify.App._state = event.state;
-		//alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
-	};
-	
+		
 	/* APP */
 
 	mollify.App.init = function(s, p) {
@@ -96,6 +91,12 @@ var mollifyDefaults = {
 				start();
 			}
 		});
+		
+		if (mollify.settings["view-url"])
+			window.onpopstate = function(event) {
+				mollify.App.onRestoreState(document.location.href, event.state);
+			};
+
 		start();
 	};
 	
@@ -180,6 +181,7 @@ var mollifyDefaults = {
 	};
 	
 	mollify.App.storeView = function(viewId, o) {
+		if (!mollify.settings["view-url"]) return;
 		if (window.history) window.history.pushState(o, "", "?v="+viewId);	
 	};
 	

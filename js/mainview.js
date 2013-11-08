@@ -281,6 +281,7 @@
 		this._viewStyle = 0;
 		this._selected = [];
 		this._customFolderTypes = {};
+		this._selectedItems = [];
 		this._formatters = {
 			byteSize : new mollify.ui.formatters.ByteSize(new mollify.ui.formatters.Number(2, false, mollify.ui.texts.get('decimalSeparator'))),
 			timestamp : new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat')),
@@ -544,6 +545,8 @@
 				if (h.id.length > 1 && that._customFolderTypes[h.id[0]]) {
 					var f = that._customFolderTypes[h.id[0]].getFolderObjById(h.id.slice(1));
 					if (f) {
+						viewFound = true;
+						that._currentFolder = f;
 						that._customFolderTypes[h.id[0]].getFolderInfo(f).done(function(r) {
 							that._currentFolderInfo = r;
 							that.folder();
