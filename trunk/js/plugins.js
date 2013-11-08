@@ -403,7 +403,7 @@
 					return f.ic.id;
 				},
 				getFolderObjById : function(id) {
-					return { ic: { id: id } };	
+					return { type: "ic", name: "", ic: { id: id } };	
 				},
 				
 				onFolderDeselect : function(f) {
@@ -413,13 +413,13 @@
 				getFolderInfo : function(f) {
 					var df = $.Deferred();
 					mollify.service.post("itemcollections/"+f.ic.id+"/data", {rq_data: that._fileView.getDataRequest() }).done(function(r){
-						df.resolve({items: r.ic.items, data: r.data});
+						df.resolve({items: r.ic.items, ic: r.ic, name: r.ic.name, data: r.data});
 					});
 					return df.promise();
 				},
 		
 				onRenderFolderView : function(f, fi, $h, $tb) {
-					mollify.dom.template("mollify-tmpl-fileview-header-custom", {folder: f}).appendTo($h);
+					mollify.dom.template("mollify-tmpl-fileview-header-custom", {name: fi.ic.name, folder: f}).appendTo($h);
 		
 					var opt = {
 						title: function() {
