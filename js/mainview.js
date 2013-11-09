@@ -678,7 +678,7 @@
 			that._currentFolderData = false;
 			that.rootNav.setActive(false);
 
-			that._onSelectFolder(id);
+			return that._onSelectFolder(id);
 		};
 		
 		this._getFolderPublicId = function(f) {
@@ -697,9 +697,9 @@
 			
 			var idParts = id.split("/");			
 			if (idParts.length > 1 && that._customFolderTypes[idParts[0]]) {
-				that._customFolderTypes[idParts[0]].onSelectFolder(idParts[1]).done(that._setFolder).fail(onFail);
+				return that._customFolderTypes[idParts[0]].onSelectFolder(idParts[1]).done(that._setFolder).fail(onFail);
 			} else if (idParts.length == 1) {
-				mollify.filesystem.folderInfo(idParts[0], true, that.getDataRequest()).done(function(r) {
+				return mollify.filesystem.folderInfo(idParts[0], true, that.getDataRequest()).done(function(r) {
 					var folder = r.folder;
 					var data = r;
 					data.items = r.folders.slice(0).concat(r.files);
@@ -709,6 +709,7 @@
 			} else {
 				// invalid id, just ignore
 				that.hideProgress();
+				return $.Deferred().reject();
 			}
 		};
 		
