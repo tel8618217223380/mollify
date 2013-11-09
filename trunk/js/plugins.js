@@ -319,7 +319,6 @@
 				
 		this._showCollection = function(ic) {
 			that._fileView.changeToFolder("ic/"+ic.id);
-			that._collectionsNav.setActive(ic);
 		};
 		
 		this.editCollection = function(ic, done) {
@@ -360,11 +359,15 @@
 		this._updateNavBar = function(list) {
 			that._list = list;
 			var navBarItems = [];
+			var itemsById = {};
 			$.each(list, function(i, ic) {
+				itemsById[ic.id] = ic;
 				navBarItems.push({title:ic.name, obj: ic, callback:function(){ that._showCollection(ic); }})
 			});
 			that._collectionsNav.update(navBarItems);
-			//TODO update selected
+			
+			var f = that._fileView.getCurrentFolder();
+			if (f.type == 'ic') that._collectionsNav.setActive(itemsById[f.id]);
 		}
 
 		this.removeCollection = function(ic) {
@@ -381,7 +384,7 @@
 				{"title-key":"pluginItemCollectionsNavEdit", callback: function() {
 					that.editCollection(ic, function(removed) {
 						var f = that._fileView.getCurrentFolder();
-						if (f.type != 'ic' || f.ic.id != ic.id) return;
+						if (f.type != 'ic' || f.id != ic.id) return;
 
 						if (removed) that._fileView.openInitialFolder();
 						else that._fileView.refresh();
@@ -398,7 +401,9 @@
 			that._fileView.addCustomFolderType("ic", {		
 				onSelectFolder : function(id) {
 					var df = $.Deferred();
-					mollify.service.post("itemcollections/"+id+"/data", {rq_data: that._fileView.getDataRequest() }).done(function(r){
+					mollify.service.post("itemcollections/"+id+"/data", {rq_data: that._fileView.getDataRequest() }).done(function(r) {
+						that._collectionsNav.setActive(r.ic);
+						
 						var fo = {
 							type: "ic",
 							id: r.ic.id,
