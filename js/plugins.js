@@ -318,11 +318,7 @@
 		};
 				
 		this._showCollection = function(ic) {
-			that._fileView.changeToFolder({
-				type: "ic",
-				name: ic.name,
-				ic: ic
-			});
+			that._fileView.changeToFolder("ic/"+ic.id);
 			that._collectionsNav.setActive(ic);
 		};
 		
@@ -368,6 +364,7 @@
 				navBarItems.push({title:ic.name, obj: ic, callback:function(){ that._showCollection(ic); }})
 			});
 			that._collectionsNav.update(navBarItems);
+			//TODO update selected
 		}
 
 		this.removeCollection = function(ic) {
@@ -398,28 +395,31 @@
 		
 		this._onFileViewInit = function(fv) {
 			that._fileView = fv;
-			that._fileView.addCustomFolderType("ic", {
-				getFolderPublicId : function(f) {
-					return f.ic.id;
-				},
-				getFolderObjById : function(id) {
-					return { type: "ic", name: "", ic: { id: id } };	
+			that._fileView.addCustomFolderType("ic", {		
+				onSelectFolder : function(id) {
+					var df = $.Deferred();
+					mollify.service.post("itemcollections/"+id+"/data", {rq_data: that._fileView.getDataRequest() }).done(function(r){
+						var fo = {
+							type: "ic",
+							id: r.ic.id,
+							name: r.ic.name
+						};
+						var data = {
+							items: r.ic.items,
+							ic: r.ic,
+							data: r.data
+						};
+						df.resolve(fo, data);
+					});
+					return df.promise();
 				},
 				
 				onFolderDeselect : function(f) {
 					that._collectionsNav.setActive(false);
 				},
 		
-				getFolderInfo : function(f) {
-					var df = $.Deferred();
-					mollify.service.post("itemcollections/"+f.ic.id+"/data", {rq_data: that._fileView.getDataRequest() }).done(function(r){
-						df.resolve({items: r.ic.items, ic: r.ic, name: r.ic.name, data: r.data});
-					});
-					return df.promise();
-				},
-		
-				onRenderFolderView : function(f, fi, $h, $tb) {
-					mollify.dom.template("mollify-tmpl-fileview-header-custom", {name: fi.ic.name, folder: f}).appendTo($h);
+				onRenderFolderView : function(f, data, $h, $tb) {
+					mollify.dom.template("mollify-tmpl-fileview-header-custom", { folder: f }).appendTo($h);
 		
 					var opt = {
 						title: function() {
@@ -430,7 +430,7 @@
 					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
 					mollify.ui.controls.dropdown({
 						element: actionsElement,
-						items: that._getItemActions(f.ic),
+						items: that._getItemActions(data.ic),
 						hideDelay: 0,
 						style: 'submenu'
 					});
