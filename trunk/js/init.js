@@ -169,8 +169,12 @@ var mollifyDefaults = {
 	};
 	
 	mollify.App.onRestoreState = function(url, o) {
+		if (!mollify.settings["view-url"]) return;
+		
 		// if no view active, app is not loaded -> don't restore
 		if (!mollify.App.activeView) return;
+		
+		//TODO check same user from o
 		
 		//baseUrl = mollify.request.getBaseUrl(url);
 		var params = mollify.request.getParams(url);
@@ -180,9 +184,12 @@ var mollifyDefaults = {
 		mollify.App._activateView(id);
 	};
 	
-	mollify.App.storeView = function(viewId, o) {
+	mollify.App.storeView = function(viewId) {
 		if (!mollify.settings["view-url"]) return;
-		if (window.history) window.history.pushState(o, "", "?v="+viewId);	
+		var obj = {
+			userId : mollify.session.userId
+		};
+		if (window.history) window.history.pushState(obj, "", "?v="+viewId);	
 	};
 	
 	mollify.App.registerView = function(id, h) {
@@ -378,8 +385,8 @@ var mollifyDefaults = {
 		return mollify.service.post("filesystem/"+item.id+"/details/", { data : data });
 	};
 	
-	mfs.folderInfo = function(f, hierarchy, data) {
-		return mollify.service.post("filesystem/"+ (f ? f.id : "roots") + "/info/" + (hierarchy ? "?h=1" : ""), { data : data });
+	mfs.folderInfo = function(id, hierarchy, data) {
+		return mollify.service.post("filesystem/"+ (id ? id : "roots") + "/info/" + (hierarchy ? "?h=1" : ""), { data : data });
 	};
 
 	mfs.findFolder = function(d, data) {
