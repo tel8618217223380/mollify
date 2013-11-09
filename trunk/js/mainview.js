@@ -542,6 +542,8 @@
 			}
 			if (h.id) {
 				that.changeToFolder(h.id.join("/")).fail(function() {
+					this.handled = true;
+					//TODO show error message that folder was not found?
 					that.hideProgress();
 					that.openInitialFolder();					
 				});
@@ -649,6 +651,7 @@
 		};
 	
 		this.showNoRoots = function() {
+			//TODO show message, for admin instruct opening admin tool?
 			that._currentFolder = false;
 			that._currentFolderData = {items: mollify.filesystem.roots};
 			that._updateUI();

@@ -37,12 +37,12 @@
 			});
 		}
 
-		this.onResize = function() {
-			//$("#mollify-configview").height($("#mollify-mainview-content").height());
-		}
+		this.onResize = function() {}
 
 		this.onActivate = function(h) {
 			mollify.templates.load("configview", mollify.templates.url("configview.html")).done(function() {
+				mollify.App.storeView("admin/");	//TODO subviews
+				
 				mollify.dom.template("mollify-tmpl-configview").appendTo(h.content);
 				
 				that.showLoading(true);
