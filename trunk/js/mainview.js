@@ -79,7 +79,7 @@
 		this._findView = function(id) {
 			var found = false;
 			$.each(that._views, function(i, v) {
-				if (v.viewId == id[0]) {
+				if (v.viewId == id) {
 					found = v;
 					return false;
 				}
