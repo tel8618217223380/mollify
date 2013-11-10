@@ -85,7 +85,7 @@
 				}
 			});
 			return found;
-		}
+		};
 		
 		this.onRestoreView = function(id) {
 			var viewId = id[0];

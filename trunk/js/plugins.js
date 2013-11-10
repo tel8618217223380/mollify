@@ -2003,6 +2003,7 @@
 			configViewHandler : {
 				views : function() {
 					return [{
+						viewId: "shares",
 						title: mollify.ui.texts.get("pluginShareConfigViewNavTitle"),
 						onActivate: that.onActivateConfigView
 					}];

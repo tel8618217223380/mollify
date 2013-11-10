@@ -14,6 +14,7 @@
 	mollify.view.config.admin.Registration = {
 		RegistrationsView : function() {
 			var that = this;
+			this.viewId = "registration";
 
 			this.init = function(s, cv) {
 				that._cv = cv;

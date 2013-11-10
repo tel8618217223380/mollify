@@ -40,9 +40,7 @@
 		this.onResize = function() {}
 
 		this.onActivate = function(h) {
-			mollify.templates.load("configview", mollify.templates.url("configview.html")).done(function() {
-				mollify.App.storeView("admin/");	//TODO subviews
-				
+			mollify.templates.load("configview", mollify.templates.url("configview.html")).done(function() {				
 				mollify.dom.template("mollify-tmpl-configview").appendTo(h.content);
 				
 				that.showLoading(true);
@@ -83,8 +81,6 @@
 						});
 					}
 				}
-				
-				that._activateView(that._views[0]);
 			});
 		}
 
@@ -114,7 +110,7 @@
 				$.when.apply($, o).done(df.resolve);
 			});
 			return df;
-		}
+		};
 
 		this._initAdminViews = function(h) {
 			if (!mollify.session.admin || that._adminViews.length === 0) return;
@@ -132,9 +128,39 @@
 				title: mollify.ui.texts.get("configViewAdminNavTitle"),
 				items: navBarItems
 			});
-		}
+			
+			if (h.id) {
+				var view = that._findView(h.id[0]);
+				if (view) that._activateView(view.view, view.admin);
+			} else
+				that._activateView(that._views[0]);
+		};
+		
+		this._findView = function(id) {
+			var found = false;
+			$.each(that._views, function(i, v) {
+				if (v.viewId == id) {
+					found = { view: v, admin: false };
+					return false;
+				}
+			});
+			if (!found)
+				$.each(that._adminViews, function(i, v) {
+					if (v.viewId == id) {
+						found = { view: v, admin: true };
+						return false;
+					}
+				});
 
-		this._activateView = function(v, admin) {
+			return found;
+		};
+
+		this.onRestoreView = function(id) {
+			var view = that._findView(id[0]);
+			if (view) that._activateView(view.view, view.admin, true);
+		};
+
+		this._activateView = function(v, admin, noStore) {
 			if (that._activeView) {
 				if (that._activeView.onDeactivate) that._activeView.onDeactivate();
 				if (that._adminNav) that._adminNav.setActive(false);
@@ -146,6 +172,7 @@
 			that.showLoading(false);
 			
 			that._activeView = v;
+			if (!noStore && that._activeView.viewId) mollify.App.storeView("admin/"+that._activeView.viewId);
 			$("#mollify-configview-header").html(v.title);
 			v.onActivate(that._getContentElement().empty(), that);
 		}
@@ -212,6 +239,7 @@
 	/* Account */
 	mollify.view.config.user.AccountView = function(mv) {
 		var that = this;
+		this.viewId = "account";
 		this.title = mollify.ui.texts.get("configUserAccountNavTitle");
 
 		this.onActivate = function($c) {
@@ -224,6 +252,7 @@
 	/* Users */
 	mollify.view.config.admin.UsersView = function() {
 		var that = this;
+		this.viewId = "users";
 		
 		this.init = function(opt, cv) {
 			that._cv = cv;
@@ -655,6 +684,7 @@
 	/* Groups */
 	mollify.view.config.admin.GroupsView = function() {
 		var that = this;
+		this.viewId = "groups";
 		
 		this.init = function(s, cv) {
 			that._cv = cv;
@@ -934,6 +964,7 @@
 	/* Folders */
 	mollify.view.config.admin.FoldersView = function() {
 		var that = this;
+		this.viewId = "folders";
 		
 		this.init = function(s, cv) {
 			that._cv = cv;

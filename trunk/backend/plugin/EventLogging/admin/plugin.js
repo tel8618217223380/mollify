@@ -14,6 +14,7 @@
 	mollify.view.config.admin.EventLogging = {
 		AllEventsView : function() {
 			var that = this;
+			this.viewId = "events";
 
 			this.init = function(s, cv) {
 				that._cv = cv;
