@@ -61,7 +61,7 @@
 			try {
 				t = JSON.parse(r);
 			} catch (e) {
-				new mollify.ui.FullErrorView('<b>Localization file syntax error</b> (<code>'+url+'</code>): <p><code>'+e.message+'</code></p>').show();
+				new mollify.ui.FullErrorView('<b>Localization file syntax error</b> (<code>'+url+'</code>)', '<code>'+e.message+'</code>').show();
 				return;
 			}
 			if (!tt.locale)
@@ -75,7 +75,7 @@
 			df.resolve(t.locale);			
 		}).fail(function(e) {
 			if (e.status == 404) {
-				new mollify.ui.FullErrorView('<b>Localization file missing</b>: <code>'+url+'</code>. <p>Either create the file or use <a href="https://code.google.com/p/mollify/wiki/ClientResourceMap">client resource map</a> to load it from different location, or to ignore it</p>').show();
+				new mollify.ui.FullErrorView('Localization file missing: <code>'+url+'</code>', 'Either create the file or use <a href="https://code.google.com/p/mollify/wiki/ClientResourceMap">client resource map</a> to load it from different location, or to ignore it').show();
 				return;
 			}
 			df.reject();
@@ -539,16 +539,18 @@
 		});
 	};
 	
-	mollify.ui.FullErrorView = function(e) {
+	mollify.ui.FullErrorView = function(title, msg) {
 		this.show = function() {
 			this.init(mollify.App.getElement());
 		};
 		
 		this.init = function($c) {
 			if (mollify.App._initialized)
-				mollify.dom.template("mollify-tmpl-fullpage-error", {message: e}).appendTo($c.empty());
-			else
-				$c.html(e);
+				mollify.dom.template("mollify-tmpl-fullpage-error", {title: title, message: msg}).appendTo($c.empty());
+			else {
+				var err = '<h1>'+title+'</h1><p>'+msg+'</p>';
+				$c.html(err);
+			}
 		};
 	};
 	
