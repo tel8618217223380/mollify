@@ -14,6 +14,7 @@
 	mollify.view.config.admin.Notificator = {
 		NotificationsView : function() {
 			var that = this;
+			this.viewId = "notificator";
 
 			this.init = function(s, cv) {
 				that._cv = cv;
