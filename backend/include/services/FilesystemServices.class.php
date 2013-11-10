@@ -342,6 +342,7 @@
 					
 					$folder = $this->item($data['folder']);
 					$to = $folder->folderWithName($item->name());
+					Logging::logDebug("COPY TO ".$to->internalPath());
 					if ($to->exists()) throw new ServiceException("DIR_ALREADY_EXISTS");
 					$this->env->filesystem()->copy($item, $to);
 					break;

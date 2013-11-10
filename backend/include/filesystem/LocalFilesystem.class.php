@@ -44,12 +44,6 @@
 		public function type() {
 			return MollifyFilesystem::TYPE_LOCAL;
 		}
-
-		/*public function createItemWithInternalPath($id, $path) {
-			if (strpos($path, $this->rootPath) === FALSE)
-				throw new ServiceException("INVALID_REQUEST", "Illegal filesystem (".$this->rootPath.") for path: ".$path);
-			return $this->createItem($id, $this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
-		}*/
 				
 		public function createItem($id, $path) {
 			self::assertPath($path);
@@ -71,7 +65,7 @@
 		
 		/* Returns item path in native charset */
 		public function localPath($item) {
-			return $this->filesystemInfo->env()->convertCharset($this->internalPath($item), FALSE);
+			return $this->filesystemInfo->env()->convertCharset($item->internalPath(), FALSE);
 		}
 		
 		public function itemExists($item) {
@@ -204,19 +198,19 @@
 
 		public function copy($item, $to) {			
 			$nativeTarget = $this->localPath($to);
-			//$nativeTarget = $this->filesystemInfo->env()->convertCharset($target, FALSE);
-
+			
 			if (file_exists($nativeTarget)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists (".$nativeTarget.")");
 			
 			$result = FALSE;
 			$nativePath = $this->localPath($item);
 			
+			Logging::logDebug("copy [".$nativePath."] -> [".$nativeTarget."]");
 			if ($item->isFile()) {
 				$result = copy($nativePath, $nativeTarget);
 			} else {
 				$result = $this->copyFolderRecursively($nativePath, $nativeTarget);
 			}
-			if (!$result) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()." to .".$to->id()."]");
+			if (!$result) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()." to ".$to->id()."]");
 			
 			return $to;
 		}
@@ -313,6 +307,7 @@
 			
 			$target = self::joinPath($this->internalPath($folder), $name);
 			$nativeTarget = $this->filesystemInfo->env()->convertCharset($target, FALSE);
+			Logging::logDebug("create ".$target.": ".$this->publicPath($target));
 			
 			if (file_exists($nativeTarget)) throw new ServiceException("FILE_ALREADY_EXISTS");
 			return $this->itemWithPath($this->publicPath($target));
@@ -328,8 +323,8 @@
 		public function folderWithName($folder, $name) {
 			self::assertFilename($name);
 			
-			$path = self::folderPath(self::joinPath($this->publicPath($folder->internalPath()), $name));
-			return $this->itemWithPath($path);
+			$path = self::folderPath(self::joinPath($folder->internalPath(), $name));
+			return $this->itemWithPath($this->publicPath($path));
 		}
 		
 		public function size($file) {

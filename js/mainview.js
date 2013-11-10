@@ -146,7 +146,10 @@
 					var item = items[$items.index(this)];
 					if (item.callback) item.callback();
 				});
-				if (nb.onRender) nb.onRender($nb, $items, function($e) { return items[$items.index($e)].obj; });
+				if (nb.onRender) nb.onRender($nb, $items, function($e) {
+					var ind = $items.index($e);
+					return items[ind].obj;
+				});
 			};
 			initItems();
 			return {
@@ -698,11 +701,11 @@
 			mollify.ui.hideActivePopup();
 			that.showProgress();
 			
-			var idParts = id.split("/");			
+			var idParts = id ? id.split("/") : [];
 			if (idParts.length > 1 && that._customFolderTypes[idParts[0]]) {
 				return that._customFolderTypes[idParts[0]].onSelectFolder(idParts[1]).done(that._setFolder).fail(onFail);
-			} else if (idParts.length == 1) {
-				return mollify.filesystem.folderInfo(idParts[0], true, that.getDataRequest()).done(function(r) {
+			} else if (!id || idParts.length == 1) {
+				return mollify.filesystem.folderInfo(id ? idParts[0] : null, true, that.getDataRequest()).done(function(r) {
 					var folder = r.folder;
 					var data = r;
 					data.items = r.folders.slice(0).concat(r.files);
@@ -783,7 +786,7 @@
 		
 		this.onDragAndDrop = function(to, itm) {
 			var copy = (that.dropType(to, itm) == 'copy');
-			//console.log((copy ? "copy " : "move ") +item.name+" to "+to.name);
+			console.log((copy ? "copy " : "move ") +itm.name+" to "+to.name);
 			
 			if (copy) mollify.filesystem.copy(itm, to);
 			else mollify.filesystem.move(itm, to);
