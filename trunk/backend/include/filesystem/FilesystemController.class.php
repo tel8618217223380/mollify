@@ -430,10 +430,10 @@
 		}
 
 		public function copy($item, $to) {
-			Logging::logDebug('copying '.$item->id()."[".$item->path().'] to ['.$to.']');
+			Logging::logDebug('copying '.$item->id()."[".$item->internalPath().'] to '.$to->id()."[".$to->internalPath().']');
 			
+			if ($item->isFile() and !$to->isFile()) $to = $to->createFile($item->name());
 			if (!$item->isFile() and $to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
-			if ($item->isFile() and !$to->isFile()) throw new ServiceException("NOT_A_FILE", $to->path());
 			
 			$this->assertRights($item, Authentication::RIGHTS_READ, "copy");
 			$this->assertRights($to->parent(), Authentication::RIGHTS_WRITE, "copy");
@@ -443,7 +443,7 @@
 		}
 		
 		public function copyItems($items, $folder) {
-			Logging::logDebug('copying '.count($items).' items to ['.$folder.']');
+			Logging::logDebug('copying '.count($items).' items to ['.$folder->path().']');
 			$this->assertRights($items, Authentication::RIGHTS_READ, "copy");
 			
 			foreach($items as $item) {
