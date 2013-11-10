@@ -786,7 +786,7 @@
 		
 		this.onDragAndDrop = function(to, itm) {
 			var copy = (that.dropType(to, itm) == 'copy');
-			console.log((copy ? "copy " : "move ") +itm.name+" to "+to.name);
+			//console.log((copy ? "copy " : "move ") +itm.name+" to "+to.name);
 			
 			if (copy) mollify.filesystem.copy(itm, to);
 			else mollify.filesystem.move(itm, to);
