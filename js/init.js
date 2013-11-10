@@ -152,8 +152,14 @@ var mollifyDefaults = {
 			
 			mollify.App.activeView.init(mollify.App.getElement(), id);
 		};
-		if (id) mollify.App._getView(id, onView);
-		else onView();
+		
+		if (id) {
+			var custom = !!mollify.App._views[id[0]];
+			var isActiveView = (custom && mollify.App.activeViewId == id[0]) || (!custom && mollify.App.activeViewId == "main");
+			
+			if (isActiveView) mollify.App.activeView.onRestoreView(id);
+			else mollify.App._getView(id, onView);
+		} else onView();
 	};
 	
 	mollify.App._getView = function(id, cb) {
@@ -174,7 +180,7 @@ var mollifyDefaults = {
 		// if no view active, app is not loaded -> don't restore
 		if (!mollify.App.activeView) return;
 		
-		//TODO check same user from o
+		if (!mollify.session.user_id || mollify.session.user_id != o.user_id) return;
 		
 		//baseUrl = mollify.request.getBaseUrl(url);
 		var params = mollify.request.getParams(url);
@@ -187,7 +193,7 @@ var mollifyDefaults = {
 	mollify.App.storeView = function(viewId) {
 		if (!mollify.settings["view-url"]) return;
 		var obj = {
-			userId : mollify.session.userId
+			user_id : mollify.session.user_id
 		};
 		if (window.history) window.history.pushState(obj, "", "?v="+viewId);	
 	};

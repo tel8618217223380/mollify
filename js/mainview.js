@@ -62,23 +62,44 @@
 			});
 			
 			if (that._views.length > 0) {
-				var view = that._views[0];
+				var view = false;
 				if (viewId) {
-					var found = false;
-					$.each(that._views, function(i, v) {
-						if (v.viewId == viewId[0]) {
-							view = v;
-							viewId = viewId.slice(1);
-							if (viewId.length == 0 || (viewId.length == 1 && viewId[0] == "")) viewId = false;
-							found = true;
-							return false;
-						}
-					});
-					if (!found) viewId = false;
+					view = that._findView(viewId[0]);
+					viewId = viewId.slice(1);
+					if (viewId.length == 0 || (viewId.length == 1 && viewId[0] == "")) viewId = false;
+				}
+				if (!view) {
+					view = that._views[0];
+					viewId = false;
 				}
 				that.activateView(view, viewId);
 			}
+		};
+		
+		this._findView = function(id) {
+			var found = false;
+			$.each(that._views, function(i, v) {
+				if (v.viewId == id[0]) {
+					found = v;
+					return false;
+				}
+			});
+			return found;
 		}
+		
+		this.onRestoreView = function(id) {
+			var viewId = id[0];
+			if (that._currentView && that._currentView.viewId == viewId) {
+				that._currentView.onRestoreView(id.slice(1));
+			} else {
+				var view = that._findView(viewId);
+				if (view) {
+					var viewId = id.slice(1);
+					if (viewId.length == 0 || (viewId.length == 1 && viewId[0] == "")) viewId = false;
+					that.activateView(view, viewId);
+				}
+			}
+		};
 		
 		this.activateView = function(v, id) {			
 			mollify.ui.hideActivePopup();
@@ -552,7 +573,11 @@
 				});
 			} else
 				that.openInitialFolder();
-		}
+		};
+		
+		this.onRestoreView = function(id) {
+			that.changeToFolder(id.join("/"), true);
+		};
 		
 		this._getUploadHandler = function(c) {
 			return {
@@ -668,11 +693,11 @@
 			$("#mollify-folderview-items").removeClass("loading");
 		};
 	
-		this.changeToFolder = function(f) {
+		this.changeToFolder = function(f, noStore) {
 			var id = f;
 			if (f && (typeof(f) != "string")) id = that._getFolderPublicId(f);
 		
-			mollify.App.storeView("files/"+ id);
+			if (!noStore) mollify.App.storeView("files/"+ id);
 			
 			if (that._currentFolder && that._currentFolder.type && that._customFolderTypes[that._currentFolder.type]) {
 				if (that._customFolderTypes[that._currentFolder.type].onFolderDeselect)
