@@ -238,7 +238,8 @@
 							columns: [
 								{ type:"selectrow" },
 								{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
-								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle'), valueMapper: function(i) { return i; } },
+								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+								{ id: "type", title: mollify.ui.texts.get('pluginNotificatorAdminEventTypeTitle') },
 								{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 							],
 							onRowAction: function(id, e) {
