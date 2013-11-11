@@ -564,6 +564,23 @@
 				that.showNoRoots();
 				return;
 			}
+			
+			var params = mollify.request.getParams();
+			if (params.path) {
+				mollify.filesystem.findFolder({path: params.path}, that.getDataRequest()).done(function(r) {
+					var folder = r.folder;
+					that.changeToFolder(folder);
+				}).fail(function(e) {
+					if (e.code == 203) {
+						mollify.ui.dialogs.error({ message: mollify.ui.texts.get('mainviewFolderNotFound', params.path) });
+						this.handled = true;
+					}
+					that.hideProgress();
+					that.openInitialFolder();
+				});
+				return;
+			}
+						
 			if (h.id) {
 				that.changeToFolder(h.id.join("/")).fail(function() {
 					this.handled = true;
