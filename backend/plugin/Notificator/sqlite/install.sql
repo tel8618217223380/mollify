@@ -5,10 +5,17 @@ CREATE TABLE notificator_notification (
   message varchar(512) NOT NULL DEFAULT ''
 );
 CREATE TABLE notificator_notification_event (
+  id INTEGER PRIMARY KEY,
   notification_id int(11) NOT NULL,
   event_type varchar(128) NOT NULL,
-  PRIMARY KEY (notification_id, event_type),
   FOREIGN KEY(notification_id) REFERENCES notificator_notification(id)
+);
+CREATE TABLE notificator_notification_event_filter (
+  id INTEGER PRIMARY KEY,
+  notification_event_id int(11) NOT NULL,
+  type varchar(128) NOT NULL,
+  value varchar(128) NOT NULL,
+  FOREIGN KEY(notification_event_id) REFERENCES notificator_notification_event(id)
 );
 CREATE TABLE notificator_notification_user (
   notification_id int(11) NOT NULL,
@@ -30,4 +37,4 @@ CREATE TABLE notificator_notification_recipient (
   FOREIGN KEY(notification_id) REFERENCES notificator_notification(id),
   FOREIGN KEY(user_id) REFERENCES user(id)
 );
-INSERT INTO parameter (name, value) VALUES ('plugin_Notificator_version', '1_0');
+INSERT INTO parameter (name, value) VALUES ('plugin_Notificator_version', '1_1');
