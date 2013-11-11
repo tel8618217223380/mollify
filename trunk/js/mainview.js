@@ -714,7 +714,7 @@
 			var id = f;
 			if (f && (typeof(f) != "string")) id = that._getFolderPublicId(f);
 		
-			if (!noStore) mollify.App.storeView("files/"+ id);
+			if (!noStore) mollify.App.storeView("files/"+ (id ? id : ""));
 			
 			if (that._currentFolder && that._currentFolder.type && that._customFolderTypes[that._currentFolder.type]) {
 				if (that._customFolderTypes[that._currentFolder.type].onFolderDeselect)
