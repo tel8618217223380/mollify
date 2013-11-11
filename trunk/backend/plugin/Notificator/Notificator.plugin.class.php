@@ -15,11 +15,11 @@
 		}
 
 		public function version() {
-			return "1_0";
+			return "1_1";
 		}
 
 		public function versionHistory() {
-			return array("1_0");
+			return array("1_0", "1_1");
 		}				
 
 		public function setup() {
