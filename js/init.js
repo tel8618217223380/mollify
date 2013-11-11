@@ -136,10 +136,10 @@ var mollifyDefaults = {
 	};
 	
 	mollify.App._activateView = function(id) {
-		var onView = function(v, viewId) {
+		var onView = function(v) {
 			if (v) {
 				mollify.App.activeView = v;
-				mollify.App.activeViewId = viewId;
+				mollify.App.activeViewId = id[0];
 			} else {
 				if (!mollify.session || !mollify.session.authenticated) {
 					mollify.App.activeView = new mollify.view.LoginView();
@@ -165,12 +165,9 @@ var mollifyDefaults = {
 	mollify.App._getView = function(id, cb) {
 		var h = mollify.App._views[id[0]];
 		if (h && h.getView) {
-			var view = h.getView(idParts, mollify.App.pageParams);
-			
-			if (view && view.done) view.done(function(v) {
-				cb(v, id[0]);
-			});
-			else cb(view, id[0]);
+			var view = h.getView(id, mollify.App.pageParams);
+			if (view && view.done) view.done(cb);
+			else cb(view);
 		} else cb(false);
 	};
 	

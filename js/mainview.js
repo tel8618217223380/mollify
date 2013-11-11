@@ -66,7 +66,7 @@
 				if (viewId) {
 					view = that._findView(viewId[0]);
 					viewId = viewId.slice(1);
-					if (viewId.length == 0 || (viewId.length == 1 && viewId[0] == "")) viewId = false;
+					if (viewId.length === 0 || (viewId.length == 1 && viewId[0] === "")) viewId = false;
 				}
 				if (!view) {
 					view = that._views[0];
@@ -94,8 +94,8 @@
 			} else {
 				var view = that._findView(viewId);
 				if (view) {
-					var viewId = id.slice(1);
-					if (viewId.length == 0 || (viewId.length == 1 && viewId[0] == "")) viewId = false;
+					viewId = id.slice(1);
+					if (viewId.length === 0 || (viewId.length == 1 && viewId[0] === "")) viewId = false;
 					that.activateView(view, viewId);
 				}
 			}
