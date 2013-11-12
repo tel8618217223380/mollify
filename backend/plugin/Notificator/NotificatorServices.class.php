@@ -91,7 +91,7 @@
 				return;
 			}
 			if (isset($data["events"])) {
-				$this->response()->success($dao->editNotificationEvents($id, $data["events"]));
+				$this->response()->success($dao->addNotificationEvents($id, $data["events"]));
 				return;
 			}
 			if (isset($data["users"])) {

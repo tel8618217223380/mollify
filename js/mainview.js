@@ -428,6 +428,9 @@
 		this.init = function(mainview) {
 			that.title = mollify.ui.texts.get('mainviewMenuTitle');
 			that.icon = "icon-file-alt";
+			that._viewStyle = 0;
+			if (mollify.settings["file-view"]["default-view-mode"] == "small-icon") that._viewStyle = 1;
+			if (mollify.settings["file-view"]["default-view-mode"] == "large-icon") that._viewStyle = 2;
 
 			mollify.events.addEventHandler(that.onEvent);
 			
@@ -1120,7 +1123,7 @@
 		this.initList = function() {
 			var $h = $("#mollify-folderview-header-items").empty();
 			if (that.isListView()) {
-				var cols = mollify.settings["list-view-columns"];
+				var cols = mollify.settings["file-view"]["list-view-columns"];
 				that.itemWidget = new FileList('mollify-folderview-items', $h, 'main', this._filelist, cols);
 			} else {
 				var thumbs = !!mollify.session.features.thumbnails;

@@ -177,7 +177,7 @@
 											folder.name = name;
 									folders.push(folder);
 								});
-								mollify.service.put("notificator/list/"+nd.id, {events: currentEvents.concat(sel)}).done(update);
+								mollify.service.put("notificator/list/"+nd.id, {events: sel}).done(update);
 							}
 						});
 					}
@@ -229,7 +229,7 @@
 						actions: [
 							{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddEvents },
 							{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
-								mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: sel }).done(update);
+								mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: mollify.helpers.extractValue(sel, "id") }).done(update);
 							}}
 						],
 						table: {
@@ -238,13 +238,16 @@
 							columns: [
 								{ type:"selectrow" },
 								{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
-								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 								{ id: "type", title: mollify.ui.texts.get('pluginNotificatorAdminEventTypeTitle') },
-								{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+								{ id: "filter", title: mollify.ui.texts.get('pluginNotificatorAdminEventFilterTitle'), valueMapper: function(i, v) { return "-"; } },
+								{ id: "set_filter", title: "", type: "action", content: '<i class="icon-filter"></i>' },
+								{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 							],
 							onRowAction: function(id, e) {
 								if (id == "remove") {
-									mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: [e] }).done(update);
+									mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: [e.id] }).done(update);
+								} else if (id == "set_filter") {
+									
 								}
 							}
 						}
