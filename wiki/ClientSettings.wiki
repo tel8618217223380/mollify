@@ -10,7 +10,7 @@ Following settings are available in client (and their default values), used in i
 			"limited-http-methods" : false,	// limited HTTP methods
 			"default-view-mode": "list",	// default view mode
 			"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
-			"view-url": false,	// reflect view in url
+			"view-url": false,			// reflect view in url
 			"list-view-columns": {
 				...			// file list column setup
 			},
