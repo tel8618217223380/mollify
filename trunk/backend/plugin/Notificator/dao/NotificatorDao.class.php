@@ -85,7 +85,7 @@
 			
 			$query = "select distinct ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.event_type as event_type, ntf_usr.user_id as ntf_usr_id, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.is_group as ntf_rcp_usr_is_group, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
 			
-			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.notification_id = ntf.id left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.notification_id = ntf.id left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.notification_id = ntf.id left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.id = ntf_rcp.user_id";
+			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.notification_id = ntf.id left outer join ".$db->table("notificator_notification_event_filter")." evtf on evt.id = evtf.notification_event_id left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.notification_id = ntf.id left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.notification_id = ntf.id left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.id = ntf_rcp.user_id";
 
 			$query .= " where (evt.event_type is null or evt.event_type = '$typeId') and $userCriteria and ntf_rcp_user.id is not null";
 			$query .= " order by ntf.id asc";
@@ -125,6 +125,10 @@
 			return $result;
 		}
 		
+		public function getEventFilters() {
+			
+		}
+		
 		public function addNotification($data) {
 			$db = $this->env->db();
 			$db->update(sprintf("INSERT INTO ".$db->table("notificator_notification")." (name) VALUES ('%s')", $db->string($data["name"])));
@@ -146,7 +150,7 @@
 
 		public function removeNotificationEvents($id, $ids) {
 			$db = $this->env->db();
-			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s' and event_type in (%s)", $db->string($id), $db->arrayString($ids, TRUE)));
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s' and id in (%s)", $db->string($id), $db->arrayString($ids, TRUE)));
 			return TRUE;
 		}
 		
@@ -164,11 +168,10 @@
 			return TRUE;
 		}
 
-		public function editNotificationEvents($id, $events) {
+		public function addNotificationEvents($id, $events) {
 			$db = $this->env->db();
 			
 			$db->startTransaction();
-			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s'", $db->string($id)));
 			foreach ($events as $event)
 				$db->update(sprintf("INSERT INTO ".$db->table("notificator_notification_event")." (notification_id, event_type) VALUES ('%s', '%s')", $db->string($id), $db->string($event)));
 			$db->commit();

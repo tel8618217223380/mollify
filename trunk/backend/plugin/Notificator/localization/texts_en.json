@@ -9,6 +9,8 @@
 		"pluginNotificationAdminEditNotificationMessage": "Enter new name for the notification:",
 		"pluginNotificatorNotificationMessageTitle": "Message",
 		"pluginNotificatorNotificationEventsTitle": "Events that trigger notification",
+		"pluginNotificatorAdminEventTypeTitle": "Type",
+		"pluginNotificatorAdminEventFilterTitle": "Filter",
 		"pluginNotificatorNotificationUsersTitle": "Users who receive notification",
 		"pluginNotificatorNotificationEditMessageDialogTitle": "Edit notification message",
 		"pluginNotificatorNotificationEditMessageTitle": "Title",

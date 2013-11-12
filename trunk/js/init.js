@@ -16,10 +16,14 @@ var mollifyDefaults = {
 	"app-element-id" : "mollify",
 	"service-path": "backend/",
 	"limited-http-methods" : false,
-	"list-view-columns": {
-		"name": { width: 250 },
-		"size": {},
-		"file-modified": { width: 150 }
+	"file-view" : {
+		"default-view-mode" : false,
+		"list-view-columns": {
+			"name": { width: 250 },
+			"size": {},
+			"file-modified": { width: 150 }
+		},
+		"actions": false
 	},
 	"html5-uploader": {
 		maxChunkSize: 0
@@ -72,7 +76,7 @@ var mollifyDefaults = {
 				mollify.plugins.register(p[i]);
 		}
 		
-		mollify.settings = $.extend({}, mollifyDefaults, s);
+		mollify.settings = $.extend(true, {}, mollifyDefaults, s);
 		mollify.service.init(mollify.settings["limited-http-methods"]);
 		
 		var start = function() {
