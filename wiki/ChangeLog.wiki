@@ -4,7 +4,7 @@
 === Version 2.2.9 ===
 Released 2013/11/11
   * Improved support for Windows platform
-  * Added view url & history (current view changes the browser page address, which can be used as a shortcut)
+  * Added view url & history (current view changes the browser page address, which can be used as a shortcut) [https://code.google.com/p/mollify/wiki/ClientSettings#Reflect_view_in_URL_(_view-url_)]
 
 === Version 2.2.8 ===
 Released 2013/11/1
