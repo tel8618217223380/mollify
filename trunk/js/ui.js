@@ -1215,7 +1215,7 @@
 				select : function(item) {
 					var $c = $e.find("option");
 					
-					if (typeof(item) === 'number') {
+					if (item !== undefined && typeof(item) === 'number') {
 						if ($c.length >= item) return;
 						$($c[item]).prop("selected", true);
 						return;	

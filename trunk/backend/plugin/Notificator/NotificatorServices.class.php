@@ -76,11 +76,18 @@
 		}
 		
 		public function processPut() {
-			if (count($this->path) != 2 or $this->path[0] != 'list') throw $this->invalidRequestException();
+			if (count($this->path) < 2 or $this->path[0] != 'list') throw $this->invalidRequestException();
 			
 			$id = $this->path[1];
 			$data = $this->request->data;
 			$dao = $this->getDao();
+			
+			// list/1/events/1/filters
+			if (count($this->path) == 5 and $this->path[2] == "events" and $this->path[4] == "filters") {
+				$eventId = $this->path[3];
+				$this->response()->success($dao->updateNotificationEventFilters($id, $eventId, isset($data["new"]) ? $data["new"] : array(), isset($data["removed"]) ? $data["removed"] : array()));
+				return;
+			}
 			
 			if (isset($data["name"])) {
 				$this->response()->success($dao->editNotificationName($id, $data["name"]));
