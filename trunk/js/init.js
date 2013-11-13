@@ -131,15 +131,13 @@ var mollifyDefaults = {
 	
 	mollify.App._start = function() {
 		mollify.App.activeView = false;
-		mollify.App.activeViewId = null;
-		
-		var id = false;
-		if (mollify.App.pageParams.v && mollify.App.pageParams.v.length > 0)
-			id = mollify.App.pageParams.v.split("/");
-		mollify.App._activateView(id);
+		mollify.App.activeViewId = null;	
+		mollify.App.openView(mollify.App.pageParams.v || "/files/");
 	};
 	
-	mollify.App._activateView = function(id) {
+	mollify.App.openView = function(viewId) {
+		var id = viewId.split("/");
+
 		var onView = function(v) {
 			if (v) {
 				mollify.App.activeView = v;
@@ -186,9 +184,7 @@ var mollifyDefaults = {
 		//baseUrl = mollify.request.getBaseUrl(url);
 		var params = mollify.request.getParams(url);
 		if (!params.v || params.v.length < 1) return;
-		
-		var id = params.v.split("/");
-		mollify.App._activateView(id);
+		mollify.App.openView(params.v);
 	};
 	
 	mollify.App.storeView = function(viewId) {
