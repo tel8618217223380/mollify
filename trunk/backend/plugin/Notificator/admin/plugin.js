@@ -225,12 +225,85 @@
 					};
 					
 					var onEditFilters = function(event) {
+						var availableFilters = [
+							{
+								events: "^filesystem/.*",
+								filters: [
+									{ key : "item_parent", type : "folder"},
+									{ key : "item_any_parent", type : "folder"},
+									{ key : "item_name", type : "string"}
+								]
+							}
+						];
 						var filterData = {
 							"new": [],
 							"modified": [],
 							"removed": []
 						};
 						var $content = false;
+						
+						var getAvailableFilters = function() {
+							var result = [];
+							$.each(availableFilters, function(i, f) {
+								if (!new RegExp(f.events, "gi").test(event.type)) return;
+								result = result.concat(f.filters);
+							});
+							return result;
+						};
+						
+						var initFilterEditor = function($e, f) {
+							if (f.type == "folder") {
+								mollify.dom.template("mollify-tmpl-notificator-filtereditor-folder").appendTo($e);
+								
+								var selected = false;
+								var $val = $e.find(".mollify-notificator-filtereditor-folder-value");
+								var onSelect = function(f) {
+									selected = f;
+									$val.val(selected.name);
+								};
+								$e.find(".mollify-notificator-filtereditor-folder-select").click(function() {
+									mollify.ui.dialogs.folderSelector({
+										title: mollify.ui.texts.get('pluginNotificatorNotificationEventFilterFolderEditorSelectTitle'),
+										message: mollify.ui.texts.get('pluginNotificatorNotificationEventFilterFolderEditorSelectMsg'),
+										actionTitle: mollify.ui.texts.get('ok'),
+										handler: {
+											onSelect: onSelect,
+											canSelect: function(f) { return true; }
+										}
+									});
+								});
+								
+								return {
+									hasValue : function() {
+										return !!selected;
+									},
+									getValue : function() {
+										return selected ? selected.id : false;
+									},
+									getVisibleValue : function() {
+										return selected ? selected.path : false;
+									}
+								};
+							}
+							else if (f.type == "string") {
+								mollify.dom.template("mollify-tmpl-notificator-filtereditor-string").appendTo($e);								
+								var $val = $e.find(".mollify-notificator-filtereditor-string-value");
+								
+								return {
+									hasValue : function() {
+										var val = $val.val();
+										return val && val.length > 0;
+									},
+									getValue : function() {
+										return $val.val();
+									},
+									getVisibleValue : function() {
+										return $val.val();
+									}
+								};
+							}
+							return false;
+						};
 						
 						mollify.ui.dialogs.custom({
 							resizable: true,
@@ -246,11 +319,11 @@
 									d.close();
 									return;
 								}
-								/*if (permissionData["new"].length === 0 && permissionData.modified.length === 0 && permissionData.removed.length === 0)
+								if (filterData["new"].length === 0 && filterData.removed.length === 0)
 									return;
 								
 								$content.addClass("loading");
-								mollify.service.put("filesystem/permissions", permissionData).done(d.close).fail(d.close);*/
+								mollify.service.put("notificator/list/"+nd.id+"/events/"+event.id+"/filters/", filterData).done(d.close).fail(d.close);
 							},
 							"on-show": function(h, $d) {
 								$content = $d.find("#mollify-notificator-filtereditor-content");
@@ -262,6 +335,47 @@
 								h.center();
 								$content.removeClass("loading");
 								
+								var $list = mollify.ui.controls.table("mollify-notificator-filtereditor-list", {
+									key: "id",
+									columns: [
+										{ id: "id", title: mollify.ui.texts.get('xx')},
+										{ id: "type", title: mollify.ui.texts.get('yy') },
+										{ id: "visibleValue", title: mollify.ui.texts.get('zz') },
+										{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-notificator-filtereditor-listremove").html() }
+									],
+									onRowAction: function(id, f) {
+										if (!f.isnew) filterData.new.removed(newFilter);
+										$list.remove(f);
+									}
+								});
+								if (e.filters) $list.add(e.filters);
+								
+								var editor = false;
+								var $newType = mollify.ui.controls.select("mollify-notificator-filtereditor-new-type", {
+									none: {title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersSelect')},
+									title: "key",
+									onChange: function(nf) {
+										clearNewEditor();
+										if (nf) editor = initFilterEditor($("#mollify-notificator-filtereditor-new-value"), nf);
+									}
+								});
+								$newType.add(getAvailableFilters());
+								var clearNewEditor = function() {
+									$newType.sel(null);
+									$("#mollify-notificator-filtereditor-new-value").empty();
+									editor = false;
+								};
+								
+								$("#mollify-notificator-filtereditor-new-add").click(function() {
+									var selectedFilter = $newType.selected();
+									if (!selectedFilter) return;
+									if (!editor || !editor.hasValue()) return;
+									
+									var newFilter = {type: selectedFilter.key, val: editor.getValue(), visibleValue: editor.getVisibleValue(), isnew: true};
+									filterData.new.push(newFilter);
+									$list.add(newFilter);
+									clearNewEditor();
+								});
 								/*that.loadPermissions(item, function(permissions, userData) {
 									$content.removeClass("loading");
 									that.initEditor(item, permissions, userData, permissionData);
@@ -285,7 +399,7 @@
 								{ type:"selectrow" },
 								{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 								{ id: "type", title: mollify.ui.texts.get('pluginNotificatorAdminEventTypeTitle') },
-								{ id: "filter", title: mollify.ui.texts.get('pluginNotificatorAdminEventFilterTitle'), valueMapper: function(i, v) { return "-"; } },
+								{ id: "filter", title: mollify.ui.texts.get('pluginNotificatorAdminEventFilterTitle'), valueMapper: function(i, v) { return i.filters ? i.filters.length : ""; } },
 								{ id: "set_filter", title: "", type: "action", content: '<i class="icon-filter"></i>' },
 								{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 							],

@@ -867,7 +867,9 @@ var mollifyDefaults = {
 		if (!u)
 			return $.Deferred().resolve().promise();
 		var df = $.Deferred();
-		$.getScript(u, df.resolve).fail(df.reject);
+		$.getScript(u, df.resolve).fail(function(e) {
+			new mollify.ui.FullErrorView("Failed to load script ", "<code>"+u+"</code>").show();
+		});
 		return df.promise();
 	};
 		
