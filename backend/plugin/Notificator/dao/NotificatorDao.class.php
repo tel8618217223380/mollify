@@ -25,9 +25,9 @@
 		public function getNotification($id) {
 			$db = $this->env->db();
 			
-			$query = "select ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.id as event_id, evt.event_type as event_type, ntf_user.id as ntf_usr_id, ntf_user.name as ntf_usr_name, ntf_user.email as ntf_usr_email, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
+			$query = "select ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.id as event_id, evt.event_type as event_type, evtf.id as event_filter_id, evtf.type as event_filter_type, evtf.value as event_filter_value, ntf_user.id as ntf_usr_id, ntf_user.name as ntf_usr_name, ntf_user.email as ntf_usr_email, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
 			
-			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.notification_id = ntf.id left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.notification_id = ntf.id left outer join ".$db->table("user")." ntf_user on ntf_user.id = ntf_usr.user_id left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.notification_id = ntf.id left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.id = ntf_rcp.user_id";
+			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.notification_id = ntf.id left outer join ".$db->table("notificator_notification_event_filter")." evtf on evt.id = evtf.notification_event_id left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.notification_id = ntf.id left outer join ".$db->table("user")." ntf_user on ntf_user.id = ntf_usr.user_id left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.notification_id = ntf.id left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.id = ntf_rcp.user_id";
 			
 			$query .= " where ntf.id = ".$db->string($id, TRUE);
 			
@@ -37,6 +37,7 @@
 			$users = array();
 			$first = $rows[0];
 			$events = array();
+			$filters = array();
 			$result = array(
 				"id" => $first["id"],
 				"name" => $first["name"],
@@ -50,7 +51,12 @@
 			foreach($rows as $row) {
 				if ($row["event_id"] != NULL and !in_array($row["event_id"], $events)) {
 					$events[] = $row["event_id"];
-					$result["events"][] = array("id" => $row["event_id"], "type" => $row["event_type"]);
+					$result["events"][] = array("id" => $row["event_id"], "type" => $row["event_type"], "filters" => array());
+				}
+				if ($row["event_filter_id"] != NULL and !in_array($row["event_filter_id"], $filters)) {
+					$filters[] = $row["event_filter_id"];
+					$c = count($result["events"]);
+					$result["events"][$c-1]["filters"][] = array("id" => $row["event_filter_id"], "type" => $row["event_filter_type"], "value" => $row["event_filter_value"]);					
 				}
 
 				$userId = $row["ntf_usr_id"];
@@ -174,6 +180,21 @@
 			$db->startTransaction();
 			foreach ($events as $event)
 				$db->update(sprintf("INSERT INTO ".$db->table("notificator_notification_event")." (notification_id, event_type) VALUES ('%s', '%s')", $db->string($id), $db->string($event)));
+			$db->commit();
+			
+			return TRUE;
+		}
+		
+		public function updateNotificationEventFilters($id, $eventId, $new, $removed) {
+			$db = $this->env->db();
+			
+			$db->startTransaction();
+			foreach ($new as $event)
+				$db->update(sprintf("INSERT INTO ".$db->table("notificator_notification_event_filter")." (notification_event_id, type, value) VALUES (%s, %s, %s)", $db->string($eventId, TRUE), $db->string($event["type"], TRUE), $db->string($event["value"], TRUE)));
+				
+			foreach ($removed as $event)
+				$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event_filter")." WHERE id= %s and notification_event_id = %s", $db->string($event["id"], TRUE), $db->string($eventId, TRUE)));
+
 			$db->commit();
 			
 			return TRUE;

@@ -348,20 +348,20 @@
 										$list.remove(f);
 									}
 								});
-								if (e.filters) $list.add(e.filters);
+								$list.add(event.filters);
 								
 								var editor = false;
 								var $newType = mollify.ui.controls.select("mollify-notificator-filtereditor-new-type", {
 									none: {title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersSelect')},
 									title: "key",
 									onChange: function(nf) {
-										clearNewEditor();
+										clearNewEditor(true);
 										if (nf) editor = initFilterEditor($("#mollify-notificator-filtereditor-new-value"), nf);
 									}
 								});
 								$newType.add(getAvailableFilters());
-								var clearNewEditor = function() {
-									$newType.sel(null);
+								var clearNewEditor = function(noType) {
+									if (!noType) $newType.select(null);
 									$("#mollify-notificator-filtereditor-new-value").empty();
 									editor = false;
 								};
@@ -371,15 +371,11 @@
 									if (!selectedFilter) return;
 									if (!editor || !editor.hasValue()) return;
 									
-									var newFilter = {type: selectedFilter.key, val: editor.getValue(), visibleValue: editor.getVisibleValue(), isnew: true};
+									var newFilter = {type: selectedFilter.key, value: editor.getValue(), visibleValue: editor.getVisibleValue(), isnew: true};
 									filterData.new.push(newFilter);
 									$list.add(newFilter);
 									clearNewEditor();
 								});
-								/*that.loadPermissions(item, function(permissions, userData) {
-									$content.removeClass("loading");
-									that.initEditor(item, permissions, userData, permissionData);
-								}).fail(h.close);*/
 							}
 						});
 					};
@@ -399,7 +395,7 @@
 								{ type:"selectrow" },
 								{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 								{ id: "type", title: mollify.ui.texts.get('pluginNotificatorAdminEventTypeTitle') },
-								{ id: "filter", title: mollify.ui.texts.get('pluginNotificatorAdminEventFilterTitle'), valueMapper: function(i, v) { return i.filters ? i.filters.length : ""; } },
+								{ id: "filter", title: mollify.ui.texts.get('pluginNotificatorAdminEventFilterTitle'), valueMapper: function(i, v) { return (i.filters && i.filters.length > 0) ? i.filters.length : ""; } },
 								{ id: "set_filter", title: "", type: "action", content: '<i class="icon-filter"></i>' },
 								{ id: "remove", title: mollify.ui.texts.get('configAdminActionRemoveTitle'), type: "action", content: '<i class="icon-trash"></i>' }
 							],
