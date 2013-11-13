@@ -224,7 +224,7 @@
 						});
 					};
 					
-					var onEditFilters = function(event) {
+					var onEditFilters = function(event, cb) {
 						var availableFilters = [
 							{
 								events: "^filesystem/.*",
@@ -237,7 +237,6 @@
 						];
 						var filterData = {
 							"new": [],
-							"modified": [],
 							"removed": []
 						};
 						var $content = false;
@@ -323,14 +322,10 @@
 									return;
 								
 								$content.addClass("loading");
-								mollify.service.put("notificator/list/"+nd.id+"/events/"+event.id+"/filters/", filterData).done(d.close).fail(d.close);
+								mollify.service.put("notificator/list/"+nd.id+"/events/"+event.id+"/filters/", filterData).done(d.close).done(cb).fail(d.close);
 							},
 							"on-show": function(h, $d) {
 								$content = $d.find("#mollify-notificator-filtereditor-content");
-								/*$("#mollify-pluginpermissions-editor-change-item").click(function(e) {
-									e.preventDefault();
-									return false;
-								});*/
 			
 								h.center();
 								$content.removeClass("loading");
@@ -338,13 +333,16 @@
 								var $list = mollify.ui.controls.table("mollify-notificator-filtereditor-list", {
 									key: "id",
 									columns: [
-										{ id: "id", title: mollify.ui.texts.get('xx')},
-										{ id: "type", title: mollify.ui.texts.get('yy') },
-										{ id: "visibleValue", title: mollify.ui.texts.get('zz') },
+										{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle')},
+										{ id: "type", title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersType') },
+										{ id: "value", title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersValue'), valueMapper: function(i, v) {
+											if (i.visibleValue) return i.visibleValue;
+											return v;
+										} },
 										{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-notificator-filtereditor-listremove").html() }
 									],
 									onRowAction: function(id, f) {
-										if (!f.isnew) filterData.new.removed(newFilter);
+										if (!f.isnew) filterData.removed.push(f);
 										$list.remove(f);
 									}
 								});
@@ -353,7 +351,7 @@
 								var editor = false;
 								var $newType = mollify.ui.controls.select("mollify-notificator-filtereditor-new-type", {
 									none: {title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersSelect')},
-									title: "key",
+									valueMapper: function(i) { return mollify.ui.texts.get('pluginNotificatorEventFilterType_'+i.key); },
 									onChange: function(nf) {
 										clearNewEditor(true);
 										if (nf) editor = initFilterEditor($("#mollify-notificator-filtereditor-new-value"), nf);
@@ -403,7 +401,7 @@
 								if (id == "remove") {
 									mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: [e.id] }).done(update);
 								} else if (id == "set_filter") {
-									onEditFilters(e);
+									onEditFilters(e, update);
 								}
 							}
 						}
