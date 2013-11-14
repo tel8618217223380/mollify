@@ -10,6 +10,78 @@
 !function($, mollify) {
 
 	"use strict"; // jshint ;_;
+	
+	var availableFilters = [
+		{
+			events: "^filesystem/.*",
+			filters: [
+				"item_parent",
+				"item_any_parent",
+				"item_name"
+			]
+		}
+	];
+	var filterEditorTypes = {
+		"item_parent" : "folder",
+		"item_any_parent" : "folder",
+		"item_name" : "string"
+	};
+	var filterEditors = {
+		"folder": {
+			init : function($e) {
+				mollify.dom.template("mollify-tmpl-notificator-filtereditor-folder").appendTo($e);
+				
+				var selected = false;
+				var $val = $e.find(".mollify-notificator-filtereditor-folder-value");
+				var onSelect = function(f) {
+					selected = f;
+					$val.val(filterEditors.folder.getVisibleValue(f));
+				};
+				$e.find(".mollify-notificator-filtereditor-folder-select").click(function() {
+					mollify.ui.dialogs.folderSelector({
+						title: mollify.ui.texts.get('pluginNotificatorNotificationEventFilterFolderEditorSelectTitle'),
+						message: mollify.ui.texts.get('pluginNotificatorNotificationEventFilterFolderEditorSelectMsg'),
+						actionTitle: mollify.ui.texts.get('ok'),
+						handler: {
+							onSelect: onSelect,
+							canSelect: function(f) { return true; }
+						}
+					});
+				});
+				
+				return {
+					hasValue : function() {
+						return !!selected;
+					},
+					getValue : function() {
+						return selected;
+					}
+				};
+			},
+			getVisibleValue : function(item) {
+				return item.path;
+			}
+		},
+		"string": {
+			init : function($e) {
+				mollify.dom.template("mollify-tmpl-notificator-filtereditor-string").appendTo($e);								
+				var $val = $e.find(".mollify-notificator-filtereditor-string-value");
+				
+				return {
+					hasValue : function() {
+						var val = $val.val();
+						return val && val.length > 0;
+					},
+					getValue : function() {
+						return $val.val();
+					}
+				};
+			},
+			getVisibleValue : function(s) {
+				return s;
+			}
+		}
+	};
 
 	mollify.view.config.admin.Notificator = {
 		NotificationsView : function() {
@@ -225,16 +297,6 @@
 					};
 					
 					var onEditFilters = function(event, cb) {
-						var availableFilters = [
-							{
-								events: "^filesystem/.*",
-								filters: [
-									{ key : "item_parent", type : "folder"},
-									{ key : "item_any_parent", type : "folder"},
-									{ key : "item_name", type : "string"}
-								]
-							}
-						];
 						var filterData = {
 							"new": [],
 							"removed": []
@@ -250,7 +312,7 @@
 							return result;
 						};
 						
-						var initFilterEditor = function($e, f) {
+/*						var initFilterEditor = function($e, f) {
 							if (f.type == "folder") {
 								mollify.dom.template("mollify-tmpl-notificator-filtereditor-folder").appendTo($e);
 								
@@ -302,7 +364,7 @@
 								};
 							}
 							return false;
-						};
+						};*/
 						
 						mollify.ui.dialogs.custom({
 							resizable: true,
@@ -338,8 +400,8 @@
 											return mollify.ui.texts.get('pluginNotificatorEventFilterType_'+v);
 										} },
 										{ id: "value", title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersValue'), valueMapper: function(i, v) {
-											if (i.visibleValue) return i.visibleValue;
-											return v;
+											if (!filterEditors[filterEditorTypes[i.type]]) return "-";
+											return filterEditors[filterEditorTypes[i.type]].getVisibleValue(i.value);
 										} },
 										{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-notificator-filtereditor-listremove").html() }
 									],
@@ -353,10 +415,12 @@
 								var editor = false;
 								var $newType = mollify.ui.controls.select("mollify-notificator-filtereditor-new-type", {
 									none: {title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersSelect')},
-									valueMapper: function(i) { return mollify.ui.texts.get('pluginNotificatorEventFilterType_'+i.key); },
+									valueMapper: function(i) { return mollify.ui.texts.get('pluginNotificatorEventFilterType_'+i); },
 									onChange: function(nf) {
 										clearNewEditor(true);
-										if (nf) editor = initFilterEditor($("#mollify-notificator-filtereditor-new-value"), nf);
+										if (nf && filterEditors[filterEditorTypes[nf]]) {
+											editor = filterEditors[filterEditorTypes[nf]].init($("#mollify-notificator-filtereditor-new-value"));
+										}
 									}
 								});
 								$newType.add(getAvailableFilters());
@@ -371,7 +435,7 @@
 									if (!selectedFilter) return;
 									if (!editor || !editor.hasValue()) return;
 									
-									var newFilter = {type: selectedFilter.key, value: editor.getValue(), visibleValue: editor.getVisibleValue(), isnew: true};
+									var newFilter = {type: selectedFilter, value: editor.getValue(), isnew: true};
 									filterData.new.push(newFilter);
 									$list.add(newFilter);
 									clearNewEditor();
