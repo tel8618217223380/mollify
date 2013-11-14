@@ -10,6 +10,7 @@
 	 */
 
 	class NotificatorServices extends ServicesBase {
+		private $eventFilterItemTypes = array("item_parent", "item_any_parent");
 		protected function isAdminRequired() { return TRUE; }
 		
 		protected function isValidPath($method, $path) {
@@ -28,18 +29,17 @@
 				$dao = $this->getDao();
 				$n = $dao->getNotification($this->path[1]);
 				
-				// get filesystem item visible value
-				$item_types = array("item_parent", "item_any_parent");
+				// get filesystem items
 				foreach($n["events"] as &$e) {
 					foreach($e["filters"] as &$f) {
-						if (!in_array($f["type"], $item_types)) continue;
+						if (!in_array($f["type"], $this->eventFilterItemTypes)) continue;
 						
 						try {
 							$itm = $this->item($f["value"]);
 							if (!$itm->exists()) {
 								$f["invalid"] = TRUE;
 							} else {
-								$f["visibleValue"] = $itm->location();
+								$f["value"] = $itm->data();
 							}
 						} catch (ServiceException $e) {
 							$f["invalid"] = TRUE;
@@ -105,7 +105,14 @@
 			// list/1/events/1/filters
 			if (count($this->path) == 5 and $this->path[2] == "events" and $this->path[4] == "filters") {
 				$eventId = $this->path[3];
-				$this->response()->success($dao->updateNotificationEventFilters($id, $eventId, isset($data["new"]) ? $data["new"] : array(), isset($data["removed"]) ? $data["removed"] : array()));
+				$new = isset($data["new"]) ? $data["new"] : array();
+				
+				// transform filesystem items into stored form (id)
+				foreach($new as &$f) {
+					if (!in_array($f["type"], $this->eventFilterItemTypes)) continue;					
+					$f["value"] = $f["value"]["id"];
+				}
+				$this->response()->success($dao->updateNotificationEventFilters($id, $eventId, $new, isset($data["removed"]) ? $data["removed"] : array()));
 				return;
 			}
 			
