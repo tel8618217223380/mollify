@@ -38,7 +38,7 @@
 			
 			$mailer = new PHPMailer;
 			
-			$smtp = $this->settings()->getSetting("mail_smtp");
+			$smtp = $this->env->settings()->setting("mail_smtp");
 			if ($smtp != NULL and isset($smtp["host"])) {
 				$mail->isSMTP();
 				$mail->Host = $smtp["host"];
@@ -52,8 +52,8 @@
 					$mail->SMTPSecure = $smtp["secure"];
 			}
 			
-			$mail->From = $f;
-			foreach ($recipients as $recipient) {
+			$mail->From = $from;
+			foreach ($validRecipients as $recipient) {
 				$mail->addBCC($recipient["name"], $recipient["email"]);
 			}
 
