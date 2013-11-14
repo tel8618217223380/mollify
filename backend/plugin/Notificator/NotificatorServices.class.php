@@ -26,7 +26,27 @@
 			}
 			if (count($this->path) == 2) {
 				$dao = $this->getDao();
-				$this->response()->success($dao->getNotification($this->path[1]));
+				$n = $dao->getNotification($this->path[1]);
+				
+				// get filesystem item visible value
+				$item_types = array("item_parent", "item_any_parent");
+				foreach($n["events"] as &$e) {
+					foreach($e["filters"] as &$f) {
+						if (!in_array($f["type"], $item_types)) continue;
+						
+						try {
+							$itm = $this->item($f["value"]);
+							if (!$itm->exists()) {
+								$f["invalid"] = TRUE;
+							} else {
+								$f["visibleValue"] = $itm->location();
+							}
+						} catch (ServiceException $e) {
+							$f["invalid"] = TRUE;
+						}
+					}
+				}
+				$this->response()->success($n);
 				return;
 			}
 

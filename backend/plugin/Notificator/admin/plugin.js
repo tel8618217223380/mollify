@@ -334,7 +334,9 @@
 									key: "id",
 									columns: [
 										{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle')},
-										{ id: "type", title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersType') },
+										{ id: "type", title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersType'), valueMapper: function(i, v) {
+											return mollify.ui.texts.get('pluginNotificatorEventFilterType_'+v);
+										} },
 										{ id: "value", title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFiltersValue'), valueMapper: function(i, v) {
 											if (i.visibleValue) return i.visibleValue;
 											return v;
