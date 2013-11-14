@@ -59,7 +59,7 @@
 				};
 			},
 			getVisibleValue : function(item) {
-				return item.path;
+				return mollify.filesystem.rootsById[item.root_id].name + ":" + item.path;
 			}
 		},
 		"string": {
@@ -311,60 +311,6 @@
 							});
 							return result;
 						};
-						
-/*						var initFilterEditor = function($e, f) {
-							if (f.type == "folder") {
-								mollify.dom.template("mollify-tmpl-notificator-filtereditor-folder").appendTo($e);
-								
-								var selected = false;
-								var $val = $e.find(".mollify-notificator-filtereditor-folder-value");
-								var onSelect = function(f) {
-									selected = f;
-									$val.val(selected.name);
-								};
-								$e.find(".mollify-notificator-filtereditor-folder-select").click(function() {
-									mollify.ui.dialogs.folderSelector({
-										title: mollify.ui.texts.get('pluginNotificatorNotificationEventFilterFolderEditorSelectTitle'),
-										message: mollify.ui.texts.get('pluginNotificatorNotificationEventFilterFolderEditorSelectMsg'),
-										actionTitle: mollify.ui.texts.get('ok'),
-										handler: {
-											onSelect: onSelect,
-											canSelect: function(f) { return true; }
-										}
-									});
-								});
-								
-								return {
-									hasValue : function() {
-										return !!selected;
-									},
-									getValue : function() {
-										return selected ? selected.id : false;
-									},
-									getVisibleValue : function() {
-										return selected ? selected.path : false;
-									}
-								};
-							}
-							else if (f.type == "string") {
-								mollify.dom.template("mollify-tmpl-notificator-filtereditor-string").appendTo($e);								
-								var $val = $e.find(".mollify-notificator-filtereditor-string-value");
-								
-								return {
-									hasValue : function() {
-										var val = $val.val();
-										return val && val.length > 0;
-									},
-									getValue : function() {
-										return $val.val();
-									},
-									getVisibleValue : function() {
-										return $val.val();
-									}
-								};
-							}
-							return false;
-						};*/
 						
 						mollify.ui.dialogs.custom({
 							resizable: true,

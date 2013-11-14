@@ -54,10 +54,10 @@
 			<dd>${$item.formatTimestamp($item.data.event.time)}</dd>
 			
 			<dt class="localized" text-key="pluginEventLoggingAdminDetailsUser"></dt>
-			<dd>${event.user}</dd>
+			<dd>${event.user || "&nbsp;"}</dd>
 
 			<dt class="localized" text-key="pluginEventLoggingAdminDetailsIP"></dt>
-			<dd>${event.ip}</dd>
+			<dd>${event.ip || "&nbsp;"}</dd>
 
 			{{if event.item}}
 			<dt class="localized" text-key="pluginEventLoggingAdminDetailsItem"></dt>
