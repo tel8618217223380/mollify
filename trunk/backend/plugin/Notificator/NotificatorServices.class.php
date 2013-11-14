@@ -29,20 +29,32 @@
 				$dao = $this->getDao();
 				$n = $dao->getNotification($this->path[1]);
 				
-				// get filesystem items
+				// transform stored values (id) into filesystem items
+				$itemCache = array();
 				foreach($n["events"] as &$e) {
 					foreach($e["filters"] as &$f) {
 						if (!in_array($f["type"], $this->eventFilterItemTypes)) continue;
 						
-						try {
-							$itm = $this->item($f["value"]);
-							if (!$itm->exists()) {
+						if (array_key_exists($f["value"], $itemCache)) {
+							if ($itemCache[$f["value"]] === FALSE)
 								$f["invalid"] = TRUE;
-							} else {
-								$f["value"] = $itm->data();
+							else
+								$f["value"] = $itemCache[$f["value"]];
+						} else {
+							try {
+								$itm = $this->item($f["value"]);
+								if (!$itm->exists()) {
+									$f["invalid"] = TRUE;
+									$itemCache[$f["value"]] = FALSE;
+								} else {
+									$data = $itm->data();
+									$itemCache[$f["value"]] = $data;
+									$f["value"] = $data;
+								}
+							} catch (ServiceException $e) {
+								$f["invalid"] = TRUE;
+								$itemCache[$f["value"]] = FALSE;
 							}
-						} catch (ServiceException $e) {
-							$f["invalid"] = TRUE;
 						}
 					}
 				}
