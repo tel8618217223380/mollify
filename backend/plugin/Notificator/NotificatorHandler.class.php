@@ -17,19 +17,20 @@
 		}
 		
 		public function onEvent($e) {
-			$type = $e->typeId();
+			//$type = $e->typeId();
 			$userId = $this->getUserId($e);
 
-			$notifications = $this->findNotifications($type, $userId);
+			$notifications = $this->findNotificationsForEvent($e, $userId);
 			$this->sendNotifications($notifications, $e);
 		}
 		
-		private function findNotifications($type, $userId) {
+		private function findNotificationsForEvent($event, $userId) {
 			require_once("Notification.class.php");
 			require_once("dao/NotificatorDao.class.php");
 			
 			$dao = new NotificatorDao($this->env);
-			return $dao->findNotifications($type, $userId);
+			$notifications = $dao->findNotifications($event->typeId(), $userId);			
+			return $this->filterNotifications($notifications, $event);
 		}
 
 		private function sendNotifications($notifications, $e) {
@@ -42,6 +43,53 @@
 			
 			foreach($notifications as $notification)
 				$this->sendNotification($notification, $e);
+		}
+		
+		private function filterNotifications($list, $event) {
+			$result = array();
+			//TODO get filters for all notifications
+			$allFilters = array();
+			foreach($list as $notification) {
+				if (!$this->isNotificationFiltered($notification, $allFilters))
+					$result[] = $notification;
+			}
+			return $result;
+		}
+		
+		private function isNotificationFiltered($notification, $e, $allFilters) {
+			$filtered = FALSE;
+			$eventType = $e->typeId();
+			foreach($notification["events"] as $event) {
+				if ($event["type"] != $eventType) continue;
+				// if matching event does not have filters, notification passes
+				if (!in_array($event["id"], $allFilters)) return FALSE;
+				
+				foreach($allFilters[$event["id"]] as $filter) {
+					if (!$this->isFilterMatch($filter, $e)) {
+						if (Logging::isDebug()) Logging::logDebug("Filter does not match: ".$filter["type"]." (".$filter["id"].")");
+						$filtered = TRUE;
+					}
+				}
+			}
+			return $filtered;
+		}
+		
+		private function isFilterMatch($filter, $e) {
+			if ($filter["type"] == "item_name") {
+				$name = $filter["value"];
+				return preg_match($name, $e->item()->name());
+			}
+			if ($filter["type"] == "item_any_parent") {
+				//$item = $filter["value"];
+				$itemLocation = "";	//TODO get item by id
+				$parentLocation = $e->item()->location();
+				return (strcmp(substr($itemLocation, 0, strlen($parentLocation)), $parentLocation) == 0);
+			}
+			if ($filter["type"] == "item_parent") {
+				$parentId = $filter["value"];
+				return (strcmp($e->item()->parent()->id(), $parentId) == 0);
+			}
+			throw new ServiceException("INVALID_CONFIGURATION", "No filter supported: ".$filter["type"]);
 		}
 
 		private function sendNotification($notification, $e) {
