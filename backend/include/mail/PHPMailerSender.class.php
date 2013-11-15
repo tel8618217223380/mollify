@@ -40,16 +40,16 @@
 			
 			$smtp = $this->env->settings()->setting("mail_smtp");
 			if ($smtp != NULL and isset($smtp["host"])) {
-				$mail->isSMTP();
-				$mail->Host = $smtp["host"];
+				$mailer->isSMTP();
+				$mailer->Host = $smtp["host"];
 				
 				if (isset($smtp["username"]) and isset($smtp["password"])) {
-					$mail->SMTPAuth = true;
-					$mail->Username = $smtp["username"];
-					$mail->Password = $smtp["password"];
+					$mailer->SMTPAuth = true;
+					$mailer->Username = $smtp["username"];
+					$mailer->Password = $smtp["password"];
 				}
 				if (isset($smtp["secure"]))
-					$mail->SMTPSecure = $smtp["secure"];
+					$mailer->SMTPSecure = $smtp["secure"];
 			}
 			
 			$mailer->From = $f;
@@ -71,11 +71,16 @@
 			$mailer->Subject = $subject;
 			$mailer->Body    = $message;
 			
-			if(!$mailer->send()) {
-				Logging::logError('Message could not be sent: '.$mailer->ErrorInfo);
+			try {
+				if(!$mailer->send()) {
+					Logging::logError('Message could not be sent: '.$mailer->ErrorInfo);
+					return FALSE;
+				}
+				return TRUE;
+			} catch (Exception $e) {
+				Logging::logError('Message could not be sent: '.$e);
 				return FALSE;
 			}
-			return TRUE;
 		}
 		
 		private function getValidRecipients($recipients) {
