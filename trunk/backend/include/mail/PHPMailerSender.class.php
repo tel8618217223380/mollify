@@ -18,10 +18,7 @@
 			$this->enabled = $env->features()->isFeatureEnabled("mail_notification");
 		}
 		
-		public function send($to, $subject, $message, $from = NULL, $attachments = NULL) {
-			if (Logging::isDebug())
-				Logging::logDebug("Sending mail to [".Util::array2str($to)."]: [".$message."]");
-			
+		public function send($to, $subject, $message, $from = NULL, $attachments = NULL) {			
 			if (!$this->enabled) return;
 			
 			$isHtml = (stripos($message, "<html>") !== FALSE);
@@ -32,6 +29,9 @@
 				Logging::logDebug("No valid recipient email addresses, no mail sent");
 				return;
 			}
+			
+			if (Logging::isDebug())
+				Logging::logDebug("Sending mail from [".$f."] to [".Util::array2str($validRecipients)."]: [".$message."]");
 			
 			set_include_path("vendor/PHPMailer".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
 			require 'class.phpmailer.php';
@@ -52,27 +52,27 @@
 					$mail->SMTPSecure = $smtp["secure"];
 			}
 			
-			$mail->From = $from;
+			$mailer->From = $f;
 			foreach ($validRecipients as $recipient) {
-				$mail->addBCC($recipient["name"], $recipient["email"]);
+				$mailer->addBCC($recipient["email"], $recipient["name"]);
 			}
 
 			if (!$isHtml)
-				$mail->WordWrap = 50;
+				$mailer->WordWrap = 50;
 			else
-				$mail->isHTML(true);
+				$mailer->isHTML(true);
 			
 			if ($attachments != NULL) {
 				//TODO use stream
 				foreach ($attachments as $attachment)
-					$mail->addAttachment($attachment);
+					$mailer->addAttachment($attachment);
 			}
 			
-			$mail->Subject = $subject;
-			$mail->Body    = $message;
+			$mailer->Subject = $subject;
+			$mailer->Body    = $message;
 			
-			if(!$mail->send()) {
-				Logging::logError('Message could not be sent: '.$mail->ErrorInfo);
+			if(!$mailer->send()) {
+				Logging::logError('Message could not be sent: '.$mailer->ErrorInfo);
 				return FALSE;
 			}
 			return TRUE;
