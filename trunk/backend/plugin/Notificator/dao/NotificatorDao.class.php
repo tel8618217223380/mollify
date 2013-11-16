@@ -89,7 +89,7 @@
 				$userCriteria = "(ntf_usr.user_id is null and not exists (select user_id from ".$db->table("notificator_notification_user")." where notification_id = ntf.id))";
 			}
 			
-			$query = "select distinct ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.event_type as event_type, ntf_usr.user_id as ntf_usr_id, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.is_group as ntf_rcp_usr_is_group, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
+			$query = "select distinct ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.id as event_id, evt.event_type as event_type, evtf.id as event_filter_id, evtf.type as event_filter_type, evtf.value as event_filter_value, ntf_usr.user_id as ntf_usr_id, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.is_group as ntf_rcp_usr_is_group, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
 			
 			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.notification_id = ntf.id left outer join ".$db->table("notificator_notification_event_filter")." evtf on evt.id = evtf.notification_event_id left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.notification_id = ntf.id left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.notification_id = ntf.id left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.id = ntf_rcp.user_id";
 
@@ -101,32 +101,50 @@
 			$result = array();
 			$recipients = array();
 			$recipientIds = array();
+			$events = array();
+			$eventIds = array();
+			$filters = array();
+			$filterIds = array();
 			$prev = NULL;
 
 			foreach($rows as $row) {
 				if ($prev == NULL) $prev = $row;
 				
 				if (strcmp($prev["id"], $row["id"]) != 0) {
-					$result[] = new Notification($prev["id"], $prev["name"], $prev["message_title"], $prev["message"], $recipients);
+					$result[] = new Notification($prev["id"], $prev["name"], $prev["message_title"], $prev["message"], $recipients, $events);
 					$recipients = array();
 					$recipientIds = array();
+					$events = array();
+					$eventIds = array();
+					$filterIds = array();
 				}
-				if ($row["ntf_rcp_usr_is_group"] == 1) {
-					$users = $this->env->configuration()->getGroupUsers($row["ntf_rcp_usr_id"]);
-					foreach($users as $u) {
-						if (in_array($u["id"], $recipientIds)) continue;
-						$recipients[] = array("id" => $u["id"], "name" => $u["name"], "email" => $u["email"]);
-						$recipientIds[] = $u["id"];
+				if (!in_array($row["ntf_rcp_usr_id"], $recipientIds)) {
+					if ($row["ntf_rcp_usr_is_group"] == 1) {
+						$users = $this->env->configuration()->getGroupUsers($row["ntf_rcp_usr_id"]);
+						foreach($users as $u) {
+							if (in_array($u["id"], $recipientIds)) continue;
+							$recipients[] = array("id" => $u["id"], "name" => $u["name"], "email" => $u["email"]);
+							$recipientIds[] = $u["id"];
+						}
+					} else {
+						$recipients[] = array("id" => $row["ntf_rcp_usr_id"], "name" => $row["ntf_rcp_usr_name"], "email" => $row["ntf_rcp_usr_email"]);
 					}
-				} else {
-					if (in_array($row["ntf_rcp_usr_id"], $recipientIds)) continue;
-					$recipients[] = array("id" => $row["ntf_rcp_usr_id"], "name" => $row["ntf_rcp_usr_name"], "email" => $row["ntf_rcp_usr_email"]);
 					$recipientIds[] = $row["ntf_rcp_usr_id"];
 				}
+				
+				if (!in_array($row["event_id"], $eventIds)) {
+					$eventIds[] = $row["event_id"];
+					$events[] = array("id" => $row["event_id"], "type" => $row["event_type"], "filters" => array());
+				}
+				if ($row["event_filter_id"] != NULL and !in_array($row["event_filter_id"], $filterIds)) {
+					$events[count($events)-1]["filters"][] = array("id" => $row["event_filter_id"], "type" => $row["event_filter_type"], "value" => $row["event_filter_value"]);
+					$filterIds[] = $row["event_filter_id"];
+				}
+
 				$prev = $row;
 			}
 			if (count($recipients) > 0)
-				$result[] = new Notification($prev["id"], $prev["name"], $prev["message_title"], $prev["message"], $recipients);
+				$result[] = new Notification($prev["id"], $prev["name"], $prev["message_title"], $prev["message"], $recipients, $events);
 						
 			return $result;
 		}
