@@ -15,13 +15,15 @@
 		private $title;
 		private $msg;
 		private $recipients;
+		private $events;
 
-		public function __construct($id, $name, $title, $msg, $recipients) {
+		public function __construct($id, $name, $title, $msg, $recipients, $events) {
 			$this->id = $id;
 			$this->name = $name;
 			$this->title = $title;
 			$this->msg = $msg;
 			$this->recipients = $recipients;
+			$this->events = $events;
 		}
 
 		public function id() {
@@ -42,6 +44,10 @@
 		
 		public function getRecipients() {
 			return $this->recipients;
+		}
+
+		public function getEvents() {
+			return $this->events;
 		}
 		
 		public function __toString() {

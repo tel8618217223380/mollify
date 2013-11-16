@@ -47,25 +47,22 @@
 		
 		private function filterNotifications($list, $event) {
 			$result = array();
-			//TODO get filters for all notifications
-			$allFilters = array();
 			foreach($list as $notification) {
-				if (!$this->isNotificationFiltered($notification, $allFilters))
+				if (!$this->isNotificationFiltered($notification, $event))
 					$result[] = $notification;
 			}
 			return $result;
 		}
 		
-		private function isNotificationFiltered($notification, $e, $allFilters) {
+		private function isNotificationFiltered($notification, $e) {
 			$filtered = FALSE;
 			$eventType = $e->typeId();
-			foreach($notification["events"] as $event) {
-				if ($event["type"] != $eventType) continue;
-				// if matching event does not have filters, notification passes
-				if (!in_array($event["id"], $allFilters)) return FALSE;
+			foreach($notification->getEvents() as $notificationEvent) {
+				// event without filters matches directly
+				if (count($notificationEvent["filters"]) == 0) return FALSE;
 				
-				foreach($allFilters[$event["id"]] as $filter) {
-					if (!$this->isFilterMatch($filter, $e)) {
+				foreach($notificationEvent["filters"] as $filter) {
+					if (!$filtered and !$this->isFilterMatch($filter, $e)) {
 						if (Logging::isDebug()) Logging::logDebug("Filter does not match: ".$filter["type"]." (".$filter["id"].")");
 						$filtered = TRUE;
 					}
