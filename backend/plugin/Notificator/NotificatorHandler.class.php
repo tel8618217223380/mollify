@@ -74,7 +74,7 @@
 		private function isFilterMatch($filter, $e) {
 			if ($filter["type"] == "item_name") {
 				$regex = "/".str_replace("/", "//", $filter["value"])."/";
-				return preg_quote(preg_match($regex, $e->item()->name()));
+				return preg_match(preg_quote($regex), $e->item()->name());
 			}
 			if ($filter["type"] == "item_any_parent") {
 				//$item = $filter["value"];
