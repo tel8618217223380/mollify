@@ -77,9 +77,9 @@
 				return preg_match(preg_quote($regex), $e->item()->name());
 			}
 			if ($filter["type"] == "item_any_parent") {
-				//$item = $filter["value"];
-				$itemLocation = "";	//TODO get item by id
-				$parentLocation = $e->item()->location();
+				$parent = $this->env->filesystem()->item($filter["value"]);	//TODO itemIdProvider?
+				$parentLocation = $parent->location();
+				$itemLocation = $e->item()->location();
 				return (strcmp(substr($itemLocation, 0, strlen($parentLocation)), $parentLocation) == 0);
 			}
 			if ($filter["type"] == "item_parent") {
