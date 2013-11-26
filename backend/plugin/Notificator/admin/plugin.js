@@ -28,7 +28,7 @@
 	};
 	var filterEditors = {
 		"folder": {
-			init : function($e) {
+			init : function($e, onValueChangeCb) {
 				mollify.dom.template("mollify-tmpl-notificator-filtereditor-folder").appendTo($e);
 				
 				var selected = false;
@@ -36,6 +36,7 @@
 				var onSelect = function(f) {
 					selected = f;
 					$val.val(filterEditors.folder.getVisibleValue(f));
+					if (onValueChangeCb) onValueChangeCb();
 				};
 				$e.find(".mollify-notificator-filtereditor-folder-select").click(function() {
 					mollify.ui.dialogs.folderSelector({
@@ -47,7 +48,7 @@
 							canSelect: function(f) { return true; }
 						}
 					});
-				});
+				}).focus();
 				
 				return {
 					hasValue : function() {
@@ -63,9 +64,11 @@
 			}
 		},
 		"string": {
-			init : function($e) {
+			init : function($e, onValueChangeCb) {
 				mollify.dom.template("mollify-tmpl-notificator-filtereditor-string").appendTo($e);								
 				var $val = $e.find(".mollify-notificator-filtereditor-string-value");
+				if (onValueChangeCb) $val.keyup(onValueChangeCb);
+				$val.focus();
 				
 				return {
 					hasValue : function() {
@@ -311,6 +314,7 @@
 							});
 							return result;
 						};
+						var addFilterIfValid = false;
 						
 						mollify.ui.dialogs.custom({
 							resizable: true,
@@ -318,7 +322,7 @@
 							title: mollify.ui.texts.get('pluginNotificatorNotificationEditEventFilters'),
 							content: mollify.dom.template("mollify-tmpl-notificator-filtereditor", {event: event}),
 							buttons: [
-								{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
+								{ id: "yes", cls:"btn-primary", "title": mollify.ui.texts.get('dialogSave') },
 								{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
 							],
 							"on-button": function(btn, d) {
@@ -326,6 +330,7 @@
 									d.close();
 									return;
 								}
+								addFilterIfValid();
 								if (filterData["new"].length === 0 && filterData.removed.length === 0)
 									return;
 								
@@ -365,7 +370,7 @@
 									onChange: function(nf) {
 										clearNewEditor(true);
 										if (nf && filterEditors[filterEditorTypes[nf]]) {
-											editor = filterEditors[filterEditorTypes[nf]].init($("#mollify-notificator-filtereditor-new-value"));
+											editor = filterEditors[filterEditorTypes[nf]].init($("#mollify-notificator-filtereditor-new-value"), onEditorValueChanged);
 										}
 									}
 								});
@@ -373,10 +378,16 @@
 								var clearNewEditor = function(noType) {
 									if (!noType) $newType.select(null);
 									$("#mollify-notificator-filtereditor-new-value").empty();
+									$("#mollify-notificator-filtereditor-new-add").addClass("disabled");
 									editor = false;
 								};
+								var onEditorValueChanged = function() {
+									var ok = (editor && editor.hasValue());
+									if (ok) $("#mollify-notificator-filtereditor-new-add").removeClass("disabled");
+									else $("#mollify-notificator-filtereditor-new-add").addClass("disabled");
+								};
 								
-								$("#mollify-notificator-filtereditor-new-add").click(function() {
+								addFilterIfValid = function() {
 									var selectedFilter = $newType.selected();
 									if (!selectedFilter) return;
 									if (!editor || !editor.hasValue()) return;
@@ -385,7 +396,9 @@
 									filterData.new.push(newFilter);
 									$list.add(newFilter);
 									clearNewEditor();
-								});
+								};
+								$("#mollify-notificator-filtereditor-new-add").click(addFilterIfValid);
+								clearNewEditor();
 							}
 						});
 					};

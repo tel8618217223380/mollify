@@ -1304,6 +1304,11 @@ a.mollify-tableaction {
 	font-family: monospace;
 }
 
+#mollify-notificator-filtereditor-new-type, #mollify-notificator-filtereditor-new-value, #mollify-notificator-filtereditor-new-add {
+	float: left;
+	margin-right: 8px;
+}
+
 @media (min-width: 980px) {
 	body {
 		padding-top: 90px;
