@@ -29,6 +29,7 @@
 			"enable_mail_notification" => FALSE,
 			"enable_retrieve_url" => FALSE,
 			"allowed_file_upload_types" => array(),
+			"forbidden_file_upload_types" => array(),
 			"firebug_logging" => FALSE,
 			"mail_notification_from" => "Admin",
 			"new_folder_permission_mask" => 0755,

@@ -601,6 +601,26 @@
 		
 		this._getUploadHandler = function(c) {
 			return {
+				isUploadAllowed: function(files) {
+					if (!files) return false;
+					var allowed = true;
+					$.each(files, function(i, f) {
+						var fn = files[i].name;
+						if (!fn) return;
+						
+						var ext = fn.split('.').pop();
+						if (!ext) return;
+						
+						ext = ext.toLowerCase();
+						if (mollify.session.filesystem["forbidden_file_upload_types"].length > 0 && mollify.session.filesystem["forbidden_file_upload_types"].indexOf(ext) >= 0) allowed = false;
+
+						if (mollify.session.filesystem["allowed_file_upload_types"].length > 0 && mollify.session.filesystem["allowed_file_upload_types"].indexOf(ext) < 0) allowed = false;
+					});
+					if (!allowed) {
+						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadNotAllowed'), type: "warning"});
+					}
+					return allowed;
+				},
 				start: function(files, ready) {
 					that.uploadProgress.show(mollify.ui.texts.get(files.length > 1 ? "mainviewUploadProgressManyMessage" : "mainviewUploadProgressOneMessage", files.length), function() {
 						ready();
