@@ -706,7 +706,7 @@
 		}
 		
 		public function uploadFrom($folder, $name, $stream, $src = '[Unknown]') {
-			$this->env->features()->assertFeature("file_upload");
+			//$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
 
 			$targetItem = $folder->createFile($name);
