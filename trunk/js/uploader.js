@@ -95,11 +95,15 @@
 			var started = false;
 			var l = o.handler;
 			
-			var $input = $d.find("input").fileupload($.extend({
+			var $input = $d.find("input");
+			if (t._getUploaderSettings()["allow-folders"]) $input.attr("directory webkitdirectory mozdirectory");
+			$input.fileupload($.extend({
 				url: o.url,
 				dataType: 'json',
 				dropZone: $dropZone,
 				add: function (e, data) {
+					if (l.isUploadAllowed && !l.isUploadAllowed(data.originalFiles)) return false;
+					
 					if (!started && l.start)
 						l.start(data.originalFiles, function() {
 							data.submit();
@@ -138,11 +142,15 @@
 				var $container = $('<div style="width: 0px; height: 0px; overflow: hidden;"></div>').appendTo($p);
 				var $form = $('<form enctype="multipart/form-data"></form>').appendTo($container);
 				var started = false;
-				var $dndUploader = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"></input>').appendTo($form).fileupload($.extend({
+				var attributes = '';
+				if (t._getUploaderSettings()["allow-folders"]) attributes = "directory webkitdirectory mozdirectory";
+				var $dndUploader = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"' + attributes + '></input>').appendTo($form).fileupload($.extend({
 					url: '',
 					dataType: 'json',
 					dropZone: h.dropElement,
 					add: function (e, data) {
+						if (l.isUploadAllowed && !l.isUploadAllowed(data.originalFiles)) return false;
+						
 						if (!started && h.handler.start)
 							h.handler.start(data.originalFiles, function() {
 								data.submit();

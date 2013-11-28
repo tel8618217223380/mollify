@@ -40,6 +40,7 @@
 			$this->idProvider = new ItemIdProvider($env);
 			
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types');
+			$this->forbiddenUploadTypes = $env->settings()->setting('forbidden_file_upload_types');
 			$this->registerSearcher(new FileSystemSearcher($this->env));
 			
 			$coreData = new CoreFileDataProvider($this->env);
@@ -202,7 +203,8 @@
 			$result['filesystem'] = array(
 				"max_upload_file_size" => Util::inBytes(ini_get("upload_max_filesize")),
 				"max_upload_total_size" => Util::inBytes(ini_get("post_max_size")),
-				"allowed_file_upload_types" => $this->allowedFileUploadTypes()
+				"allowed_file_upload_types" => $this->allowedFileUploadTypes(),
+				"forbidden_file_upload_types" => $this->forbiddenFileUploadTypes()
 			);
 			
 			$this->itemIdProvider()->loadRoots();
@@ -413,6 +415,16 @@
 		private function allowedFileUploadTypes() {
 			$types = array();
 			foreach ($this->allowedUploadTypes as $type) {
+				$pos = strrpos($type, ".");
+				if ($pos === FALSE) $types[] = $type;
+				else $types[] = substr($type, $pos+1);
+			}
+			return $types;
+		}
+		
+		private function forbiddenFileUploadTypes() {
+			$types = array();
+			foreach ($this->forbiddenUploadTypes as $type) {
 				$pos = strrpos($type, ".");
 				if ($pos === FALSE) $types[] = $type;
 				else $types[] = substr($type, $pos+1);
@@ -654,6 +666,8 @@
 		}
 		
 		private function upload($folder, $name, $origin, $size = NULL, $type = NULL, $range = NULL) {
+			$this->assertUploadFileType($name);
+			
 			$append = ($range != NULL);
 			//TODO check for max post size, range etc
 			$target = $folder->fileWithName($name);
@@ -705,7 +719,20 @@
 			throw new ServiceException("FILE_ALREADY_EXISTS");
 		}
 		
+		public function assertUploadFileType($name) {
+			$ext = ltrim(strrchr($name, "."), ".");
+			if ($ext === FALSE) return;
+			$ext = strtolower($ext);
+			
+			if (Logging::isDebug()) Logging::logDebug("FORBIDDEN ".$ext.": ".Util::array2str($this->forbiddenUploadTypes));
+			if (count($this->forbiddenUploadTypes) > 0 and in_array($ext, $this->forbiddenUploadTypes)) throw new ServiceException("UPLOAD_FILE_NOT_ALLOWED");
+			
+			if (Logging::isDebug()) Logging::logDebug("ALLOWED ".$ext.": ".Util::array2str($this->allowedUploadTypes));
+			if (count($this->allowedUploadTypes) > 0 and !in_array($ext, $this->allowedUploadTypes)) throw new ServiceException("UPLOAD_FILE_NOT_ALLOWED");
+		}
+		
 		public function uploadFrom($folder, $name, $stream, $src = '[Unknown]') {
+			$this->assertUploadFileType($name);
 			//$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
 

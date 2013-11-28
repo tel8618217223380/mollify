@@ -87,6 +87,7 @@
 		"mainviewUploadProgressManyMessage": "Uploading {0} files",
 		"mainviewFileUploadFailed": "File upload failed",
 		"mainviewFileUploadComplete": "File upload complete",
+		"mainviewFileUploadNotAllowed": "File upload not allowed",
 		"mainviewRetrieveFileTitle": "Retrieve file from URL:",
 		"mainviewRetrieveUrlTitle": "File URL",
 		"mainviewRetrieveFileResourceNotFound": "Could not retrieve file, resource not found: {0}",
