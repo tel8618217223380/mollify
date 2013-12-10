@@ -612,9 +612,9 @@
 						if (!ext) return;
 						
 						ext = ext.toLowerCase();
-						if (mollify.session.filesystem["forbidden_file_upload_types"].length > 0 && mollify.session.filesystem["forbidden_file_upload_types"].indexOf(ext) >= 0) allowed = false;
+						if (mollify.session.filesystem.forbidden_file_upload_types.length > 0 && mollify.session.filesystem.forbidden_file_upload_types.indexOf(ext) >= 0) allowed = false;
 
-						if (mollify.session.filesystem["allowed_file_upload_types"].length > 0 && mollify.session.filesystem["allowed_file_upload_types"].indexOf(ext) < 0) allowed = false;
+						if (mollify.session.filesystem.allowed_file_upload_types.length > 0 && mollify.session.filesystem.allowed_file_upload_types.indexOf(ext) < 0) allowed = false;
 					});
 					if (!allowed) {
 						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewFileUploadNotAllowed'), type: "warning"});
