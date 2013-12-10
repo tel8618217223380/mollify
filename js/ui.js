@@ -1658,8 +1658,7 @@
 		};
 		$dlg.find(".modal-footer .btn").click(function(e) {
 			e.preventDefault();
-			var data = $(this).tmplItem().data;
-			var btn = data.buttons[$(this).index()];
+			var btn = spec.buttons[$(this).index()];
 			if (spec["on-button"]) spec["on-button"](btn, h);
 		});
 		if (spec.resizable) {
