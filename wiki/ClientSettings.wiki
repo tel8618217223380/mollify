@@ -8,14 +8,14 @@ Following settings are available in client (and their default values), used in i
 		mollify.App.init({
 			"service-path": "backend/",	// service path
 			"limited-http-methods" : false,	// limited HTTP methods
-			"default-view-mode": "list",	// default view mode
-			"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
 			"view-url": false,		// reflect view in url
-			"list-view-columns": {
-				...			// file list column setup
-			},
-			"file-view": {
-				...			// file view options
+			"file-view": {		// file view options
+				"default-view-mode": "list",	// default view mode
+				"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
+				"list-view-columns": {
+					...			// file list column setup
+				},
+				...
 			}},
 			[
 				...			// client plugins
@@ -29,17 +29,20 @@ Following settings are available in client (and their default values), used in i
 
 Location of the backend script relative to the index.html file.
 
-== Default view mode (`default-view-mode`) ==
-
-View mode selected when Mollify is launched, options are "`list`" (default), "`small-icon`" and "`large-icon`".
-
 == Reflect view in URL (`view-url`) ==
 
 Mollify can reflect the current view in the browser url (if browser supports history pushState). By default this is disabled.
 
 * More setting descriptions coming soon *
 
-= File list column customization =
+
+= File view options =
+
+== Default view mode (`default-view-mode`) ==
+
+View mode selected when Mollify is launched, options are "`list`" (default), "`small-icon`" and "`large-icon`".
+
+== File list column customization ==
 
 File list columns can be customized with setting 'list-view-columns'.
 
@@ -86,8 +89,6 @@ Example configuration (the default):
 	});
 </script>
 }}}
-
-= File view options =
 
 == Actions customizations ==
 
