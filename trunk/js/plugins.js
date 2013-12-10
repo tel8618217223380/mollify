@@ -1587,8 +1587,12 @@
 							finished: function() {
 								setTimeout(function() { vt._uploadProgress.success(mollify.ui.texts.get('mainviewFileUploadComplete')); }, 1000);
 							},
-							failed: function() {
-								vt._uploadProgress.failure(mollify.ui.texts.get('mainviewFileUploadFailed'));
+							failed: function(e) {
+								if (e && e.code == 216) {
+									vt._uploadProgress.failure(mollify.ui.texts.get('mainviewFileUploadNotAllowed'));
+								} else {
+									vt._uploadProgress.failure(mollify.ui.texts.get('mainviewFileUploadFailed'));
+								}
 							}
 						}
 					});
@@ -1623,6 +1627,7 @@
 					$e.addClass("failure");
 					t._$title.text(text);
 					t._$speed.text("");
+					t._$bar.css("width", "0%");
 				}
 			}
 		};
