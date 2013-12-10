@@ -123,7 +123,13 @@
 					started = false;
 				},
 				fail: function(e, data) {
-					if (l.failed) l.failed();
+					var r = data.response();
+					var error = null;
+					if (r && r.jqXHR) {
+						var response = r.jqXHR.responseText;
+						if (response) error = JSON.parse(response);
+					}
+					if (l.failed) l.failed(error);
 					started = false;
 				}
 			}, t._getUploaderSettings()));
@@ -170,7 +176,13 @@
 						started = false
 					},
 					fail: function(e, data) {
-						if (h.handler.failed) h.handler.failed();
+						var r = data.response();
+						var error = null;
+						if (r && r.jqXHR) {
+							var response = r.jqXHR.responseText;
+							if (response) error = JSON.parse(response);
+						}
+						if (h.handler.failed) h.handler.failed(error);
 						started = false
 					}
 				}, t._getUploaderSettings())).fileupload('disable');
