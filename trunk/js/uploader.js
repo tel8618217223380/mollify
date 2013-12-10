@@ -155,7 +155,7 @@
 					dataType: 'json',
 					dropZone: h.dropElement,
 					add: function (e, data) {
-						if (l.isUploadAllowed && !l.isUploadAllowed(data.originalFiles)) return false;
+						if (h.handler.isUploadAllowed && !h.handler.isUploadAllowed(data.originalFiles)) return false;
 						
 						if (!started && h.handler.start)
 							h.handler.start(data.originalFiles, function() {
