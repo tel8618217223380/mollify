@@ -9,7 +9,7 @@ Following settings are available in client (and their default values), used in i
 			"service-path": "backend/",	// service path
 			"limited-http-methods" : false,	// limited HTTP methods
 			"view-url": false,		// reflect view in url
-			"file-view": {		// file view options
+			"file-view": {			// file view options
 				"default-view-mode": "list",	// default view mode
 				"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
 				"list-view-columns": {
@@ -51,10 +51,12 @@ The setting accepts following format:
 {{{
 <script type="text/javascript">
 	mollify.App.init({
-		"list-view-columns": {
-			"column-1-id": { column-1-settings: "" },
-			"column-2-id": { column-2-settings: "" },
-			...
+		"file-view": {
+			"list-view-columns": {
+				"column-1-id": { column-1-settings: "" },
+				"column-2-id": { column-2-settings: "" },
+				...
+			}
 		}
 	});
 </script>
