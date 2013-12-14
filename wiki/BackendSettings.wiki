@@ -24,6 +24,7 @@ $CONFIGURATION = array(
 	"url_retriever_class" => "UrlRetriever.class.php",		// URL retriever implementation
 	"enable_zip_download" => FALSE,					// enable zip downloads
 	"allowed_file_upload_types" => array(),				// allowed file upload types
+	"forbidden_file_upload_types" => array(),				// forbidden file upload types
 	"new_folder_permission_mask" => 0755,				// new folder permission mask
 	"convert_filenames" => FALSE,					// convert filesystem filenames
 	"authentication_methods" => array("pw"),			// supported authentication methods
@@ -106,15 +107,25 @@ Define the URL retriever implementation. If default implementation is not suffic
 
 Enable zip downloads, which allows downloading entire folders or file collections (by default disabled).
 
-== Allowed file upload types (`allowed_file_upload_types`) ==
+== Allowed and forbidden file upload types (`allowed_file_upload_types`, `forbidden_file_upload_types`) ==
 
-Define the file types that are allowed to upload. By default, all types are allowed.
+Define the file types that are allowed or forbidden to upload. By default, all types are allowed.
+
+{{{
+	$CONFIGURATION = array(
+		"forbidden_file_upload_types" => array("gif", "png", "jpg")
+	);
+}}}
+
+or
 
 {{{
 	$CONFIGURATION = array(
 		"allowed_file_upload_types" => array("gif", "png", "jpg")
 	);
 }}}
+
+Note that only one of the settings should be defined. If forbidden types are defined, every type listed will be rejected. But if allowed types are defined, any type not in the list will be rejected.
 
 == New folder permission mask (`new_folder_permission_mask`) ==
 
