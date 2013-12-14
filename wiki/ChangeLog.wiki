@@ -3,7 +3,7 @@
 
 === Version 2.3 ===
 Released 2013/12/14
-  * Notificator version 1.1: Added ability define notification event filters (filesystem events can be set to be effective on certain folders only, on certain subfolders only, or based on file or folder name)
+  * Notificator version 1.1: Added support for definining notification event filters (filesystem events can be set to be effective on certain folders only, on certain subfolders only, or based on file or folder name)
   * Support for allowed/forbidden upload file types ([https://code.google.com/p/mollify/wiki/BackendSettings#Allowed_and_forbidden_file_upload_types_(_allowed_file_upload_ty])
   * Fixed group editing error
 
