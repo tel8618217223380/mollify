@@ -193,7 +193,7 @@
 		}
 	
 		public function updateUser($id, $name, $lang, $email, $permission, $expiration, $description = NULL) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', lang=%s, email=%s, permission_mode='%s', expiration=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($expiration), $this->db->string($description), $this->db->string($id)));
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', lang=%s, email=%s, permission_mode=%s, expiration=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($permission, TRUE), $this->db->string($expiration), $this->db->string($description), $this->db->string($id)));
 			return TRUE;
 		}
 		
