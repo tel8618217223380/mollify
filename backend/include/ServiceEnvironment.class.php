@@ -14,6 +14,7 @@
 	require_once("filesystem/FilesystemController.class.php");
 	require_once("plugin/PluginController.class.php");
 	require_once("services/ServicesBase.class.php");
+	require_once("permissions/PermissionsController.class.php");
 	require_once("event/EventHandler.class.php");
 	require_once("Formatter.class.php");
 	require_once("Cookie.class.php");
@@ -36,6 +37,7 @@
 		private $settings;
 		private $eventHandler;
 		private $filesystem;
+		private $permissions;
 		private $request;
 		private $mailer = NULL;
 		private $urlRetriever = NULL;
@@ -51,6 +53,7 @@
 			$this->authentication = new Authentication($this);
 			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
+			$this->permissions = new Mollify_PermissionsController($this);
 			$this->plugins = new PluginController($this);
 			$this->resources = new ResourceLoader($this);
 			$this->passwordHash = new Mollify_PasswordHash($this->settings);
@@ -98,6 +101,10 @@
 
 		public function filesystem() {
 			return $this->filesystem;
+		}
+
+		public function permissions() {
+			return $this->permissions;
 		}
 
 		public function plugins() {
