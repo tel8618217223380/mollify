@@ -20,6 +20,15 @@
 			return $this->db;
 		}
 		
+		public function getVersionHistory() {
+			return array("1_8_8", "2_0", "2_2", "2_4");
+		}
+		
+		public function currentVersion() {
+			$list = $this->getVersionHistory();
+			return $list[count($list)-1];
+		}
+		
 		public function installedVersion() {
 			$result = $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='version'");
 			if ($result->count() === 0) return NULL;

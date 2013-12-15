@@ -45,6 +45,13 @@ CREATE TABLE item_permission (
   permission char(2) NOT NULL,
   PRIMARY KEY (user_id,item_id)
 );
+CREATE TABLE permission (
+  name char(64) NOT NULL,
+  user_id int(11) NULL DEFAULT 0,
+  subject char(255) NULL,
+  value char(32) NOT NULL,
+  PRIMARY KEY (name,user_id,subject)
+);
 CREATE TABLE user_folder (
   user_id int(11) NOT NULL,
   folder_id int(11) NOT NULL,

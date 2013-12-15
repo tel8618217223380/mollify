@@ -54,6 +54,14 @@ CREATE TABLE `{TABLE_PREFIX}item_permission` (
   PRIMARY KEY (`user_id`,`item_id`)
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify item permissions';
 
+CREATE TABLE `{TABLE_PREFIX}permission` (
+  `name` char(64) NOT NULL,
+  `user_id` int(11) NULL DEFAULT 0,
+  `subject` char(255) NULL,
+  `value` char(32) NOT NULL,
+  PRIMARY KEY (`name`,`user_id`,`subject`)
+) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify permissions';
+
 CREATE TABLE `{TABLE_PREFIX}user_folder` (
   `user_id` int(11) NOT NULL,
   `folder_id` int(11) NOT NULL,
