@@ -41,15 +41,18 @@
 			
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types');
 			$this->forbiddenUploadTypes = $env->settings()->setting('forbidden_file_upload_types');
+		}
+		
+		public function initialize() {
+			FileEvent::register($this->env->events());
+			
 			$this->registerSearcher(new FileSystemSearcher($this->env));
 			
 			$coreData = new CoreFileDataProvider($this->env);
 			$coreData->init($this);
 						
-			FileEvent::register($this->env->events());
+			$this->env->permissions()->registerFilesystemPermission("filesystem_item_access", array("no", "ro", "wd", "rw"));
 		}
-		
-		public function initialize() {}
 		
 		public function itemIdProvider() {
 			return $this->idProvider;
@@ -384,6 +387,7 @@
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
 			} else {
 				$permission = $this->env->configuration()->getItemPermission($item, $this->env->session()->userId());
+				Logging::logDebug("ITEM PERMISSION: ".$this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item));
 				if (!$permission) return $this->env->authentication()->getDefaultPermission();
 				
 				$this->permissionCache[$item->id()] = $permission;
@@ -409,6 +413,7 @@
 		}
 		
 		public function allPermissions($item) {
+			Logging::logDebug("ITEM PERMISSION: ".$this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item));
 			return $this->env->configuration()->getItemPermissions($item);
 		}
 		
