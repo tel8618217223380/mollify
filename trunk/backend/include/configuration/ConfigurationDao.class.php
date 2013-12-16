@@ -42,16 +42,14 @@
 		public function getInstalledVersion() {
 			return $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='version'")->value();
 		}
-		
-		public function checkProtocolVersion($version) {}
 	
 		public function findUser($username, $allowEmail = FALSE, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
 			if ($allowEmail) {
-				$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s')".$expirationCriteria, $this->db->string($username), $this->db->string($username)));
+				$result = $this->db->query(sprintf("SELECT id, name, user_type, lang, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s')".$expirationCriteria, $this->db->string($username), $this->db->string($username)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE name='%s'".$expirationCriteria, $this->db->string($username)));
+				$result = $this->db->query(sprintf("SELECT id, name, user_type, lang, email FROM ".$this->db->table("user")." WHERE name='%s'".$expirationCriteria, $this->db->string($username)));
 			}
 			$matches = $result->count();
 			
@@ -103,7 +101,7 @@
 		public function getUserByName($username, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
-			$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0".$expirationCriteria, $this->db->string($username)));
+			$result = $this->db->query(sprintf("SELECT id, name, user_type, lang, email FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0".$expirationCriteria, $this->db->string($username)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -120,7 +118,7 @@
 		}
 
 		public function getUserByNameOrEmail($name) {
-			$result = $this->db->query(sprintf("SELECT id, name, lang, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($name)));
+			$result = $this->db->query(sprintf("SELECT id, name, user_type, lang, email FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($name)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -143,7 +141,7 @@
 		public function getUser($id, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
-			return $this->db->query(sprintf("SELECT id, name, lang, email, permission_mode, expiration FROM ".$this->db->table("user")." WHERE id='%s'".$expirationCriteria, $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name, user_type, lang, email, expiration FROM ".$this->db->table("user")." WHERE id='%s'".$expirationCriteria, $this->db->string($id)))->firstRow();
 		}
 		
 		public function userQuery($rows, $start, $criteria, $sort = NULL) {
@@ -174,12 +172,12 @@
 			}
 			
 			$count = $db->query("select count(id) ".$query)->value(0);
-			$result = $db->query("select id, name, lang, email, permission_mode, expiration, is_group ".$query." limit ".$rows." offset ".$start)->rows();
+			$result = $db->query("select id, name, user_type, lang, email, expiration, is_group ".$query." limit ".$rows." offset ".$start)->rows();
 			
 			return array("start" => $start, "count" => count($result), "total" => $count, "data" => $result);
 		}
 		
-		public function addUser($name, $lang, $email, $permission, $expiration) {
+		public function addUser($name, $lang, $email, $type, $expiration) {
 			if (isset($email) and strlen($email) > 0)
 				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value();
 			else
@@ -188,12 +186,12 @@
 			if ($matches > 0)
 				throw new ServiceException("INVALID_REQUEST", "Duplicate user found with name [".$name."] or email [".$email."]");
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, lang, email, permission_mode, is_group, expiration) VALUES (%s, %s, %s, %s, 0, %s)", $this->db->string($name, TRUE), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($permission, TRUE), $this->db->string($expiration)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, lang, email, user_type, is_group, expiration) VALUES (%s, %s, %s, %s, 0, %s)", $this->db->string($name, TRUE), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($user_type, TRUE), $this->db->string($expiration)));
 			return $this->db->lastId();
 		}
 	
-		public function updateUser($id, $name, $lang, $email, $permission, $expiration, $description = NULL) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', lang=%s, email=%s, permission_mode=%s, expiration=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($permission, TRUE), $this->db->string($expiration), $this->db->string($description), $this->db->string($id)));
+		public function updateUser($id, $name, $lang, $email, $type, $expiration, $description = NULL) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', lang=%s, email=%s, user_type=%s, expiration=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($type, TRUE), $this->db->string($expiration), $this->db->string($description), $this->db->string($id)));
 			return TRUE;
 		}
 		
@@ -203,7 +201,7 @@
 			if (!$transaction) $this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_group")." WHERE user_id='%s'", $id));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE user_id='%s'", $id));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_auth")." WHERE user_id='%s'", $id));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("user")." WHERE id='%s'", $id));
 			if ($affected === 0)
@@ -246,7 +244,7 @@
 		}
 
 		public function getGroupUsers($id) {
-			return $this->db->query("SELECT user.id as id, user.name as name, user.lang as lang, user.permission_mode, user.email as email FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id as id, user.name as name, user.lang as lang, user.user_type, user.email as email FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addGroupUsers($groupId, $userIds) {
@@ -265,11 +263,11 @@
 		}
 		
 		public function addUserGroup($name, $description) {
-			$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE name='%s' and is_group=1", $this->db->string($name)))->value();
+			$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE name=%s and is_group=1", $this->db->string($name, TRUE)))->value();
 			if ($matches > 0)
 				throw new ServiceException("INVALID_REQUEST", "Duplicate group found with name [".$name."]");
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, description, permission_mode, is_group) VALUES ('%s', '%s', NULL, 1)", $this->db->string($name), $this->db->string($description)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, description, user_type, is_group) VALUES (%s, %s, NULL, 1)", $this->db->string($name, TRUE), $this->db->string($description, TRUE)));
 			return $this->db->lastId();
 		}
 
@@ -294,7 +292,7 @@
 		}
 		
 		public function getFolderUsers($id) {
-			return $this->db->query("SELECT user.id as id, user.name as name, user.permission_mode as permission_mode, user.is_group as is_group FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id as id, user.name as name, user.user_type as user_type, user.is_group as is_group FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addFolderUsers($folderId, $userIds) {
@@ -330,7 +328,7 @@
 			$this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $folderId));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name='filesystem_item_access' AND subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $folderId));
 			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$rootId." not found");
@@ -383,11 +381,11 @@
 			return TRUE;
 		}
 		
-		public function getDefaultPermission($userId) {
+		/*public function getDefaultPermission($userId) {
 			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($userId)))->value());
 			$this->env->authentication()->assertPermissionValue($mode);
 			return $mode;
-		}
+		}*/
 		
 		function getItemDescription($item) {
 			$result = $this->db->query(sprintf("SELECT description FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $this->itemId($item)));
@@ -435,7 +433,7 @@
 			return $this->db->query($query)->valueMap("item_id", "description");
 		}
 							
-		function getItemPermission($item, $userId) {
+		/*function getItemPermission($item, $userId) {
 			$mysql = (strcmp("mysql", $this->db->type()) == 0);
 			$table = $this->db->table("item_permission");
 			$id = $this->itemId($item);
@@ -617,7 +615,7 @@
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s'", $this->itemId($item)));
 			}
 			return TRUE;
-		}
+		}*/
 				
 		private function itemId($item) {
 			return $this->db->string($item->id());

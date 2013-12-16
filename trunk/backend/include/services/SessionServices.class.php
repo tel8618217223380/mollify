@@ -10,7 +10,6 @@
 	 */
 
 	class SessionServices extends ServicesBase {
-		private static $PROTOCOL_VERSION = "3";
 		private static $GET_ITEMS = array("info", "logout");
 		private static $POST_ITEMS = array("authenticate", "logout");
 		
@@ -19,7 +18,7 @@
 			
 			if ($method === Request::METHOD_GET and !in_array($path[0], self::$GET_ITEMS)) return FALSE;
 			if ($method === Request::METHOD_POST and !in_array($path[0], self::$POST_ITEMS)) return FALSE;
-			if ($path[0] === 'info' and count($path) < 2) return FALSE;
+			if ($path[0] === 'info' and count($path) != 1) return FALSE;
 			
 			return TRUE;
 		}
@@ -32,11 +31,11 @@
 			if ($this->path[0] === 'logout') {
 				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
 				$this->env->session()->end();
-				$this->response()->success($this->getSessionInfo(self::$PROTOCOL_VERSION));
+				$this->response()->success($this->getSessionInfo());
 				return;
 			}
 			$this->env->authentication()->check();
-			$this->response()->success($this->getSessionInfo($this->path[1]));
+			$this->response()->success($this->getSessionInfo());
 		}
 
 		public function processPost() {
@@ -66,19 +65,11 @@
 			$this->response()->success($sessionInfo);
 		}
 		
-		private function getSessionInfo($protocolVersion) {
-			Logging::logDebug("Requesting session info for protocol version ".$protocolVersion);
-			
-			if ($protocolVersion != self::$PROTOCOL_VERSION)
-				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported protocol version [".$protocolVersion."], expected [".self::$PROTOCOL_VERSION."]");
-			$this->env->configuration()->checkProtocolVersion($protocolVersion);
-			
+		private function getSessionInfo() {
 			$auth = $this->env->authentication();
 			$info = array("authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures(), "plugins" => $this->env->plugins()->getSessionInfo(), "plugin_base_url" => $this->env->getPluginBaseUrl());
 			
 			if ($auth->isAuthenticated()) {
-				$info["default_permission"] = $this->env->authentication()->getDefaultPermission();
-				
 				$info = array_merge(
 					$info,
 					$this->env->session()->getSessionInfo(),
