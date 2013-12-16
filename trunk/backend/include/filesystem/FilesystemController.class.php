@@ -138,7 +138,7 @@
 			
 			foreach($this->getFolderDefs($all) as $folderDef) {
 				$root = $this->filesystem($folderDef, !$all)->root();
-				if (!$this->hasReadRights($root)) continue;
+				if (!$this->hasRights($root, self::PERMISSION_LEVEL_READ)) continue;
 				$list[] = $root;
 			}
 			
@@ -198,7 +198,7 @@
 		private function isFolderValid($folderDef, $mustExist = TRUE) {
 			$root = $this->filesystem($folderDef, $mustExist)->root();
 			if ($mustExist and !$root->exists()) throw new ServiceException("DIR_DOES_NOT_EXIST", 'root id:'.$folderDef['id']);
-			if (!$this->allowFilesystems and !$this->hasReadRights($root)) return FALSE;
+			if (!$this->allowFilesystems and !$this->hasRights($root, self::PERMISSION_LEVEL_READ)) return FALSE;
 			return TRUE;
 		}
 		
@@ -303,39 +303,31 @@
 		}
 		
 		public function items($folder) {
-			//make sure folder permissions are fetched into cache
-			$this->env->permissions()->prefetchPermissions($folder);
-			$this->assertReadRights($folder, "items");
+			$this->env->permissions()->prefetchFilesystemChildrenPermissions("filesystem_item_access", $folder);
+			$this->assertRights($folder, self::PERMISSION_LEVEL_READ, "items");
 			$this->itemIdProvider()->load($folder);
 			
 			$list = array();
 			foreach($folder->items() as $i) {
-				if (!$this->isItemVisible($i)) continue;
+				if (!$this->hasRights($i, self::PERMISSION_LEVEL_READ)) continue;
 				$list[] = $i;
 			}
 			return $list;
 		}
 
 		public function hierarchy($folder) {
-			$this->assertReadRights($folder, "hierarchy");
+			$this->assertRights($folder, self::PERMISSION_LEVEL_READ, "hierarchy");
 			$h = $folder->hierarchy();
 			return $h;
 		}
-		
-		/*private function isItemVisible($item) {
-			if ($this->env->authentication()->isAdmin()) return TRUE;
-			$permission = $this->getItemUserPermissionFromCache($item);
-			if (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $permission) != 0) return TRUE;
-			return FALSE;
-		}*/
 
 		public function details($item, $data = NULL) {
 			$this->assertRights($item, self::PERMISSION_LEVEL_READ, "details");
 	
 			$details = $item->details();
 			$details["description"] = $this->description($item);
-			$details["permission"] = $this->permission($item);
-			$details["parent_permission"] = $this->permission($item->parent());
+			$details["permission"] = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item);
+			$details["parent_permission"] = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item->parent());
 			$details["plugins"] = array();
 
 			foreach($this->contextPlugins as $k=>$p) {
