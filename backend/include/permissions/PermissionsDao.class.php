@@ -109,36 +109,34 @@
 			return $k;
 		}
 	
-		/*function getItemPermissions($item) {
-			$id = $this->itemId($item);
-			$rows = $this->db->query(sprintf("SELECT user.id as user_id, user.is_group as is_group, item_permission.permission as permission FROM ".$this->db->table("item_permission")." as item_permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = item_permission.user_id WHERE item_permission.item_id = '%s'", $id))->rows();
+		public function getAllSubjectPermissions($subject) {
+			$rows = $this->db->query(sprintf("SELECT user.id as user_id, user.is_group as is_group, permission.value as value FROM ".$this->db->table("permission")." as permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = permission.user_id WHERE permission.subject = '%s'", $subject))->rows();
 			
 			$list = array();
 			foreach ($rows as $row) {
 				if (!isset($row["user_id"]))
-					$list[] = array("item_id" => $item->id(), "user_id" => '0', "is_group" => 0, "permission" => $row["permission"]);
+					$list[] = array("subject" => $subject, "user_id" => '0', "is_group" => 0, "value" => $row["value"]);
 				else
-					$list[] = array("item_id" => $item->id(), "user_id" => $row["user_id"], "is_group" => $row["is_group"], "permission" => $row["permission"]);
+					$list[] = array("subject" => $subject, "user_id" => $row["user_id"], "is_group" => $row["is_group"], "value" => $row["value"]);
 			}
 			return $list;
 		}
 			
-		function updateItemPermissions($updates) {
+		public function updatePermissions($updates) {
 			$new = $updates['new'];
 			$modified = $updates['modified'];
 			$removed = $updates['removed'];
-			$mysql = (strcmp("mysql", $this->db->type()) == 0);
 			
-			if ($mysql) $this->db->startTransaction();
-			if (count($new) > 0) $this->addItemPermissionValues($new);
-			if (count($modified) > 0) $this->updateItemPermissionValues($modified);
-			if (count($removed) > 0) $this->removeItemPermissionValues($removed);
-			if ($mysql) $this->db->commit();
+			$this->db->startTransaction();
+			if (count($new) > 0) $this->addPermissionValues($new);
+			if (count($modified) > 0) $this->updatePermissionValues($modified);
+			if (count($removed) > 0) $this->removePermissionValues($removed);
+			$this->db->commit();
 							
 			return TRUE;
 		}
 
-		private function addItemPermissionValues($list) {
+		private function addPermissionValues($list) {
 			$query = "INSERT INTO ".$this->db->table("item_permission")." (item_id, user_id, permission) VALUES ";
 			$first = TRUE;
 			
@@ -156,49 +154,46 @@
 			$this->db->update($query);							
 			return TRUE;
 		}
-		
-		public function addItemPermission($id, $permission, $userId) {
-			$permission = $this->db->string(strtolower($permission));
-			$id = $this->db->string($id);
-			$user = $this->db->string($userId);
-
-			$query = sprintf("INSERT INTO ".$this->db->table("item_permission")." (item_id, user_id, permission) VALUES ('%s', '%s', '%s')", $id, $user, $permission);
-			$this->db->update($query);							
-			return TRUE;
-		}
 	
-		private function updateItemPermissionValues($list) {
+		private function updatePermissionValues($list) {
 			foreach($list as $item) {
-				$permission = $this->db->string(strtolower($item["permission"]));
-				$id = $this->db->string($item["item_id"]);
+				$name = $this->db->string($item["name"], TRUE);
+				$value = $this->db->string(strtolower($item["value"]), TRUE);
+				$subject = $this->db->string($item["subject"], TRUE);
 				$user = '0';
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 			
-				$this->db->update(sprintf("UPDATE ".$this->db->table("item_permission")." SET permission='%s' WHERE item_id='%s' and user_id='%s'", $permission, $id, $user));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("permission")." SET value='%s' WHERE name=%s, subject=%s and user_id=%s", $value, $name, $subject, $user));
 			}
 							
 			return TRUE;
 		}
 	
-		private function removeItemPermissionValues($list) {
+		private function removePermissionValues($list) {
 			foreach($list as $item) {
-				$id = $this->db->string($item["item_id"]);
-				$user = "user_id = '0'";
-				if ($item["user_id"] != NULL) $user = sprintf("user_id = '%s'", $this->db->string($item["user_id"]));
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s' AND %s", $id, $user));
+				$name = $this->db->string($item["name"], TRUE);
+				$subject = $this->db->string($item["subject"], TRUE);
+				$user = "0";
+				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name = %s AND subject=%s AND user_id = %s", $name, $subject, $user));
 			}
 							
 			return TRUE;
 		}
 
-		function removeItemPermissions($item) {
+		function removeFilesystemPermissions($name, $item) {
 			if (!$item->isFile()) {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $item->location())));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name=%s AND subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $this->db->string($name, TRUE), str_replace("'", "\'", $item->location())));
 			} else {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s'", $this->itemId($item)));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name=%s AND subject=%s", $this->db->string($name, TRUE), $this->db->string($item->id(), TRUE)));
 			}
 			return TRUE;
-		}*/
+		}
 
+		public function addPermission($name, $subject, $userId, $value = "1") {
+			$query = sprintf("INSERT INTO ".$this->db->table("permission")." (name, subject, user_id, permission) VALUES (%s, %s, %s)", $this->db->string($name, TRUE), $this->db->string($subject, TRUE), $this->db->string($userId, TRUE), $this->db->string(strtolower($value), TRUE));
+			$this->db->update($query);							
+			return TRUE;
+		}
 	}
 ?>
