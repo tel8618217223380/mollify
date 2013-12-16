@@ -1,7 +1,7 @@
 UPDATE parameter SET value = '2_2' WHERE name = 'version';
 INSERT INTO parameter (name, value) VALUES ('old_user_pw', '1');
 
-ALTER TABLE user ADD lang char(2) NULL;
+ALTER TABLE user ADD COLUMN lang char(2) NULL;
 
 CREATE TABLE user_auth (
   user_id INTEGER PRIMARY KEY,

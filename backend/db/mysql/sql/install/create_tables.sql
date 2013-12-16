@@ -3,7 +3,7 @@ CREATE TABLE `{TABLE_PREFIX}user` (
   `name` varchar(255) NOT NULL,
   `lang` char(2) NULL,
   `description` varchar(255) NOT NULL DEFAULT '',
-  `permission_mode` char(2) NULL,
+  `user_type` char(2) NULL,
   `email` varchar(128) NULL,
   `auth` varchar(8) NULL,
   `is_group` TINYINT(1) NOT NULL,

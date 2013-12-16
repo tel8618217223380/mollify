@@ -13,6 +13,11 @@
 	 			
 	 class FilesystemController {	 	
 	 	const EVENT_TYPE_FILE = "filesystem";
+
+	 	const PERMISSION_LEVEL_NONE = "n";
+	 	const PERMISSION_LEVEL_READ = "r";
+	 	const PERMISSION_LEVEL_READWRITE = "rw";
+	 	const PERMISSION_LEVEL_READWRITEDELETE = "rwd";
 		
 		private $env;
 		private $allowedUploadTypes;
@@ -51,7 +56,12 @@
 			$coreData = new CoreFileDataProvider($this->env);
 			$coreData->init($this);
 						
-			$this->env->permissions()->registerFilesystemPermission("filesystem_item_access", array("no", "ro", "wd", "rw"));
+			$this->env->permissions()->registerFilesystemPermission("filesystem_item_access", array(
+				self::PERMISSION_LEVEL_NONE,
+				self::PERMISSION_LEVEL_READ,
+				self::PERMISSION_LEVEL_READWRITE,
+				self::PERMISSION_LEVEL_READWRITEDELETE
+			));
 		}
 		
 		public function itemIdProvider() {
@@ -128,7 +138,7 @@
 			
 			foreach($this->getFolderDefs($all) as $folderDef) {
 				$root = $this->filesystem($folderDef, !$all)->root();
-				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
+				if (!$this->hasReadRights($root)) continue;
 				$list[] = $root;
 			}
 			
@@ -170,10 +180,25 @@
 			return $list;
 		}
 		
+		private function hasRights($item, $required) {
+			if (is_array($item)) {
+				foreach($item as $i)
+					if (!$this->env->permissions()->hasFilesystemRights("filesystem_item_access", $item, $required)) return FALSE;
+				return TRUE;
+			}
+
+			return $this->env->permissions()->hasFilesystemRights("filesystem_item_access", $item, $required);
+		}
+		
+		public function assertRights($item, $required, $desc = "Unknown action") {
+			if (!$this->hasRights($item, $required))
+				throw new ServiceException("INSUFFICIENT_RIGHTS", $desc.", required: ".$required);
+		}
+		
 		private function isFolderValid($folderDef, $mustExist = TRUE) {
 			$root = $this->filesystem($folderDef, $mustExist)->root();
 			if ($mustExist and !$root->exists()) throw new ServiceException("DIR_DOES_NOT_EXIST", 'root id:'.$folderDef['id']);
-			if (!$this->allowFilesystems and !$this->env->authentication()->hasReadRights($this->permission($root))) return FALSE;
+			if (!$this->allowFilesystems and !$this->hasReadRights($root)) return FALSE;
 			return TRUE;
 		}
 		
@@ -273,23 +298,14 @@
 			$this->filesystem($folderDef, TRUE);
 		}
 
-		public function assertRights($item, $required, $desc = "Unknown action") {
-			if (is_array($item)) {
-				foreach($item as $i)
-					$this->env->authentication()->assertRights($this->permission($i), $required, "filesystemitem ".$i->id()."/".$desc);
-			} else {
-				$this->env->authentication()->assertRights($this->permission($item), $required, "filesystemitem ".$item->id()."/".$desc);
-			}
-		}
-
 		public function ignoredItems($filesystem, $path) {
 			return array('mollify.dsc', 'mollify.uac');	//TODO get from settings and/or configuration etc
 		}
 		
 		public function items($folder) {
 			//make sure folder permissions are fetched into cache
-			$this->fetchPermissions($folder);
-			$this->assertRights($folder, Authentication::RIGHTS_READ, "items");
+			$this->env->permissions()->prefetchPermissions($folder);
+			$this->assertReadRights($folder, "items");
 			$this->itemIdProvider()->load($folder);
 			
 			$list = array();
@@ -301,20 +317,20 @@
 		}
 
 		public function hierarchy($folder) {
-			$this->assertRights($folder, Authentication::RIGHTS_READ, "hierarchy");
+			$this->assertReadRights($folder, "hierarchy");
 			$h = $folder->hierarchy();
 			return $h;
 		}
 		
-		private function isItemVisible($item) {
+		/*private function isItemVisible($item) {
 			if ($this->env->authentication()->isAdmin()) return TRUE;
 			$permission = $this->getItemUserPermissionFromCache($item);
 			if (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $permission) != 0) return TRUE;
 			return FALSE;
-		}
+		}*/
 
 		public function details($item, $data = NULL) {
-			$this->assertRights($item, Authentication::RIGHTS_READ, "details");
+			$this->assertRights($item, self::PERMISSION_LEVEL_READ, "details");
 	
 			$details = $item->details();
 			$details["description"] = $this->description($item);
@@ -350,16 +366,18 @@
 		}
 
 		public function setDescription($item, $desc) {
-			$this->assertRights($item, Authentication::RIGHTS_WRITE, "set description");
+			//TODO own permission
+			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITE, "set description");
 			return $this->env->configuration()->setItemDescription($item, $desc);
 		}
 
 		public function removeDescription($item) {
-			$this->assertRights($item, Authentication::RIGHTS_WRITE, "remove description");
+			//TODO own permission
+			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITE, "remove description");
 			return $this->env->configuration()->removeItemDescription($item);
 		}
 		
-		public function permission($item) {
+		/*public function permission($item) {
 			if (!$item) return Authentication::PERMISSION_VALUE_NO_RIGHTS;
 			if ($this->env->authentication()->isAdmin()) return Authentication::PERMISSION_VALUE_READWRITE;
 			
@@ -386,8 +404,8 @@
 				$permission = $this->permissionCache[$item->id()];
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
 			} else {
-				$permission = $this->env->configuration()->getItemPermission($item, $this->env->session()->userId());
-				Logging::logDebug("ITEM PERMISSION: ".$this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item));
+				$permission = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item);
+				//Logging::logDebug("ITEM PERMISSION: ".$this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item));
 				if (!$permission) return $this->env->authentication()->getDefaultPermission();
 				
 				$this->permissionCache[$item->id()] = $permission;
@@ -415,7 +433,7 @@
 		public function allPermissions($item) {
 			Logging::logDebug("ITEM PERMISSION: ".$this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item));
 			return $this->env->configuration()->getItemPermissions($item);
-		}
+		}*/
 		
 		private function allowedFileUploadTypes() {
 			$types = array();
@@ -439,7 +457,7 @@
 		
 		public function rename($item, $name) {
 			Logging::logDebug('rename from ['.$item->path().'] to ['.$name.']');
-			$this->assertRights($item, Authentication::RIGHTS_WRITE, "rename");
+			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITE, "rename");
 			$to = $item->rename($name);
 			
 			$this->env->events()->onEvent(FileEvent::rename($item, $to));
@@ -452,8 +470,8 @@
 			if ($item->isFile() and !$to->isFile()) $to = $to->createFile($item->name());
 			if (!$item->isFile() and $to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
 			
-			$this->assertRights($item, Authentication::RIGHTS_READ, "copy");
-			$this->assertRights($to->parent(), Authentication::RIGHTS_WRITE, "copy");
+			$this->assertRights($item, self::PERMISSION_LEVEL_READ, "copy");
+			$this->assertRights($to->parent(), self::PERMISSION_LEVEL_READWRITE, "copy");
 
 			$to = $item->copy($to);
 			$this->env->events()->onEvent(FileEvent::copy($item, $to));
@@ -461,7 +479,7 @@
 		
 		public function copyItems($items, $folder) {
 			Logging::logDebug('copying '.count($items).' items to ['.$folder->path().']');
-			$this->assertRights($items, Authentication::RIGHTS_READ, "copy");
+			$this->assertRights($items, self::PERMISSION_LEVEL_READ, "copy");
 			
 			foreach($items as $item) {
 				if ($item->isFile())
@@ -475,8 +493,8 @@
 			Logging::logDebug('moving '.$item->id()."[".$item->path().'] to ['.$to.']');
 
 			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
-			$this->assertRights($item, Authentication::RIGHTS_READ, "move");
-			$this->assertRights($to, Authentication::RIGHTS_WRITE, "move");
+			$this->assertRights($item, self::PERMISSION_LEVEL_READ, "move");
+			$this->assertRights($to, self::PERMISSION_LEVEL_READWRITE, "move");
 
 			$to = $item->move($to);
 						
@@ -486,7 +504,7 @@
 		
 		public function moveItems($items, $to) {
 			Logging::logDebug('moving '.count($items).' items');
-			$this->assertRights($items, Authentication::RIGHTS_WRITE, "move");
+			$this->assertRights($items, self::PERMISSION_LEVEL_READWRITE, "move");
 			
 			foreach($items as $item)
 				$this->move($item, $to);
@@ -495,7 +513,7 @@
 		public function delete($item) {
 			Logging::logDebug('deleting ['.$item->id().']');
 			
-			$this->assertRights($item, Authentication::RIGHTS_DELETE, "delete");
+			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITEDELETE, "delete");
 			$this->validateAction(FileEvent::DELETE, $item);
 						
 			$item->delete();
@@ -503,7 +521,7 @@
 			if ($this->env->features()->isFeatureEnabled("descriptions"))
 				$this->env->configuration()->removeItemDescription($item);
 			
-			$this->env->configuration()->removeItemPermissions($item);
+			$this->env->permissions()->removeFilesystemItemPermissions($item);	//TODO
 			
 			$this->env->events()->onEvent(FileEvent::delete($item));
 			$this->idProvider->delete($item);
@@ -512,7 +530,7 @@
 		public function deleteItems($items) {
 			Logging::logDebug('deleting '.count($items).' items');
 			$this->validateAction(FileEvent::DELETE, $items);
-			$this->assertRights($items, Authentication::RIGHTS_DELETE, "delete");
+			$this->assertRights($items, self::PERMISSION_LEVEL_READWRITEDELETE, "delete");
 			
 			foreach($items as $item)
 				$this->delete($item);
@@ -520,7 +538,7 @@
 		
 		public function createFolder($parent, $name) {
 			Logging::logDebug('creating folder ['.$parent->id().'/'.$name.']');
-			$this->assertRights($parent, Authentication::RIGHTS_WRITE, "create folder");
+			$this->assertRights($parent, self::PERMISSION_LEVEL_READWRITE, "create folder");
 
 			$new = $parent->createFolder($name);
 			$this->env->events()->onEvent(FileEvent::createFolder($new));			
@@ -529,7 +547,7 @@
 		public function download($file, $mobile, $range = NULL) {
 			if (!$range)
 				Logging::logDebug('download ['.$file->id().']');
-			$this->assertRights($file, Authentication::RIGHTS_READ, "download");
+			$this->assertRights($file, self::PERMISSION_LEVEL_READ, "download");
 			if (!$file->filesystem()->isDirectDownload()) {
 				$this->env->response()->redirect($file->filesystem()->getDownloadUrl($file));
 				return;
@@ -569,7 +587,7 @@
 
 		public function view($file) {
 			Logging::logDebug('view ['.$file->id().']');
-			$this->assertRights($file, Authentication::RIGHTS_READ, "view");
+			$this->assertRights($file, self::PERMISSION_LEVEL_READ, "view");
 			$this->env->events()->onEvent(FileEvent::view($file));
 			$this->env->response()->send($file->name(), $file->extension(), $file->read(), $file->size());
 		}
@@ -577,7 +595,7 @@
 		public function updateFileContents($item, $content) {
 			if (!$item->isFile()) throw new ServiceException("NOT_A_FILE", $item->path());
 			Logging::logDebug('update file contents ['.$item->id().']');
-			$this->assertRights($item, Authentication::RIGHTS_WRITE, "update content");
+			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITE, "update content");
 			$this->env->events()->onEvent(FileEvent::upload($item));
 			$item->put($content);
 		}
@@ -589,7 +607,7 @@
 		}
 		
 		public function uploadTo($folder) {
-			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
+			$this->assertRights($folder, self::PERMISSION_LEVEL_READWRITE, "upload");
 			
 			//if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
 			
@@ -739,7 +757,7 @@
 		public function uploadFrom($folder, $name, $stream, $src = '[Unknown]') {
 			$this->assertUploadFileType($name);
 			//$this->env->features()->assertFeature("file_upload");
-			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
+			$this->assertRights($folder, self::PERMISSION_LEVEL_READWRITE, "upload");
 
 			$targetItem = $folder->createFile($name);
 			if (Logging::isDebug()) Logging::logDebug("Upload from $src ($name) to ".$targetItem->id());

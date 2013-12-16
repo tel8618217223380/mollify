@@ -146,7 +146,7 @@
 			$start = isset($data["start"]) ? $data["start"] : 0;
 			
 			$sort = NULL;
-			$allowedFields = array("id", "name", "email", "permission_mode");
+			$allowedFields = array("id", "name", "email", "user_type");
 
 			if (isset($data["sort"]) and isset($data["sort"]["id"])) {
 				$sort = $data["sort"];
@@ -179,9 +179,16 @@
 			// user
 			if (count($this->path) == 1) {
 				$user = $this->request->data;
-				if (!isset($user['name']) or !isset($user['password']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
-				$user['permission_mode'] = strtoupper($user['permission_mode']);
-				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
+				if (!isset($user['name']) or !isset($user['password'])) throw $this->invalidRequestException();
+				
+				if (isset($user['type']) and $user['type'] != NULL) {
+					$user['type'] = strtolower($user['type']);
+					// TODO user types
+					if ($user['type'] != 'a') throw $this->invalidRequestException();
+				} else {
+					$user['type'] = NULL;
+				}
+				//$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
 				$auths = $this->env->settings()->setting("authentication_methods");
 				$auth = NULL;
@@ -194,7 +201,7 @@
 					$expiration = $user['expiration'];
 				}
 				
-				$id = $this->env->configuration()->addUser($user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration);
+				$id = $this->env->configuration()->addUser($user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['type'], $expiration);
 				$this->env->configuration()->storeUserAuth($id, $user['name'], $auth, base64_decode($user['password']));
 				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], isset($user['email']) ? $user['email'] : NULL));
 				$this->response()->success(TRUE);
@@ -243,16 +250,22 @@
 			// users/xx
 			if (count($this->path) == 2) {
 				$user = $this->request->data;
-				if (!isset($user['name']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
-				$user['permission_mode'] = strtoupper($user['permission_mode']);
-				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
+				if (!isset($user['name'])) throw $this->invalidRequestException();
 				
+				if (isset($user['type']) and $user['type'] != NULL) {
+					$user['type'] = strtolower($user['type']);
+					// TODO user types
+					if ($user['type'] != 'a') throw $this->invalidRequestException();
+				} else {
+					$user['type'] = NULL;
+				}
+								
 				$expiration = NULL;
 				//TODO validate time
 				if (isset($user['expiration']) and $user['expiration'] != NULL)
 					$expiration = $user['expiration'];
 
-				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration);
+				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['type'], $expiration);
 				$auth = NULL;
 				if (isset($user['auth'])) {
 					$auth = strtoupper($user['auth']);
