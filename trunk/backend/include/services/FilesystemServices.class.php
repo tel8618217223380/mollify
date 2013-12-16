@@ -267,7 +267,7 @@
 			$result["folder"] = ($item != NULL) ? $item->data() : NULL;
 			$result["files"] = $files;
 			$result["folders"] = $folders;
-			$result["permission"] = ($item != NULL) ? $this->env->permissions()->hasFilesystemRights("filesystem_item_access", $item) : NULL;
+			$result["permission"] = ($item != NULL) ? $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item) : NULL;
 			$result["data"] = $this->env->filesystem()->getRequestData($item, $items, $data);
 			
 			if ($includeHierarchy) {

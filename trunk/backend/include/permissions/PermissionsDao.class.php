@@ -30,11 +30,11 @@
 			if ($mysql) {
 				$subcategoryQuery = sprintf("(IF(user_id = '%s', 1, IF(user_id = '0', 3, 2)))", $userId);
 			} else {
-				$subcategoryQuery = sprintf("case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end", $userId);
+				$subcategoryQuery = sprintf("(case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end)", $userId);
 			}
 
 			// item permissions
-			$query = sprintf("SELECT value, user_id, case when subject is null then 2 else 1 AS 'category', %s AS 'subcategory' FROM ".$table." WHERE name='%s' AND (subject is null OR subject = '%s') AND %s", $name, $subcategoryQuery, $id, $userQuery);
+			$query = sprintf("SELECT value, user_id, (case when subject is null then 2 else 1 end) as category, %s as subcategory FROM ".$table." WHERE name='%s' AND (subject is null OR subject = '%s') AND %s", $subcategoryQuery, $name, $id, $userQuery);
 					
 			if ($item->isFile() or !$item->isRoot()) {
 				$parentLocation = $item->parent()->location();
