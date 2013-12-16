@@ -45,12 +45,21 @@
 		
 		public function getFilesystemPermission($name, $item) {
 			if (!array_key_exists($name, $this->filesystemPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
+			if ($this->env->authentication()->isAdmin()) {
+				$values = $this->filesystemPermissions[$name];
+				if ($values != NULL) return $values[count($values)-1];
+				return TRUE;
+			}
 			
 			$id = $item->id();
 			$permission = $this->getFromCache($name, $id);
 			if ($permission !== FALSE) return $permission;
 
 			$permission = $this->dao->getFilesystemPermission($name, $item, $this->env->session()->userId(), $this->getGroupIds());
+			if ($permission == NULL) {
+				$values = $this->filesystemPermissions[$name];
+				if ($values != NULL) $permission = $values[0];	//fallback to first
+			}
 			$this->putToCache($name, $id, $permission);
 			
 			return $permission;
