@@ -93,6 +93,7 @@
 			mollify.ui.handlers.localize($e);
 			var $dropZone = o.dropElement || $e;
 			var started = false;
+			var rejected = false;
 			var l = o.handler;
 			
 			var $input = $d.find("input");
@@ -101,7 +102,7 @@
 				url: o.url,
 				dataType: 'json',
 				dropZone: $dropZone,
-				add: function (e, data) {
+				/*add: function (e, data) {
 					if (l.isUploadAllowed && !l.isUploadAllowed(data.originalFiles)) return false;
 					
 					if (!started && l.start)
@@ -111,16 +112,42 @@
 					else
 						data.submit();
 					started = true;
+				},*/
+				submit: function (e, data) {
+					if (started && rejected) return;
+					//console.log("submit");
+					//console.log(data);
+
+					if (!started) {
+						started = true;
+						rejected = false;
+						
+						if (l.isUploadAllowed && !l.isUploadAllowed(data.originalFiles)) {
+							rejected = true;
+							return false;
+						}
+						
+						if (l.start)
+							l.start(data.originalFiles, function() {});
+					}
 				},
 				progressall: function (e, data) {
 					if (!l.progress) return;
 					
 					var progress = parseInt(data.loaded / data.total * 100, 10);
+					//console.log(progress + "%");
 					l.progress(progress, data.bitrate || false);
 				},
-				done: function(e, data) {					
-					if (l.finished) l.finished();
+				done: function(e, data) {
+					//console.log("done");
+					//if (l.finished) l.finished();
+					//started = false;
+				},
+				stop: function() {
+					//console.log("all done");
 					started = false;
+					rejected = false;
+					if (l.finished) l.finished();
 				},
 				fail: function(e, data) {
 					var r = data.response();
@@ -129,8 +156,8 @@
 						var response = r.jqXHR.responseText;
 						if (response) error = JSON.parse(response);
 					}
-					if (l.failed) l.failed(error);
-					started = false;
+					if (l.failed) l.failed(data.files, error);
+					//started = false;
 				}
 			}, t._getUploaderSettings()));
 			
@@ -148,13 +175,14 @@
 				var $container = $('<div style="width: 0px; height: 0px; overflow: hidden;"></div>').appendTo($p);
 				var $form = $('<form enctype="multipart/form-data"></form>').appendTo($container);
 				var started = false;
+				var rejected = false;
 				var attributes = '';
 				if (t._getUploaderSettings()["allow-folders"]) attributes = "directory webkitdirectory mozdirectory";
 				var $dndUploader = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"' + attributes + '></input>').appendTo($form).fileupload($.extend({
 					url: '',
 					dataType: 'json',
 					dropZone: h.dropElement,
-					add: function (e, data) {
+					/*add: function (e, data) {
 						if (h.handler.isUploadAllowed && !h.handler.isUploadAllowed(data.originalFiles)) return false;
 						
 						if (!started && h.handler.start)
@@ -164,16 +192,43 @@
 						else
 							data.submit();
 						started = true;
+					},*/
+					submit: function (e, data) {
+						if (started && rejected) return;
+						//console.log("submit");
+						//console.log(data);
+
+						if (!started) {
+							started = true;
+							rejected = false;
+							
+							if (h.handler.isUploadAllowed && !h.handler.isUploadAllowed(data.originalFiles)) {
+								rejected = true;
+								return false;
+							}
+							
+							//$.each(data.originalFiles, function(i, f) { totalSize += f.size; });
+							
+							if (h.handler.start)
+								h.handler.start(data.originalFiles, function() {});
+						}
 					},
 					progressall: function (e, data) {
 						if (!h.handler.progress) return;
 						
 						var progress = parseInt(data.loaded / data.total * 100, 10);
+						//console.log(progress + "%");
 						h.handler.progress(progress, data.bitrate || false);
 					},
 					done: function(e, data) {
+						//console.log("done " + data.files.length);
+						//console.log(data);						
+					},
+					stop: function() {
+						//console.log("all done");
+						started = false;
+						rejected = false;
 						if (h.handler.finished) h.handler.finished();
-						started = false
 					},
 					fail: function(e, data) {
 						var r = data.response();
@@ -182,8 +237,7 @@
 							var response = r.jqXHR.responseText;
 							if (response) error = JSON.parse(response);
 						}
-						if (h.handler.failed) h.handler.failed(error);
-						started = false
+						if (h.handler.failed) h.handler.failed(data.files, error);
 					}
 				}, t._getUploaderSettings())).fileupload('disable');
 				t._initDropZoneEffects(h.dropElement);
