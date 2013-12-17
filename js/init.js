@@ -80,7 +80,7 @@ var mollifyDefaults = {
 		mollify.service.init(mollify.settings["limited-http-methods"]);
 		
 		var start = function() {
-			mollify.service.get("session/info/").fail(function() {
+			mollify.service.get("session/info/3").fail(function() {
 				new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
 			}).done(function(s) {
 				mollify.events.dispatch('session/start', s);
@@ -109,7 +109,7 @@ var mollifyDefaults = {
 	mollify.App._onSessionStart = function(s) {
 		mollify.session = s;
 		mollify.session.id = mollify.session.session_id;
-		mollify.session.admin = (mollify.session.default_permission == 'A');	//TODO
+		mollify.session.admin = (mollify.session.default_permission == 'A');
 		
 		mollify.filesystem.init(mollify.session.folders);
 		

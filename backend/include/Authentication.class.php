@@ -10,9 +10,7 @@
 	 */
 
 	class Authentication {
-		const USER_TYPE_ADMIN = "A";
-		
-		/*const PERMISSION_VALUE_ADMIN = "A";
+		const PERMISSION_VALUE_ADMIN = "A";
 		const PERMISSION_VALUE_READWRITE = "RW";
 		const PERMISSION_VALUE_READWRITE_NODELETE = "WD";
 		const PERMISSION_VALUE_READONLY = "RO";
@@ -22,7 +20,7 @@
 		const RIGHTS_READ = "R";
 		const RIGHTS_WRITE = "W";
 		const RIGHTS_DELETE = "D";
-		const RIGHTS_ADMIN = "A";*/
+		const RIGHTS_ADMIN = "A";
 	
 		protected $env;
 		
@@ -35,10 +33,10 @@
 		public function initialize() {
 		}
 		
-		/*public function assertPermissionValue($value) {
+		public function assertPermissionValue($value) {
 			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READWRITE_NODELETE and $value != self::PERMISSION_VALUE_READONLY and $value != self::PERMISSION_VALUE_NO_RIGHTS)
 				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission mode [".$value."]");
-		}*/
+		}
 		
 		public function check() {
 			if ($this->isAuthenticated()) {
@@ -171,7 +169,7 @@
 			return $this->env->session()->isActive();
 		}
 		
-		/*public function getDefaultPermission() {
+		public function getDefaultPermission() {
 			if (!$this->cachedDefaultPermission) {
 				if (!$this->isAuthenticated()) $this->cachedDefaultPermission = self::PERMISSION_VALUE_NO_RIGHTS;
 				else $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission($this->env->session()->userId());
@@ -207,14 +205,14 @@
 		function hasDeleteRights() {
 			$base = $this->getDefaultPermission();
 			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_READWRITE);
-		}*/
+		}
 
 		function assertAdmin() {
 			if (!$this->isAdmin()) throw new ServiceException("NOT_AN_ADMIN");
 		}
 		
 		function isAdmin() {
-			return ($this->isAuthenticated() and (strcasecmp($this->env->session()->user()["user_type"], self::USER_TYPE_ADMIN) === 0));
+			return ($this->isAuthenticated() and ($this->getDefaultPermission() === self::PERMISSION_VALUE_ADMIN));
 		}
 		
 		public function log() {

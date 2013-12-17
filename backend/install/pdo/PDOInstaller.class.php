@@ -32,7 +32,7 @@
 			$this->db->connect(FALSE);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
-				
+		
 		public function processor() {
 			return $this->processor;
 		}
@@ -89,20 +89,16 @@
 			return ($this->installedVersion() === $this->currentVersion());
 		}
 		
-		public function currentVersion() {
-			return $this->dbUtil->currentVersion();
-		}
-		
 		public function installedVersion() {
 			return $this->dbUtil->installedVersion();
 		}
 		
-		public function getVersionHistory() {
-			return $this->dbUtil->getVersionHistory();
-		}
-		
 		public function pluginInstalledVersion($id) {
 			return $this->dbUtil->pluginInstalledVersion($id);
+		}
+
+		public function currentVersion() {
+			return "2_2";
 		}
 		
 		public function db() {

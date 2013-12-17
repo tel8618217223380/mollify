@@ -16,7 +16,11 @@
 		public function __construct($settings) {
 			parent::__construct($settings, "update");
 		}
-				
+		
+		public function getVersionHistory() {
+			return array("1_8_8", "2_0", "2_2");
+		}
+		
 		public function updateVersionStep($from, $to) {
 			$this->util()->updateVersionStep($from, $to);
 		}

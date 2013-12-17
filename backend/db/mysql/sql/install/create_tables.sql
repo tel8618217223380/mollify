@@ -3,7 +3,7 @@ CREATE TABLE `{TABLE_PREFIX}user` (
   `name` varchar(255) NOT NULL,
   `lang` char(2) NULL,
   `description` varchar(255) NOT NULL DEFAULT '',
-  `user_type` char(2) NULL,
+  `permission_mode` char(2) NULL,
   `email` varchar(128) NULL,
   `auth` varchar(8) NULL,
   `is_group` TINYINT(1) NOT NULL,
@@ -53,14 +53,6 @@ CREATE TABLE `{TABLE_PREFIX}item_permission` (
   `permission` char(2) NOT NULL,
   PRIMARY KEY (`user_id`,`item_id`)
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify item permissions';
-
-CREATE TABLE `{TABLE_PREFIX}permission` (
-  `name` char(64) NOT NULL,
-  `user_id` int(11) NULL DEFAULT 0,
-  `subject` char(255) NULL,
-  `value` char(32) NOT NULL,
-  PRIMARY KEY (`name`,`user_id`,`subject`)
-) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify permissions';
 
 CREATE TABLE `{TABLE_PREFIX}user_folder` (
   `user_id` int(11) NOT NULL,

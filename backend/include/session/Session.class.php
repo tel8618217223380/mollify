@@ -155,7 +155,7 @@
 		public function getSessionInfo() {
 			$result = array();
 			$result['session_id'] = $this->id;
-			//$result['session_ver'] = "1_8_7";
+			$result['session_ver'] = "1_8_7";
 			if ($this->isActive()) {
 				$result['user_id'] = $this->userId();
 				$result['username'] = $this->username();
