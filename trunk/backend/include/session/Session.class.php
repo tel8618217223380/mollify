@@ -159,6 +159,7 @@
 			if ($this->isActive()) {
 				$result['user_id'] = $this->userId();
 				$result['username'] = $this->username();
+				$result['user_type'] = $this->user["user_type"];
 				$result['lang'] = $this->user["lang"];
 			}
 			return $result;

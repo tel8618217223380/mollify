@@ -20,9 +20,9 @@
 			id: "plugin-core",
 			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
-				var writable = !root && (ctx.details.permission.toUpperCase() == "RW" || ctx.details.permission.toUpperCase() == "WD");
-				var deletable = !root && (ctx.details.permission.toUpperCase() == "RW");
-				var parentWritable = !root && (ctx.details.parent_permission.toUpperCase() == "RW" || ctx.details.parent_permission.toUpperCase() == "WD");
+				var writable = !root && (ctx.details.permission.toLowerCase() == "rw" || ctx.details.permission.toLowerCase() == "rwd");
+				var deletable = !root && (ctx.details.permission.toLowerCase() == "rwd");
+				var parentWritable = !root && (ctx.details.parent_permission.toLowerCase() == "rw" || ctx.details.parent_permission.toLowerCase() == "rwd");
 
 				var actions = [];				
 				if (item.is_file ) {
@@ -589,9 +589,11 @@
 			},
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
-				var writable = !root && (ctx.details.permission.toUpperCase() == "RW" || ctx.details.permission.toUpperCase() == "WD");
-				var parentWritable = !root && (ctx.details.parent_permission.toUpperCase() == "RW" || ctx.details.parent_permission.toUpperCase() == "WD");
-				var folderWritable = !root && ctx.folder_permission && (ctx.folder_permission.toUpperCase() == "RW" || ctx.folder_permission.toUpperCase() == "WD");
+
+				//TODO check only "w" for writable
+				var writable = !root && (ctx.details.permission.toLowerCase() == "rw" || ctx.details.permission.toLowerCase() == "rwd");
+				var parentWritable = !root && (ctx.details.parent_permission.toLowerCase() == "rwd" || ctx.details.parent_permission.toLowerCase() == "rwd");
+				var folderWritable = !root && ctx.folder_permission && (ctx.folder_permission.toLowerCase() == "rw" || ctx.folder_permission.toLowerCase() == "rwd");
 
 				if (parentWritable && that._isArchive(item)) {
 					return {

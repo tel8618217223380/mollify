@@ -181,11 +181,13 @@
 			return TRUE;
 		}
 
-		function removeFilesystemPermissions($name, $item) {
+		public function removeFilesystemPermissions($name, $item) {
+			$nameCriteria = ($name != NULL ? "name=".$this->db->string($name, TRUE)." AND " : "");
+			
 			if (!$item->isFile()) {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name=%s AND subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $this->db->string($name, TRUE), str_replace("'", "\'", $item->location())));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE ".$nameCriteria."subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $item->location())));
 			} else {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name=%s AND subject=%s", $this->db->string($name, TRUE), $this->db->string($item->id(), TRUE)));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE ".$nameCriteria."subject=%s", $this->db->string($item->id(), TRUE)));
 			}
 			return TRUE;
 		}

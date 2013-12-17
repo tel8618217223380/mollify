@@ -109,7 +109,7 @@ var mollifyDefaults = {
 	mollify.App._onSessionStart = function(s) {
 		mollify.session = s;
 		mollify.session.id = mollify.session.session_id;
-		mollify.session.admin = (mollify.session.default_permission == 'A');	//TODO
+		mollify.session.admin = (mollify.session.user_type == 'a');
 		
 		mollify.filesystem.init(mollify.session.folders);
 		
