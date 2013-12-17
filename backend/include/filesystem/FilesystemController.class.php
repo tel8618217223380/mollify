@@ -513,7 +513,7 @@
 			if ($this->env->features()->isFeatureEnabled("descriptions"))
 				$this->env->configuration()->removeItemDescription($item);
 			
-			$this->env->permissions()->removeFilesystemItemPermissions($item);	//TODO
+			$this->env->permissions()->removeFilesystemPermissions($item);
 			
 			$this->env->events()->onEvent(FileEvent::delete($item));
 			$this->idProvider->delete($item);
@@ -705,6 +705,7 @@
 			$target->write($src, $append);
 			fclose($src);
 			if ($fromFile) unlink($origin);
+			header("Connection: close");
 			
 			// is finished?
 			//if ($size != NULL && $target->size() == $size) {

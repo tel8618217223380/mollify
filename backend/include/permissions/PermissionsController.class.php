@@ -161,5 +161,8 @@
 			return $this->env->configuration()->getItemPermissions($item);
 		}*/
 
+		public function removeFilesystemPermissions($item, $name = NULL) {
+			$this->dao->removeFilesystemPermissions($name, $item);
+		}
 	}
 ?>
