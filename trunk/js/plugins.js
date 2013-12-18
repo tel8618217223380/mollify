@@ -1044,26 +1044,35 @@
 					
 					mollify.service.get("permissions/types?u=1").done(function(r) {
 						var users = that.processUserData(r.users);
-						var names = mollify.helpers.getKeys(r.filesystem);	//param
+						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
+						var init = names[0];
+						var onChange = function(sel) {
+							//that.updateUI(h, $content, sel, r.types.filesystem[sel], users);
+							permissionData = {
+								"new": [],
+								"modified": [],
+								"removed": []
+							};
+							$content.addClass("loading");
+							
+							that.loadPermissions(item).done(function(r) {
+								$content.removeClass("loading");
+								that.initEditor(item, r.permissions, users, permissionData);
+							}).fail(h.close);
+						};
 						
 						var $permissionName = mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
-							onChange: function(name) {
-								that.updateUI(h, name, r.filesystem[name], users);
-							}
+							onChange: onChange,
+							valueMapper: function(name) {
+								return mollify.ui.texts.get('permission_'+name);
+							},
+							values: names,
+							value: init
 						});
-						$permissionName.add(names);
+						onChange(init);
 					}).fail(h.close);
 				}
 			});
-		};
-		
-		this.updateUI = function(h, name, values, userData) {
-			$content.addClass("loading");
-			
-			that.loadPermissions(item).done(function(r) {
-				$content.removeClass("loading");
-				that.initEditor(item, r.permissions, userData, permissionData);
-			}).fail(h.close);
 		};
 		
 		this.processUserData = function(l) {

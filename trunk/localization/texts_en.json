@@ -196,6 +196,8 @@
 		"pluginPermissionsEditNewTitle": "Add or Update Permission",
 		"pluginPermissionsEditNoUser": "Select user",
 		"pluginPermissionsEditNoPermission": "Select permission",
+		
+		"permission_filesystem_item_access": "Filesystem access",
 
 		"pluginDropboxAddTo": "Add to Dropbox",
 
