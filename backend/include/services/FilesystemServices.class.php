@@ -25,11 +25,11 @@
 		}
 
 		public function processPut() {
-			if ($this->path[0] === 'permissions') {
+			/*if ($this->path[0] === 'permissions') {
 				$this->env->authentication()->assertAdmin();
 				$this->response()->success($this->env->configuration()->updateItemPermissions($this->request->data));
 				return;
-			}
+			}*/
 			
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())
@@ -147,7 +147,7 @@
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
-				case 'permissions':
+				/*case 'permissions':
 					$this->env->authentication()->assertAdmin();
 					
 					$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
@@ -155,7 +155,7 @@
 					if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
 					
 					$this->response()->success($result);
-					break;
+					break;*/
 				default:
 					throw $this->invalidRequestException();
 			}
@@ -242,7 +242,7 @@
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
-				case 'permissions':
+				/*case 'permissions':
 					$this->env->authentication()->assertAdmin();
 					
 					$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
@@ -250,7 +250,7 @@
 					if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
 					
 					$this->response()->success($result);
-					break;
+					break;*/
 				default:
 					throw $this->invalidRequestException();
 			}

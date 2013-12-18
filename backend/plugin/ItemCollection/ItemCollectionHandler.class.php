@@ -30,7 +30,7 @@
 				throw new ServiceException("INVALID_REQUEST");
 			}
 			foreach($ic["items"] as $item)
-				$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
+				$this->env->permissions()->temporaryFilesystemPermission("filesystem_item_access", $item, FilesystemController::PERMISSION_LEVEL_READ);
 
 			$ap = $this->env->plugins()->getPlugin("Archiver");
 			if (!$ap) throw new ServiceException("INVALID_REQUEST", "No archiver plugin");

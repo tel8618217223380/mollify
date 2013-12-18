@@ -135,7 +135,7 @@
 		}
 		
 		public function getAllUsers($groups = FALSE) {
-			return $this->db->query("SELECT id, name, lang, email, permission_mode, expiration, is_group FROM ".$this->db->table("user")." where ".($groups ? "1=1" : "is_group = 0")." ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, lang, email, user_type, expiration, is_group FROM ".$this->db->table("user")." where ".($groups ? "1=1" : "is_group = 0")." ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id, $expiration = FALSE) {
@@ -380,12 +380,6 @@
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s' AND user_id='%s'", $this->db->string($folderId), $this->db->string($userId)));
 			return TRUE;
 		}
-		
-		/*public function getDefaultPermission($userId) {
-			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($userId)))->value());
-			$this->env->authentication()->assertPermissionValue($mode);
-			return $mode;
-		}*/
 		
 		function getItemDescription($item) {
 			$result = $this->db->query(sprintf("SELECT description FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $this->itemId($item)));
