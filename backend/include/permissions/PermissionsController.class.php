@@ -15,9 +15,8 @@
 		private $dao;
 		private $genericPermissions = array();
 		private $filesystemPermissions = array();
-		private $filesystemPermissionPrefetchedParents = array();
 		
-		//private $filesystemPermissionParentCaches = array();
+		private $filesystemPermissionPrefetchedParents = array();
 		private $permissionCaches = array();
 
 		public function __construct($env) {
@@ -27,6 +26,10 @@
 		
 		public function registerFilesystemPermission($name, $values = NULL) {
 			$this->filesystemPermissions[$name] = $values;
+		}
+		
+		public function getTypes() {
+			return array("generic" => $this->genericPermissions, "filesystem" => $this->filesystemPermissions);
 		}
 		
 		private function getFromCache($name, $subject) {
@@ -126,7 +129,7 @@
 		
 		public function getAllPermissions($name = NULL, $subject = NULL, $userId = NULL) {
 			if ($name != NULL) {
-				if (!array_key_exists($name, $this->permissions) and !array_key_exists($name, $this->filesystemPermissions))
+				if (!array_key_exists($name, $this->genericPermissions) and !array_key_exists($name, $this->filesystemPermissions))
 					throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			}
 			

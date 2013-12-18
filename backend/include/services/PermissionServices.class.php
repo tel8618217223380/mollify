@@ -23,7 +23,15 @@
 		}
 
 		public function processGet() {
-			if ($this->path[0] === 'list') {
+			if ($this->path[0] === 'types') {
+				$result = array("types" => $this->env->permissions()->getTypes());
+				
+				$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
+				if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
+				
+				$this->response()->success($result);
+				return;
+			} else if ($this->path[0] === 'list') {
 				$data = $this->request->data;
 				$name = $this->env->request()->hasParam("name") ? $this->env->request()->param("name") : NULL;
 				$subject = $this->env->request()->hasParam("subject") ? $this->env->request()->param("subject") : NULL;
