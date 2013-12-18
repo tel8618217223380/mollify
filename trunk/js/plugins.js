@@ -1042,12 +1042,28 @@
 
 					h.center();
 					
-					that.loadPermissions(item, function(permissions, userData) {
-						$content.removeClass("loading");
-						that.initEditor(item, permissions, userData, permissionData);
+					mollify.service.get("permissions/types?u=1").done(function(r) {
+						var users = that.processUserData(r.users);
+						var names = mollify.helpers.getKeys(r.filesystem);	//param
+						
+						var $permissionName = mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
+							onChange: function(name) {
+								that.updateUI(h, name, r.filesystem[name], users);
+							}
+						});
+						$permissionName.add(names);
 					}).fail(h.close);
 				}
 			});
+		};
+		
+		this.updateUI = function(h, name, values, userData) {
+			$content.addClass("loading");
+			
+			that.loadPermissions(item).done(function(r) {
+				$content.removeClass("loading");
+				that.initEditor(item, r.permissions, userData, permissionData);
+			}).fail(h.close);
 		};
 		
 		this.processUserData = function(l) {
@@ -1069,10 +1085,8 @@
 			return userData;
 		};
 		
-		this.loadPermissions = function(item, cb) {
-			return mollify.service.get("permissions/list?subject="+item.id+"&u=1").done(function(r) {
-				cb(r.permissions, that.processUserData(r.users));
-			});
+		this.loadPermissions = function(item) {
+			return mollify.service.get("permissions/list?subject="+item.id);
 		};
 		
 		this.initEditor = function(item, permissions, userData, permissionData) {

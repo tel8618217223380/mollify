@@ -1089,6 +1089,16 @@ var mollifyDefaults = {
 			return byKey;
 		},
 		
+		getKeys : function(m) {
+			var list = [];
+			if (m)
+				for(var k in m) {
+					if (!m.hasOwnProperty(k)) continue;
+					list.push(k);
+				}
+			return list;
+		},
+		
 		extractValue : function(list, key) {
 			var l = [];
 			for (var i=0,j=list.length; i<j; i++) { var r = list[i]; l.push(r[key]); }
