@@ -369,64 +369,6 @@
 			return $this->env->configuration()->removeItemDescription($item);
 		}
 		
-		/*public function permission($item) {
-			if (!$item) return Authentication::PERMISSION_VALUE_NO_RIGHTS;
-			if ($this->env->authentication()->isAdmin()) return Authentication::PERMISSION_VALUE_READWRITE;
-			
-			$permission = $this->getItemUserPermission($item);
-			if (!$permission) return $this->env->authentication()->getDefaultPermission();
-			return $permission;
-		}
-		
-		public function fetchPermissions($folder) {
-			if ($this->env->authentication()->isAdmin()) return;
-			$permissions = $this->env->configuration()->getAllItemPermissions($folder, $this->env->session()->userId());
-
-			$this->permissionCacheFolders[] = $folder->id();
-			foreach($permissions as $id => $p)
-				$this->permissionCache[$id] = $p;
-		}
-		
-		public function temporaryItemPermission($item, $permission) {
-			$this->permissionCache[$item->id()] = $permission;
-		}
-		
-		private function getItemUserPermission($item) {
-			if (array_key_exists($item->id(), $this->permissionCache)) {
-				$permission = $this->permissionCache[$item->id()];
-				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
-			} else {
-				$permission = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item);
-				//Logging::logDebug("ITEM PERMISSION: ".$this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item));
-				if (!$permission) return $this->env->authentication()->getDefaultPermission();
-				
-				$this->permissionCache[$item->id()] = $permission;
-				Logging::logDebug("Permission cache put [".$item->id()."]=".$permission);
-			}
-			return $permission;
-		}
-
-		private function getItemUserPermissionFromCache($item) {
-			if (array_key_exists($item->id(), $this->permissionCache)) {
-				$permission = $this->permissionCache[$item->id()];
-				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
-			} else {
-				$parentId = $item->parent()->id();
-				if ($item->isFile() and array_key_exists($parentId, $this->permissionCache)) {
-					$permission = $this->permissionCache[$parentId];
-					Logging::logDebug("Permission cache get [".$item->id()."->".$parentId."]=".$permission);
-				} else {
-					return $this->env->authentication()->getDefaultPermission();
-				}
-			}
-			return $permission;
-		}
-		
-		public function allPermissions($item) {
-			Logging::logDebug("ITEM PERMISSION: ".$this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item));
-			return $this->env->configuration()->getItemPermissions($item);
-		}*/
-		
 		private function allowedFileUploadTypes() {
 			$types = array();
 			foreach ($this->allowedUploadTypes as $type) {
@@ -705,7 +647,6 @@
 			$target->write($src, $append);
 			fclose($src);
 			if ($fromFile) unlink($origin);
-			header("Connection: close");
 			
 			// is finished?
 			//if ($size != NULL && $target->size() == $size) {

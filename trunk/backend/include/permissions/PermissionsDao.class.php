@@ -109,15 +109,19 @@
 			return $k;
 		}
 	
-		public function getAllSubjectPermissions($subject) {
-			$rows = $this->db->query(sprintf("SELECT user.id as user_id, user.is_group as is_group, permission.value as value FROM ".$this->db->table("permission")." as permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = permission.user_id WHERE permission.subject = '%s'", $subject))->rows();
+		public function getAllPermissions($name = NULL, $subject = NULL, $userId) {
+			$nameCriteria = ($name != NULL ? " AND name=".$this->db->string($name, TRUE) : "");
+			$subjectCriteria = ($subject != NULL ? " AND subject=".$this->db->string($subject, TRUE) : "");
+			$userCriteria = ($userId != NULL ? " AND user.id=".$this->db->string($userId) : "");
+			
+			$rows = $this->db->query("SELECT user.id as user_id, user.is_group as is_group, permission.value as value, permission.name as name, permission.subject as subject FROM ".$this->db->table("permission")." as permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = permission.user_id WHERE 1=1".$nameCriteria.$subjectCriteria.$userCriteria)->rows();
 			
 			$list = array();
 			foreach ($rows as $row) {
 				if (!isset($row["user_id"]))
-					$list[] = array("subject" => $subject, "user_id" => '0', "is_group" => 0, "value" => $row["value"]);
+					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => '0', "is_group" => 0, "value" => $row["value"]);
 				else
-					$list[] = array("subject" => $subject, "user_id" => $row["user_id"], "is_group" => $row["is_group"], "value" => $row["value"]);
+					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => $row["user_id"], "is_group" => $row["is_group"], "value" => $row["value"]);
 			}
 			return $list;
 		}

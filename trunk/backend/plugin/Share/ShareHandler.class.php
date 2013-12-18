@@ -289,7 +289,7 @@
 		private function processDownload($file) {
 			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 			
-			$this->env->filesystem()->temporaryItemPermission($file, Authentication::PERMISSION_VALUE_READONLY);
+			$this->env->permissions()->temporaryFilesystemPermission("filesystem_item_access", $file, FilesystemController::PERMISSION_LEVEL_READ);
 			$this->env->filesystem()->download($file, $mobile);
 		}
 		
@@ -307,7 +307,7 @@
 		}
 
 		public function processUpload($shareId, $folder) {
-			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READWRITE);
+		$this->env->permissions()->temporaryFilesystemPermission("filesystem_item_access", $folder, FilesystemController::PERMISSION_LEVEL_READWRITE);
 			$this->env->filesystem()->uploadTo($folder);
 		}
 								

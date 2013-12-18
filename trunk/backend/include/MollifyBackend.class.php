@@ -33,6 +33,7 @@
 			$this->environment->addService("configuration", "ConfigurationServices");
 			$this->environment->addService("filesystem", "FilesystemServices");
 			$this->environment->addService("events", "EventServices");
+			$this->environment->addService("permissions", "PermissionServices");
 			if (Logging::isDebug()) {
 				$this->environment->addService("debug", "DebugServices");
 				$this->environment->response()->addListener($this);

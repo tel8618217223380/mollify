@@ -997,10 +997,10 @@
 		
 		this.initialize = function() {
 			that.permissionOptions = [
+				{ title: mollify.ui.texts.get('pluginPermissionsValueRWD'), value: "rwd"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueWD'), value: "wd"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueNO'), value: "no"}
+				{ title: mollify.ui.texts.get('pluginPermissionsValueR'), value: "r"},
+				{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
 			];
 			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
 		};
@@ -1031,7 +1031,7 @@
 						return;
 					
 					$content.addClass("loading");
-					mollify.service.put("filesystem/permissions", permissionData).done(d.close).fail(d.close);
+					//mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-content");
@@ -1070,7 +1070,7 @@
 		};
 		
 		this.loadPermissions = function(item, cb) {
-			return mollify.service.get("filesystem/"+item.id+"/permissions?u=1").done(function(r) {
+			return mollify.service.get("permissions/list?subject="+item.id+"&u=1").done(function(r) {
 				cb(r.permissions, that.processUserData(r.users));
 			});
 		};
