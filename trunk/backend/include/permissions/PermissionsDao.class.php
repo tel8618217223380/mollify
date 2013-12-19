@@ -141,17 +141,18 @@
 		}
 
 		private function addPermissionValues($list) {
-			$query = "INSERT INTO ".$this->db->table("item_permission")." (item_id, user_id, permission) VALUES ";
+			$query = "INSERT INTO ".$this->db->table("permission")." (name, subject, user_id, value) VALUES ";
 			$first = TRUE;
 			
 			foreach($list as $item) {
-				$permission = $this->db->string(strtolower($item["permission"]));
-				$id = $this->db->string($item["item_id"]);
-				$user = '0';
-				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
+				$name = $this->db->string(strtolower($item["name"]), TRUE);
+				$value = $this->db->string(strtolower($item["value"]), TRUE);
+				$subject = isset($item["subject"]) ? $this->db->string($item["subject"], TRUE) : "NULL";
+				$user = "'0'";
+				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"], TRUE);
 				
 				if (!$first) $query .= ',';
-				$query .= sprintf(" ('%s', '%s', '%s')", $id, $user, $permission);
+				$query .= sprintf(" (%s, %s, %s, %s)", $name, $subject, $user, $value);
 				$first = FALSE;
 			}
 			
@@ -167,7 +168,7 @@
 				$user = '0';
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 			
-				$this->db->update(sprintf("UPDATE ".$this->db->table("permission")." SET value='%s' WHERE name=%s, subject=%s and user_id=%s", $value, $name, $subject, $user));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("permission")." SET value=%s WHERE name=%s AND subject=%s AND user_id=%s", $value, $name, $subject, $user));
 			}
 							
 			return TRUE;

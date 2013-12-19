@@ -49,7 +49,7 @@
 			throw $this->invalidRequestException();
 		}
 		
-		public function processPost() {
+		public function processPut() {
 			if ($this->path[0] === 'list') {
 				$this->response()->success($this->env->permissions()->updatePermissions($this->request->data));
 				return;

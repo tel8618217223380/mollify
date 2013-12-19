@@ -135,6 +135,11 @@
 			
 			return $this->dao->getAllPermissions($name, $subject, $userId);
 		}
+		
+		public function updatePermissions($permissionData) {
+			//TODO validate			
+			return $this->dao->updatePermissions($permissionData);
+		}
 
 		public function removeFilesystemPermissions($item, $name = NULL) {
 			$this->dao->removeFilesystemPermissions($name, $item);

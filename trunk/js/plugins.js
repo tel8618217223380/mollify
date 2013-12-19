@@ -1031,7 +1031,7 @@
 						return;
 					
 					$content.addClass("loading");
-					//mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);
+					mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-content");
@@ -1047,7 +1047,6 @@
 						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
 						var init = names[0];
 						var onChange = function(sel) {
-							//that.updateUI(h, $content, sel, r.types.filesystem[sel], users);
 							permissionData = {
 								"new": [],
 								"modified": [],
@@ -1057,7 +1056,7 @@
 							
 							that.loadPermissions(item).done(function(r) {
 								$content.removeClass("loading");
-								that.initEditor(item, r.permissions, users, permissionData);
+								that.initEditor(item, sel, r.permissions, users, permissionData);
 							}).fail(h.close);
 						};
 						
@@ -1098,10 +1097,10 @@
 			return mollify.service.get("permissions/list?subject="+item.id);
 		};
 		
-		this.initEditor = function(item, permissions, userData, permissionData) {
+		this.initEditor = function(item, permissionName, permissions, userData, permissionData) {
 			var $list;
 			
-			var isGroup = function(id) { return (userData.usersById[id].is_group != "0"); };
+			var isGroup = function(id) { return (id != 0 && userData.usersById[id].is_group != "0"); };
 			var onAddOrUpdate = function(user, permissionVal) {
 				var userVal = $list.findByKey(user.id);
 				if (userVal) {
@@ -1122,7 +1121,7 @@
 					}
 
 					// not modified or deleted => create new
-					var p = {"user_id": user.id, "item_id": item.id, permission: permissionVal, isnew: true };
+					var p = {"user_id": user.id, "subject": item.id, "name" : permissionName, value: permissionVal, isnew: true };
 					permissionData["new"].push(p);
 					$list.add(p);
 				}					
@@ -1139,8 +1138,8 @@
 				onRow: function($r, i) { if (isGroup(i.user_id)) $r.addClass("group"); },
 				columns: [
 					{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
-					{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), type: "select", options: that.permissionOptions, valueMapper: function(item, k) { return that.permissionOptionsByKey[k]; }, onChange: function(item, p) {
-						item.permission = p.value;
+					{ id: "value", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), type: "select", options: that.permissionOptions, valueMapper: function(item, k) { return that.permissionOptionsByKey[k]; }, onChange: function(item, p) {
+						item.value = p.value;
 						onEdit(item);
 					}, cellClass: "permission" },
 					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
@@ -1155,10 +1154,11 @@
 			
 			$list.add(permissions);
 			var $newUser = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-user", {
-				none: {title: mollify.ui.texts.get('pluginPermissionsEditNoUser')},
+				none: mollify.ui.texts.get('pluginPermissionsEditNoUser'),
 				title : "name",
 				onCreate : function($o, i) { if (isGroup(i.id)) $o.addClass("group"); }
 			});
+			$newUser.add({ name: mollify.ui.texts.get('pluginPermissionsEditDefaultPermission'), user_id: 0, is_group: 0 });
 			$newUser.add(userData.users);
 			$newUser.add(userData.groups);
 			
