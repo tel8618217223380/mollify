@@ -1005,7 +1005,7 @@
 			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
 		};
 		
-		that.onOpenPermissions = function(item) {
+		this.editItemPermissions = function(item) {
 			var permissionData = {
 				"new": [],
 				"modified": [],
@@ -1238,8 +1238,77 @@
 				}
 			});
 			//updateShares();
-		}
+		};
+		
+		this.editUserGenericPermissions = function(user) {
+			var permissionData = {
+				"new": [],
+				"modified": [],
+				"removed": []
+			};
+			var $content = false;
+			
+			mollify.ui.dialogs.custom({
+				resizable: true,
+				initSize: [600, 400],
+				title: mollify.ui.texts.get('pluginPermissionsEditGenericDialogTitle'),
+				content: mollify.dom.template("mollify-tmpl-permission-generic-editor", {user: user}),
+				buttons: [
+					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
+					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+				],
+				"on-button": function(btn, d) {
+					if (btn.id == 'no') {
+						d.close();
+						return;
+					}
+					/*if (permissionData["new"].length === 0 && permissionData.modified.length === 0 && permissionData.removed.length === 0)
+						return;
 					
+					$content.addClass("loading");
+					mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);*/
+				},
+				"on-show": function(h, $d) {
+					$content = $d.find("#mollify-pluginpermissions-editor-generic-content");
+					/*$("#mollify-pluginpermissions-editor-change-item").click(function(e) {
+						e.preventDefault();
+						return false;
+					});*/
+
+					h.center();
+					
+					/*mollify.service.get("permissions/types?u=1").done(function(r) {
+						var users = that.processUserData(r.users);
+						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
+						var init = names[0];
+						var onChange = function(sel) {
+							permissionData = {
+								"new": [],
+								"modified": [],
+								"removed": []
+							};
+							$content.addClass("loading");
+							
+							that.loadPermissions(item).done(function(r) {
+								$content.removeClass("loading");
+								that.initEditor(item, sel, r.permissions, users, permissionData);
+							}).fail(h.close);
+						};
+						
+						var $permissionName = mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
+							onChange: onChange,
+							valueMapper: function(name) {
+								return mollify.ui.texts.get('permission_'+name);
+							},
+							values: names,
+							value: init
+						});
+						onChange(init);
+					}).fail(h.close);*/
+				}
+			});
+		};
+
 		return {
 			id: "plugin-permissions",
 			initialize: that.initialize,
@@ -1254,7 +1323,7 @@
 						}
 					},
 					actions: [
-						{ id: 'pluginPermissions', 'title-key': 'pluginPermissionsAction', callback: function() { that.onOpenPermissions(item); } }
+						{ id: 'pluginPermissions', 'title-key': 'pluginPermissionsAction', callback: function() { that.editItemPermissions(item); } }
 					]
 				};
 			},
@@ -1268,9 +1337,7 @@
 					}];
 				}
 			},
-			editUserGenericPermissions: function(user) {
-				alert(user.id);
-			}
+			editUserGenericPermissions: that.editUserGenericPermissions
 		};
 	}
 
