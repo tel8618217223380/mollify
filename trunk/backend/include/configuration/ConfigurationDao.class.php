@@ -191,7 +191,7 @@
 		}
 	
 		public function updateUser($id, $name, $lang, $email, $type, $expiration, $description = NULL) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name=%s, lang=%s, email=%s, user_type=%s, expiration=%s, description=%s WHERE id=%s", $this->db->string($name, TRUE), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($type, TRUE), $this->db->string($expiration), $this->db->string($description, TRUE), $this->db->string($id, TRUE)));
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name=%s, lang=%s, email=%s, user_type=%s, expiration=%s, description=%s WHERE id=%s", $this->db->string($name, TRUE), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($type, TRUE), $this->db->string($expiration), $this->db->string($description != NULL ? $description : "", TRUE), $this->db->string($id, TRUE)));
 			return TRUE;
 		}
 		
