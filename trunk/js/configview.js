@@ -258,15 +258,6 @@
 			that._cv = cv;
 			that.title = mollify.ui.texts.get("configAdminUsersNavTitle");
 	
-			that._permissionOptions = ["a", "rw", "wd", "ro", "no"];
-			that._permissionTexts = {
-				"a" : mollify.ui.texts.get('configAdminUsersPermissionModeAdmin'),
-				"rw" : mollify.ui.texts.get('pluginPermissionsValueRW'),
-				"wd" : mollify.ui.texts.get('pluginPermissionsValueWD'),
-				"ro" : mollify.ui.texts.get('pluginPermissionsValueRO'),
-				"no" : mollify.ui.texts.get('pluginPermissionsValueNO')
-			};
-	
 			that._authenticationOptions = opt.authentication_methods;
 			that._authFormatter = function(am) { return am; /* TODO */ }
 			that._defaultAuthMethod = opt.authentication_methods[0];
@@ -327,9 +318,9 @@
 						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle'), sortable: true },
-						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), sortable: true, valueMapper: function(item, pk) {
-							var pkl = pk.toLowerCase();
-							return that._permissionTexts[pkl] ? that._permissionTexts[pkl] : pk;
+						{ id: "user_type", title: mollify.ui.texts.get('configAdminUsersTypeTitle'), sortable: true, valueMapper: function(item, type) {
+							if (type == null) return mollify.ui.texts.get("configAdminUsersTypeNormal");
+							return mollify.ui.texts.get("configAdminUsersType_"+type.toLowerCase());
 						} },
 						{ id: "email", title: mollify.ui.texts.get('configAdminUsersEmailTitle'), sortable: true },
 						{ id: "edit", title: mollify.ui.texts.get('configAdminActionEditTitle'), type: "action", content: '<i class="icon-edit"></i>' },
@@ -594,7 +585,7 @@
 			var $name = false;
 			var $email = false;
 			var $password = false;
-			var $permission = false;
+			var $type = false;
 			var $authentication = false;
 			var $language = false;
 			var $expiration = false;
@@ -616,14 +607,14 @@
 					}
 					var username = $name.val();
 					var email = $email.val();
-					var permissionMode = $permission.selected();
+					var type = $type.selected();
 					var expiration = mollify.helpers.formatInternalTime($expiration.get());
 					var auth = $authentication.selected();
 					if (!username || username.length === 0) return;
 					var lang = null;
 					if (showLanguages) lang = $language.selected();
 										
-					var user = { name: username, email: email, permission_mode : permissionMode, expiration: expiration, auth: auth, lang: lang };
+					var user = { name: username, email: email, user_type : type, expiration: expiration, auth: auth, lang: lang };
 					
 					if (u) {	
 						mollify.service.put("configuration/users/"+u.id, user).done(d.close).done(cb);
@@ -641,10 +632,11 @@
 					$email = $d.find("#emailField");
 					$password = $d.find("#passwordField");
 					$("#generatePasswordBtn").click(function(){ $password.val(that._generatePassword()); return false; });
-					$permission = mollify.ui.controls.select("permissionModeField", {
-						values: that._permissionOptions,
-						valueMapper : function(p) {
-							return that._permissionTexts[p];
+					$type = mollify.ui.controls.select("typeField", {
+						values: ['a'],
+						none: mollify.ui.texts.get('configAdminUsersTypeNormal'),
+						valueMapper : function(t) {
+							return mollify.ui.texts.get('configAdminUsersType_' + t);
 						}
 					});
 					$authentication = mollify.ui.controls.select("authenticationField", {
@@ -666,7 +658,7 @@
 					if (u) {
 						$name.val(u.name);
 						$email.val(u.email || "");
-						$permission.select(u.permission_mode.toLowerCase());
+						$type.select(u.user_type ? u.user_type.toLowerCase() : null);
 						$authentication.select(u.auth ? u.auth.toLowerCase() : null);
 						$expiration.set(mollify.helpers.parseInternalTime(u.expiration));
 						if (showLanguages && u.lang) $language.select(u.lang);
