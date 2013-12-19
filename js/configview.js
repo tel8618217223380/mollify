@@ -32,7 +32,10 @@
 				if (!views) return;
 				
 				$.each(views, function(i, v) {
-					that._views.push(v);
+					if (v.admin)
+						that._adminViews.push(v);
+					else
+						that._views.push(v);
 				});
 			});
 		}

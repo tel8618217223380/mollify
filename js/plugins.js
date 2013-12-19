@@ -1210,6 +1210,35 @@
 				el.close();
 			});
 		};
+		
+		this.onActivateConfigView = function($c, cv) {
+			var listView = false;
+
+			/*var updateShares = function() {
+				cv.showLoading(true);
+				
+				that.loadShares().done(function(l) {
+					shares = l.shares[mollify.session.user_id];
+					items = l.items;
+					invalid = l.invalid;
+					listView.table.set(items);
+					
+					cv.showLoading(false);
+				});
+			};*/
+
+			listView = new mollify.view.ConfigListView($c, {
+				table: {
+					key: "id",
+					columns: [
+						{ id: "name", title: mollify.ui.texts.get('fileListColumnTitleName') }
+					],
+					onRowAction: function(id, item) {
+					}
+				}
+			});
+			//updateShares();
+		}
 					
 		return {
 			id: "plugin-permissions",
@@ -1228,6 +1257,16 @@
 						{ id: 'pluginPermissions', 'title-key': 'pluginPermissionsAction', callback: function() { that.onOpenPermissions(item); } }
 					]
 				};
+			},
+			configViewHandler : {
+				views : function() {
+					return [{
+						viewId: "permissions",
+						admin: true,
+						title: mollify.ui.texts.get("pluginPermissionsConfigViewNavTitle"),
+						onActivate: function() {}
+					}];
+				}
 			},
 			editUserGenericPermissions: function(user) {
 				alert(user.id);
