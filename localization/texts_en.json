@@ -198,6 +198,8 @@
 		"pluginPermissionsEditNoPermission": "Select permission",
 		
 		"permission_filesystem_item_access": "Filesystem access",
+		
+		"pluginPermissionsEditGenericDialogTitle": "Edit permissions",
 
 		"pluginDropboxAddTo": "Add to Dropbox",
 
