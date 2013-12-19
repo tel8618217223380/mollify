@@ -194,6 +194,7 @@
 		"pluginPermissionsEditColPermission": "Permission",
 		"pluginPermissionsEditRemove": "Remove",
 		"pluginPermissionsEditNewTitle": "Add or Update Permission",
+		"pluginPermissionsEditDefaultPermission": "Any (default permission)",
 		"pluginPermissionsEditNoUser": "Select user",
 		"pluginPermissionsEditNoPermission": "Select permission",
 		
