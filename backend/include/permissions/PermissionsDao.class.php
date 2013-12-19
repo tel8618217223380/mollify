@@ -108,13 +108,23 @@
 			}
 			return $k;
 		}
-	
-		public function getAllPermissions($name = NULL, $subject = NULL, $userId) {
-			$nameCriteria = ($name != NULL ? " AND name=".$this->db->string($name, TRUE) : "");
-			$subjectCriteria = ($subject != NULL ? " AND subject=".$this->db->string($subject, TRUE) : "");
-			$userCriteria = ($userId != NULL ? " AND user.id=".$this->db->string($userId) : "");
-			
-			$rows = $this->db->query("SELECT user.id as user_id, user.is_group as is_group, permission.value as value, permission.name as name, permission.subject as subject FROM ".$this->db->table("permission")." as permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = permission.user_id WHERE 1=1".$nameCriteria.$subjectCriteria.$userCriteria)->rows();
+
+		public function getGenericPermissions($name = NULL, $userId) {
+			$criteria = ($name != NULL ? "name=".$this->db->string($name, TRUE) : "1=1");
+			$criteria .= " AND subject is null";
+			$criteria .= ($userId != NULL ? " AND user.id=".$this->db->string($userId) : "");
+			return $this->doGetPermissions($criteria);
+		}
+		
+		public function getPermissions($name = NULL, $subject = NULL, $userId) {
+			$criteria = ($name != NULL ? "name=".$this->db->string($name, TRUE) : "1=1");
+			$criteria .= ($subject != NULL ? " AND subject=".$this->db->string($subject, TRUE) : "");
+			$criteria .= ($userId != NULL ? " AND user.id=".$this->db->string($userId) : "");
+			return $this->doGetPermissions($criteria);
+		}
+		
+		private function doGetPermissions($criteria) {
+			$rows = $this->db->query("SELECT user.id as user_id, user.is_group as is_group, permission.value as value, permission.name as name, permission.subject as subject FROM ".$this->db->table("permission")." as permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = permission.user_id WHERE ".$criteria)->rows();
 			
 			$list = array();
 			foreach ($rows as $row) {

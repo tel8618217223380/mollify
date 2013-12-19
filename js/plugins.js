@@ -1228,6 +1228,9 @@
 						{ id: 'pluginPermissions', 'title-key': 'pluginPermissionsAction', callback: function() { that.onOpenPermissions(item); } }
 					]
 				};
+			},
+			editUserGenericPermissions: function(user) {
+				alert(user.id);
 			}
 		};
 	}

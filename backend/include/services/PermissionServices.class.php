@@ -37,12 +37,27 @@
 				$subject = $this->env->request()->hasParam("subject") ? $this->env->request()->param("subject") : NULL;
 				$userId = $this->env->request()->hasParam("user_id") ? $this->env->request()->param("user_id") : NULL;
 				
-				$permissions = $this->env->permissions()->getAllPermissions($name, $subject, $userId);
+				$permissions = $this->env->permissions()->getPermissions($name, $subject, $userId);
 				$result = array("permissions" => $permissions);
 				
 				$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
 				if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
 				
+				$this->response()->success($result);
+				return;
+			} else if ($this->path[0] === 'user' and count($this->path) >= 2) {
+				$userId = $this->path[1];
+				$subject = $this->env->request()->hasParam("subject") ? $this->env->request()->param("subject") : NULL;
+				
+				if (count($this->path) == 3 and $this->path[2] == "generic")
+					$permissions = $this->env->permissions()->getGenericPermissions(NULL, $userId);
+				else
+					$permissions = $this->env->permissions()->getPermissions(NULL, $subject, $userId);
+				$result = array("permissions" => $permissions);
+				
+				$types = ($this->env->request()->hasParam("t") and strcmp($this->env->request()->param("t"), "1") == 0);
+				if ($types) $result["types"] = $this->env->permissions()->getTypes();
+
 				$this->response()->success($result);
 				return;
 			}
