@@ -32,7 +32,7 @@
 				if (!views) return;
 				
 				$.each(views, function(i, v) {
-					if (v.admin)
+					if (v.admin && mollify.session.admin)
 						that._adminViews.push(v);
 					else
 						that._views.push(v);
@@ -67,10 +67,10 @@
 						that._adminViewsLoaded = true;
 						
 						// default admin views
-						that._adminViews.push(new mollify.view.config.admin.FoldersView());
-						that._adminViews.push(new mollify.view.config.admin.UsersView());
-						that._adminViews.push(new mollify.view.config.admin.GroupsView());
-						
+						that._adminViews.unshift(new mollify.view.config.admin.FoldersView());
+						that._adminViews.unshift(new mollify.view.config.admin.GroupsView());
+						that._adminViews.unshift(new mollify.view.config.admin.UsersView());
+												
 						var plugins = [];
 						for (var k in mollify.session.plugins) {
 							if (!mollify.session.plugins[k] || !mollify.session.plugins[k].admin) continue;
