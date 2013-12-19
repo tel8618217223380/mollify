@@ -181,12 +181,12 @@
 				$user = $this->request->data;
 				if (!isset($user['name']) or !isset($user['password'])) throw $this->invalidRequestException();
 				
-				if (isset($user['type']) and $user['type'] != NULL) {
-					$user['type'] = strtolower($user['type']);
+				if (isset($user['user_type']) and $user['user_type'] != NULL) {
+					$user['user_type'] = strtolower($user['user_type']);
 					// TODO user types
-					if ($user['type'] != 'a') throw $this->invalidRequestException();
+					if ($user['user_type'] != 'a') throw $this->invalidRequestException();
 				} else {
-					$user['type'] = NULL;
+					$user['user_type'] = NULL;
 				}
 				//$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
@@ -201,7 +201,7 @@
 					$expiration = $user['expiration'];
 				}
 				
-				$id = $this->env->configuration()->addUser($user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['type'], $expiration);
+				$id = $this->env->configuration()->addUser($user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['user_type'], $expiration);
 				$this->env->configuration()->storeUserAuth($id, $user['name'], $auth, base64_decode($user['password']));
 				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], isset($user['email']) ? $user['email'] : NULL));
 				$this->response()->success(TRUE);
@@ -252,12 +252,12 @@
 				$user = $this->request->data;
 				if (!isset($user['name'])) throw $this->invalidRequestException();
 				
-				if (isset($user['type']) and $user['type'] != NULL) {
-					$user['type'] = strtolower($user['type']);
+				if (isset($user['user_type']) and $user['user_type'] != NULL) {
+					$user['user_type'] = strtolower($user['user_type']);
 					// TODO user types
-					if ($user['type'] != 'a') throw $this->invalidRequestException();
+					if ($user['user_type'] != 'a') throw $this->invalidRequestException();
 				} else {
-					$user['type'] = NULL;
+					$user['user_type'] = NULL;
 				}
 								
 				$expiration = NULL;
@@ -265,7 +265,7 @@
 				if (isset($user['expiration']) and $user['expiration'] != NULL)
 					$expiration = $user['expiration'];
 
-				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['type'], $expiration);
+				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['lang']) ? $user['lang'] : NULL, isset($user['email']) ? $user['email'] : NULL, $user['user_type'], $expiration);
 				$auth = NULL;
 				if (isset($user['auth'])) {
 					$auth = strtoupper($user['auth']);
