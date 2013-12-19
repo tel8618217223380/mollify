@@ -415,10 +415,13 @@
 			mollify.ui.process($e, ["localize"]);
 			var $groups = $e.find(".mollify-config-admin-userdetails-groups");
 			var $folders = $e.find(".mollify-config-admin-userdetails-folders");
+			var $permissions = $e.find(".mollify-config-admin-userdetails-permissions");
 			var foldersView = false;
 			var groupsView = false;
+			var permissionsView = false;
 			var folders = false;
 			var groups = false;
+			var permissions = false;
 			
 			var updateGroups = function() {
 				$groups.addClass("loading");
@@ -434,6 +437,14 @@
 					$folders.removeClass("loading");
 					folders = l;
 					foldersView.table.set(folders);
+				});
+			};
+			var updatePermissions = function() {
+				$permissions.addClass("loading");
+				mollify.service.get("permissions/user/"+u.id+"/generic/").done(function(l) {
+					$permissions.removeClass("loading");
+					permissions = l;
+					permissionsView.table.set(permissions);
 				});
 			};
 			var onAddUserFolders = function() {
@@ -466,7 +477,7 @@
 						mollify.service.post("configuration/users/"+u.id+"/folders/", folders).done(updateFolders);
 					}
 				});
-			}
+			};
 			var onAddUserGroups = function() {
 				var currentIds = mollify.helpers.extractValue(groups, "id");
 				var selectable = mollify.helpers.filter(allGroups, function(f) { return currentIds.indexOf(f.id) < 0; });
@@ -488,7 +499,7 @@
 						mollify.service.post("configuration/users/"+u.id+"/groups/", mollify.helpers.extractValue(sel, "id")).done(updateGroups);
 					}
 				});
-			}
+			};
 
 			foldersView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-folders"), {
 				title: mollify.ui.texts.get('configAdminUsersFoldersTitle'),
@@ -549,8 +560,26 @@
 				}
 			});
 			
+			permissionsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-permissions"), {
+				title: mollify.ui.texts.get('configAdminUsersPermissionsTitle'),
+				actions: [
+					{ id: "action-edit", content:'<i class="icon-plus"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editUserGenericPermissions(u) } }
+				],
+				table: {
+					id: "config-admin-userpermissions",
+					key: "id",
+					narrow: true,
+					columns: [
+						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersPermissionNameTitle') },
+						{ id: "value", title: mollify.ui.texts.get('configAdminUsersPermissionValueTitle') }
+					]
+				}
+			});
+			
 			updateGroups();
 			updateFolders();
+			updatePermissions();
 		}
 		
 		this._generatePassword = function() {

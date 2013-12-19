@@ -71,6 +71,7 @@ var mollifyDefaults = {
 		mollify.App.mobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 		
 		mollify.plugins.register(new mollify.plugin.Core());
+		mollify.plugins.register(new mollify.plugin.PermissionsPlugin());
 		if (p) {
 			for (var i=0, j=p.length; i < j; i++)
 				mollify.plugins.register(p[i]);

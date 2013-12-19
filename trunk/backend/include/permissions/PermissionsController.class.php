@@ -127,13 +127,22 @@
 			$this->permissionCaches[$name][$item->id()] = $permission;
 		}
 		
-		public function getAllPermissions($name = NULL, $subject = NULL, $userId = NULL) {
+		public function getPermissions($name = NULL, $subject = NULL, $userId = NULL) {
 			if ($name != NULL) {
 				if (!array_key_exists($name, $this->genericPermissions) and !array_key_exists($name, $this->filesystemPermissions))
 					throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			}
 			
-			return $this->dao->getAllPermissions($name, $subject, $userId);
+			return $this->dao->getPermissions($name, $subject, $userId);
+		}
+		
+		public function getGenericPermissions($name = NULL, $userId = NULL) {
+			if ($name != NULL) {
+				if (!array_key_exists($name, $this->genericPermissions) and !array_key_exists($name, $this->filesystemPermissions))
+					throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
+			}
+			
+			return $this->dao->getGenericPermissions($name, $userId);
 		}
 		
 		public function updatePermissions($permissionData) {
