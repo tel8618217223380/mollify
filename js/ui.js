@@ -1030,9 +1030,20 @@
 					if (col.valueMapper) sv = col.valueMapper(item, v);
 					$s.val(sv);
 				} else if (col.type == "select") {
+					var selOptions = [];
+					if (typeof(col.options) == "function") selOptions = col.options(item);
+					else if (window.isArray(col.options)) selOptions = col.options;
+					
+					var noneOption = undefined;
+					if (col.none) {
+						if (typeof(col.none) == "function") noneOption = col.none(item);
+						else noneOption = col.none;
+					}
+					
 					var $sl = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
-						values: col.options,
+						values: selOptions,
 						title : "title",
+						none: noneOption,
 						onChange: function(v) {
 							$cell[0].ctrlVal = v;
 							if (o.selectOnEdit) setRowSelected(item, true);
@@ -1236,7 +1247,10 @@
 				selected : getSelected
 			};
 			if (o.none) api.add(o.none);
-			if (o.values) api.add(o.values);
+			if (o.values) {
+				api.add(o.values);
+				if (o.value) this.select(o.value);
+			}
 			return api;
 		},
 		

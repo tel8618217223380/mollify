@@ -1077,7 +1077,7 @@ var mollifyDefaults = {
 			return mollify.helpers.formatDateTime(time, 'yyyyMMddHHmmss');
 		},
 		
-		mapByKey : function(list, key) {
+		mapByKey : function(list, key, value) {
 			var byKey = {};
 			if (!list) return byKey;
 			for (var i=0,j=list.length; i<j; i++) {
@@ -1085,7 +1085,11 @@ var mollifyDefaults = {
 				if (!window.def(r)) continue;
 				var v = r[key];
 				if (!window.def(v)) continue;
-				byKey[v] = r;
+				
+				if (window.def(value) && r[value])
+					byKey[v] = r[value];
+				else
+					byKey[v] = r;
 			}
 			return byKey;
 		},
