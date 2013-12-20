@@ -996,13 +996,13 @@
 		var that = this;
 		
 		this.initialize = function() {
-			that.permissionOptions = [
+			/*that.permissionOptions = [
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRWD'), value: "rwd"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueR'), value: "r"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
 			];
-			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
+			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");*/
 		};
 		
 		this.editItemPermissions = function(item) {
@@ -1054,9 +1054,9 @@
 							};
 							$content.addClass("loading");
 							
-							that.loadPermissions(item).done(function(r) {
+							that.loadPermissions(item).done(function(p) {
 								$content.removeClass("loading");
-								that.initEditor(item, sel, r.permissions, users, permissionData);
+								that.initEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
 							}).fail(h.close);
 						};
 						
@@ -1097,7 +1097,7 @@
 			return mollify.service.get("permissions/list?subject="+item.id);
 		};
 		
-		this.initEditor = function(item, permissionName, permissions, userData, permissionData) {
+		this.initEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
 			var $list;
 			
 			var isGroup = function(id) { return (id != 0 && userData.usersById[id].is_group != "0"); };
@@ -1105,7 +1105,7 @@
 				var userVal = $list.findByKey(user.id);
 				if (userVal) {
 					if (!userVal.isnew) permissionData.modified.push(userVal);
-					userVal.permission = permissionVal;
+					userVal.value = permissionVal;
 					$list.update(userVal);
 				} else {
 					// if previously deleted, move it to modified
@@ -1121,7 +1121,7 @@
 					}
 
 					// not modified or deleted => create new
-					var p = {"user_id": user.id, "subject": item.id, "name" : permissionName, value: permissionVal, isnew: true };
+					var p = {"user_id": user.id, "subject": item.id, "name" : permissionName, "value": permissionVal, isnew: true };
 					permissionData["new"].push(p);
 					$list.add(p);
 				}					
@@ -1138,10 +1138,18 @@
 				onRow: function($r, i) { if (isGroup(i.user_id)) $r.addClass("group"); },
 				columns: [
 					{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
-					{ id: "value", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), type: "select", options: that.permissionOptions, valueMapper: function(item, k) { return that.permissionOptionsByKey[k]; }, onChange: function(item, p) {
-						item.value = p.value;
-						onEdit(item);
-					}, cellClass: "permission" },
+					{
+						id: "value",
+						title: mollify.ui.texts.get('pluginPermissionsEditColPermission'),
+						type: "select",
+						options: permissionValues,
+						valueMapper: function(item, k) {
+							return mollify.ui.texts.get('permission_'+item.name+'_'+k);
+						},
+						onChange: function(item, p) {
+							item.value = p;
+							onEdit(item);
+						}, cellClass: "permission" },
 					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
 				],
 				onRowAction: function(id, permission) { onRemove(permission); $list.remove(permission); }
@@ -1163,9 +1171,9 @@
 			$newUser.add(userData.groups);
 			
 			var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
-				values: that.permissionOptions,
+				values: permissionValues,
 				none: mollify.ui.texts.get('pluginPermissionsEditNoPermission'),
-				title : "title"
+				valueMapper : function(p) { return mollify.ui.texts.get('permission_'+permissionName+'_'+p); }
 			});
 			
 			var resetNew = function() {
@@ -1180,7 +1188,7 @@
 				var selectedPermission = $newPermission.selected();
 				if (!selectedPermission) return;
 				
-				onAddOrUpdate(selectedUser, selectedPermission.value);
+				onAddOrUpdate(selectedUser, selectedPermission);
 				resetNew();
 			});
 		};
@@ -1288,9 +1296,8 @@
 						
 						$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-generic-permission-list", {
 							key: "name",
-							//onRow: function($r, i) { if (isGroup(i.user_id)) $r.addClass("group"); },
 							columns: [
-								{ id: "name", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), valueMapper: function(item, name) {
+								{ id: "name", title: mollify.ui.texts.get('pluginPermissionsEditColPermissionName'), valueMapper: function(item, name) {
 									return mollify.ui.texts.get('permission_generic_'+name);
 								} },
 								{
@@ -1302,8 +1309,22 @@
 										if (itemValues) return itemValues;
 										return ["yes", "no"];
 									},
-									none: function(item) { return "none"; },
-									//valueMapper: function(item, k) { return that.permissionOptionsByKey[k]; },
+									none: function(item) {
+										var itemValues = allTypes[item.name];
+										var fallback = "";
+										if (itemValues) {
+											fallback = mollify.ui.texts.get('permission_'+item.name+'_'+itemValues[0]);
+										} else {
+											fallback = mollify.ui.texts.get('permission_no');
+										}
+										var text = mollify.ui.texts.get('permission_generic_undefined', fallback);
+										return text;
+									},
+									valueMapper: function(item, k) {
+										var itemValues = allTypes[item.name];
+										if (itemValues) return mollify.ui.texts.get('permission_'+item.name+'_'+k);
+										return mollify.ui.texts.get('permission_'+k);
+									},
 									//onChange: function(item, p) {
 									//	item.value = p.value;
 									//	onEdit(item);
