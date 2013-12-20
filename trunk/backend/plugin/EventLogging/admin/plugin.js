@@ -107,7 +107,10 @@
 						
 						$optionType = mollify.ui.controls.select("eventlogging-event-type", {
 							values: that._types.concat(["custom"]),
-							valueMapper: function(v) { if (v == "custom") return mollify.ui.texts.get('pluginEventLoggingAdminEventTypeCustom'); return that._typeTexts[v] + " ("+v+")"; },
+							formatter: function(v) {
+								if (v == "custom") return mollify.ui.texts.get('pluginEventLoggingAdminEventTypeCustom');
+								return that._typeTexts[v] + " ("+v+")";
+							},
 							none: mollify.ui.texts.get('pluginEventLoggingAdminAny'),
 							onChange: function(t) {
 								if (t == "custom")
@@ -118,7 +121,7 @@
 						});
 						$optionUser = mollify.ui.controls.select("eventlogging-user", {
 							values: users,
-							valueMapper: function(u) { return u.name; },
+							formatter: function(u) { return u.name; },
 							none: mollify.ui.texts.get('pluginEventLoggingAdminAny')
 						});
 						$optionStart = mollify.ui.controls.datepicker("eventlogging-start", {
