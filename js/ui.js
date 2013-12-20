@@ -1040,10 +1040,18 @@
 						else noneOption = col.none;
 					}
 					
+					var selValueMapper = undefined;
+					if (col.valueMapper) {
+						selValueMapper = function(sv) {
+							return col.valueMapper(item, sv);
+						};
+					}
+					
 					var $sl = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
 						values: selOptions,
-						title : "title",
+						title : selValueMapper ? false : "title",
 						none: noneOption,
+						valueMapper: selValueMapper,
 						onChange: function(v) {
 							$cell[0].ctrlVal = v;
 							if (o.selectOnEdit) setRowSelected(item, true);
@@ -1236,7 +1244,7 @@
 					if (o.none && !find) find = o.none;
 					
 					for (var i=0,j=$c.length; i<j; i++) {
-						if ($c[i].data == find) {
+						if ($c[i].data == find || $c[i].text == find) {
 							$($c[i]).prop("selected", true);
 							return;
 						}

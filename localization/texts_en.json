@@ -185,11 +185,9 @@
 		"pluginPermissionsContextTitle": "Permissions",
 		"pluginPermissionsContextEditAction": "Edit...",
 		"pluginPermissionsEditDialogTitle": "Permissions",
-		"pluginPermissionsValueRWD": "Read&Write&Delete",
-		"pluginPermissionsValueRW": "Read&Write, No delete",
-		"pluginPermissionsValueR": "Read Only",
-		"pluginPermissionsValueN": "No Rights",
+				
 		"pluginPermissionsEditColUser": "User",
+		"pluginPermissionsEditColPermissionName": "Name",
 		"pluginPermissionsEditColPermission": "Permission",
 		"pluginPermissionsEditRemove": "Remove",
 		"pluginPermissionsEditNewTitle": "Add or Update Permission",
@@ -198,7 +196,15 @@
 		"pluginPermissionsEditNoPermission": "Select permission",
 		
 		"permission_filesystem_item_access": "Filesystem access",
-
+		"permission_generic_filesystem_item_access": "Default filesystem access",
+		
+		"permission_filesystem_item_access_rwd": "Read&Write&Delete",
+		"permission_filesystem_item_access_rw": "Read&Write, No delete",
+		"permission_filesystem_item_access_r": "Read Only",
+		"permission_filesystem_item_access_n": "No Rights",
+		
+		"permission_generic_undefined": "Undefined ({0})",
+		
 		"pluginDropboxAddTo": "Add to Dropbox",
 
 		"pluginArchiverCompress": "Compress...",
