@@ -1062,7 +1062,7 @@
 						
 						var $permissionName = mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
 							onChange: onChange,
-							valueMapper: function(name) {
+							formatter: function(name) {
 								return mollify.ui.texts.get('permission_'+name);
 							},
 							values: names,
@@ -1143,7 +1143,7 @@
 						title: mollify.ui.texts.get('pluginPermissionsEditColPermission'),
 						type: "select",
 						options: permissionValues,
-						valueMapper: function(item, k) {
+						formatter: function(item, k) {
 							return mollify.ui.texts.get('permission_'+item.name+'_'+k);
 						},
 						onChange: function(item, p) {
@@ -1173,7 +1173,7 @@
 			var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
 				values: permissionValues,
 				none: mollify.ui.texts.get('pluginPermissionsEditNoPermission'),
-				valueMapper : function(p) { return mollify.ui.texts.get('permission_'+permissionName+'_'+p); }
+				formatter : function(p) { return mollify.ui.texts.get('permission_'+permissionName+'_'+p); }
 			});
 			
 			var resetNew = function() {
@@ -1320,7 +1320,7 @@
 										var text = mollify.ui.texts.get('permission_generic_undefined', fallback);
 										return text;
 									},
-									valueMapper: function(item, k) {
+									formatter: function(item, k) {
 										var itemValues = allTypes[item.name];
 										if (itemValues) return mollify.ui.texts.get('permission_'+item.name+'_'+k);
 										return mollify.ui.texts.get('permission_'+k);

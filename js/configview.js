@@ -667,20 +667,20 @@
 					$type = mollify.ui.controls.select("typeField", {
 						values: ['a'],
 						none: mollify.ui.texts.get('configAdminUsersTypeNormal'),
-						valueMapper : function(t) {
+						formatter : function(t) {
 							return mollify.ui.texts.get('configAdminUsersType_' + t);
 						}
 					});
 					$authentication = mollify.ui.controls.select("authenticationField", {
 						values: that._authenticationOptions,
 						none: mollify.ui.texts.get('configAdminUsersUserDialogAuthDefault', that._defaultAuthMethod),
-						valueMapper: that._authFormatter
+						formatter: that._authFormatter
 					});
 					if (showLanguages)
 						$language = mollify.ui.controls.select("languageField", {
 							values: mollify.settings.language.options,
 							none: mollify.ui.texts.get('configAdminUsersUserDialogLangDefault', (mollify.settings.language["default"] || 'en')),
-							valueMapper: that._langFormatter
+							formatter: that._langFormatter
 						});
 					$expiration = mollify.ui.controls.datepicker("expirationField", {
 						format: mollify.ui.texts.get('shortDateTimeFormat'),

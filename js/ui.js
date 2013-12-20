@@ -1040,18 +1040,18 @@
 						else noneOption = col.none;
 					}
 					
-					var selValueMapper = undefined;
-					if (col.valueMapper) {
-						selValueMapper = function(sv) {
-							return col.valueMapper(item, sv);
+					var formatter = undefined;
+					if (col.formatter) {
+						formatter = function(sv) {
+							return col.formatter(item, sv);
 						};
 					}
 					
 					var $sl = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
 						values: selOptions,
-						title : selValueMapper ? false : "title",
+						title : col.title,
 						none: noneOption,
-						valueMapper: selValueMapper,
+						formatter: formatter,
 						onChange: function(v) {
 							$cell[0].ctrlVal = v;
 							if (o.selectOnEdit) setRowSelected(item, true);
@@ -1194,13 +1194,13 @@
 				} else {
 					if (o.renderer) o.renderer(item, $row);
 					else {
-						var c;
-						if (typeof(item) === "string" || !o.title) {
-							c = item;
-							if (o.valueMapper) c = o.valueMapper(item);
-						} else {
+						var c = "";
+						if (o.formatter)
+							c = o.formatter(item);
+						else if (o.title)
 							c = item[o.title];
-						}
+						else if (typeof(item) === "string")
+							c = item;
 						$row.html(c);
 					}
 				}
