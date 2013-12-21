@@ -1225,7 +1225,6 @@
 				
 				var allTypeKeys = mollify.helpers.getKeys(r.types.generic).concat(mollify.helpers.getKeys(r.types.filesystem));
 				var allTypes = $.extend({}, r.types.generic, r.types.filesystem);
-				var values = mollify.helpers.mapByKey(r.permissions, "name", "value");
 
 				var getQueryParams = function(i) {
 					/*var start = $optionStart.get();
@@ -1269,7 +1268,7 @@
 						defaultSort: { id: "time", asc: false },
 						columns: [
 							{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), sortable: true, formatter: function(item, name) {
-								if (r.types.filesystem[name])
+								if (item.subject == null && r.types.filesystem[name])
 									return mollify.ui.texts.get('permission_default_'+name);
 								return mollify.ui.texts.get('permission_'+name);
 							} },
@@ -1278,7 +1277,11 @@
 								if (itemValues) return mollify.ui.texts.get('permission_'+item.name+'_'+k);
 								return mollify.ui.texts.get('permission_'+k);
 							} },
-							{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsPermissionUser'), sortable: true },
+							{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsPermissionUser'), sortable: true, formatter: function(item, u) {
+								if (!u)
+									return "";
+								return users.usersById[u].name;
+							} },
 							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(v) { return "..."; } }
 						]
 					}
