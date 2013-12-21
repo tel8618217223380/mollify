@@ -424,6 +424,7 @@
 			var permissionsView = false;
 			var folders = false;
 			var groups = false;
+			var permissionTypes = false;
 			var permissions = false;
 			
 			var updateGroups = function() {
@@ -444,9 +445,11 @@
 			};
 			var updatePermissions = function() {
 				$permissions.addClass("loading");
-				mollify.service.get("permissions/user/"+u.id+"/generic/").done(function(l) {
+				mollify.service.get("permissions/user/"+u.id+"/generic/" + (!permissionTypes ? "?t=1" : "")).done(function(l) {
 					$permissions.removeClass("loading");
-					permissions = l;
+					permissions = l.permissions;
+					if (!permissionTypes)
+						permissionTypes = l.types;
 					permissionsView.table.set(permissions);
 				});
 			};
@@ -520,7 +523,7 @@
 						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle'), valueMapper: function(f, v) {
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle'), formatter: function(f, v) {
 							var n = f.name;
 							if (n && n.length > 0) return n;
 							return mollify.ui.texts.get('configAdminUsersFolderDefaultName', f.default_name);
@@ -566,16 +569,21 @@
 			permissionsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-permissions"), {
 				title: mollify.ui.texts.get('configAdminUsersPermissionsTitle'),
 				actions: [
-					{ id: "action-edit", content:'<i class="icon-plus"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editUserGenericPermissions(u) } }
+					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editUserGenericPermissions(u) } }
 				],
 				table: {
 					id: "config-admin-userpermissions",
 					key: "id",
 					narrow: true,
 					columns: [
-						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersPermissionNameTitle') },
-						{ id: "value", title: mollify.ui.texts.get('configAdminUsersPermissionValueTitle') }
+						{ id: "name", title: mollify.ui.texts.get('pluginPermissionsEditColPermissionName'), formatter: function(p, v) {
+							if (permissionTypes.filesystem[v])
+								return mollify.ui.texts.get('permission_default_'+v);
+							return mollify.ui.texts.get('permission_'+v);
+						} },
+						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), formatter: function(p, v) {
+							return mollify.ui.texts.get('permission_'+p.name+"_"+v);
+						} }
 					]
 				}
 			});

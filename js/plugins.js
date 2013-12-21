@@ -1298,7 +1298,9 @@
 							key: "name",
 							columns: [
 								{ id: "name", title: mollify.ui.texts.get('pluginPermissionsEditColPermissionName'), valueMapper: function(item, name) {
-									return mollify.ui.texts.get('permission_generic_'+name);
+									if (r.types.filesystem[name])
+										return mollify.ui.texts.get('permission_default_'+name);
+									return mollify.ui.texts.get('permission_'+name);
 								} },
 								{
 									id: "value",
@@ -1317,7 +1319,7 @@
 										} else {
 											fallback = mollify.ui.texts.get('permission_no');
 										}
-										var text = mollify.ui.texts.get('permission_generic_undefined', fallback);
+										var text = mollify.ui.texts.get('permission_value_undefined', fallback);
 										return text;
 									},
 									formatter: function(item, k) {
@@ -1329,38 +1331,10 @@
 									//	item.value = p.value;
 									//	onEdit(item);
 									//},
-									//cellClass: "permission"
 								}
 							]
 						});
-						$list.add(permissions);
-						
-						/*var users = that.processUserData(r.users);
-						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
-						var init = names[0];
-						var onChange = function(sel) {
-							permissionData = {
-								"new": [],
-								"modified": [],
-								"removed": []
-							};
-							$content.addClass("loading");
-							
-							that.loadPermissions(item).done(function(r) {
-								$content.removeClass("loading");
-								that.initEditor(item, sel, r.permissions, users, permissionData);
-							}).fail(h.close);
-						};
-						
-						var $permissionName = mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
-							onChange: onChange,
-							valueMapper: function(name) {
-								return mollify.ui.texts.get('permission_'+name);
-							},
-							values: names,
-							value: init
-						});
-						onChange(init);*/
+						$list.add(permissions);						
 					}).fail(h.close);
 				}
 			});

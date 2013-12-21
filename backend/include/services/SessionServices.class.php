@@ -58,7 +58,7 @@
 			$this->env->authentication()->login($this->request->data("username"), $pw);
 			$this->env->events()->onEvent(SessionEvent::login($this->env->request()->ip()));
 			
-			$sessionInfo = $this->getSessionInfo($this->request->data("protocol_version"));
+			$sessionInfo = $this->getSessionInfo();
 			if ($this->request->hasData("remember") and strcmp($this->request->data("remember"), "1") === 0)
 				$this->env->authentication()->storeCookie();
 
@@ -67,13 +67,19 @@
 		
 		private function getSessionInfo() {
 			$auth = $this->env->authentication();
-			$info = array("authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures(), "plugins" => $this->env->plugins()->getSessionInfo(), "plugin_base_url" => $this->env->getPluginBaseUrl());
+			$info = array(
+				"authenticated" => $auth->isAuthenticated(),
+				"features" => $this->env->features()->getFeatures(),
+				"plugins" => $this->env->plugins()->getSessionInfo(),
+				"plugin_base_url" => $this->env->getPluginBaseUrl()
+			);
 			
 			if ($auth->isAuthenticated()) {
 				$info = array_merge(
 					$info,
 					$this->env->session()->getSessionInfo(),
-					$this->env->filesystem()->getSessionInfo()
+					$this->env->filesystem()->getSessionInfo(),
+					$this->env->permissions()->getSessionInfo()
 				);
 			}
 			include_once("include/Version.info.php");
