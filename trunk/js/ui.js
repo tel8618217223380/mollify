@@ -1016,7 +1016,7 @@
 					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell);
 				} else if (col.type == 'action') {
 					var html = col.content;
-					if (col.valueMapper) html = col.valueMapper(item, v);
+					if (col.formatter) html = col.formatter(item, v);
 					if (html) $("<a class='mollify-tableaction' title='"+col.title+"'></a>").html(html).appendTo($cell);
 				} else if (col.type == "input") {
 					var $s = $('<input type="text"></input>').appendTo($cell).change(function() {
@@ -1067,7 +1067,10 @@
 				} else {
 					if (col.renderer) col.renderer(item, v, $cell);
 					else if (col.valueMapper) $cell.html(col.valueMapper(item, v));
-					else if (col.formatter) $cell.html(col.formatter.format(v));
+					else if (col.formatter) {
+						if (typeof(col.formatter) === 'function') $cell.html(col.formatter(item, v));
+						else $cell.html(col.formatter.format(v));
+					}
 					else $cell.html(v);
 				}
 			};

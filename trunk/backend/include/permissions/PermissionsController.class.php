@@ -47,6 +47,14 @@
 			Logging::logDebug("Permission cache put [".$name."/".$subject."]=".$value);
 		}
 		
+		public function getAllFilesystemPermissions($item) {
+			$result = array();
+			foreach($this->filesystemPermissions as $name -> $values) {
+				$result[$name] = $this->getFilesystemPermission($name, $item);
+			}
+			return $result;
+		}
+		
 		public function getFilesystemPermission($name, $item) {
 			if (!array_key_exists($name, $this->filesystemPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			if ($this->env->authentication()->isAdmin()) {
@@ -127,11 +135,12 @@
 			$this->permissionCaches[$name][$item->id()] = $permission;
 		}
 		
-		public function getPermissions($name = NULL, $subject = NULL, $userId = NULL) {
+		public function getPermissions($name = NULL, $subject = NULL, $userId = NULL) {			
 			if ($name != NULL) {
 				if (!array_key_exists($name, $this->genericPermissions) and !array_key_exists($name, $this->filesystemPermissions))
 					throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			}
+			if ($userId == $this->env->session()->userId() and $this->env->authentication()->isAdmin()) return array();
 			
 			return $this->dao->getPermissions($name, $subject, $userId);
 		}
@@ -141,6 +150,7 @@
 				if (!array_key_exists($name, $this->genericPermissions) and !array_key_exists($name, $this->filesystemPermissions))
 					throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			}
+			if ($userId == $this->env->session()->userId() and $this->env->authentication()->isAdmin()) return array();
 			
 			return $this->dao->getGenericPermissions($name, $userId);
 		}
@@ -152,6 +162,12 @@
 
 		public function removeFilesystemPermissions($item, $name = NULL) {
 			$this->dao->removeFilesystemPermissions($name, $item);
+		}
+		
+		public function getSessionInfo() {
+			$result = array();
+			$result["permissions"] = $this->getGenericPermissions(NULL, $this->env->session()->userId());
+			return $result;
 		}
 	}
 ?>
