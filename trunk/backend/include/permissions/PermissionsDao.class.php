@@ -212,5 +212,26 @@
 			$this->db->update($query);							
 			return TRUE;
 		}
+		
+		public function processQuery($data) {
+			$criteria = ((isset($data["name"]) and $data["name"] != NULL) ? "name=".$this->db->string($data["name"], TRUE) : "1=1");
+			//$criteria .= ($data["subject"] != NULL ? " AND subject=".$this->db->string($subject, TRUE) : "");
+			$criteria .= ((isset($data["user_id"]) and $data["user_id"] != NULL) ? " AND user.id=".$this->db->string($data["user_id"]) : "");
+			
+			$count = $this->db->query("select count(name) FROM ".$this->db->table("permission")." WHERE ".$criteria)->value(0);
+			$rows = isset($data["count"]) ? $data["count"] : 50;
+			$start = isset($data["start"]) ? $data["start"] : 0;
+			
+			$rows = $this->db->query("SELECT user.id as user_id, user.is_group as is_group, permission.value as value, permission.name as name, permission.subject as subject FROM ".$this->db->table("permission")." as permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = permission.user_id WHERE ".$criteria." limit ".$rows." offset ".$start)->rows();
+			
+			$list = array();
+			foreach ($rows as $row) {
+				if (!isset($row["user_id"]))
+					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => '0', "is_group" => 0, "value" => $row["value"]);
+				else
+					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => $row["user_id"], "is_group" => $row["is_group"], "value" => $row["value"]);
+			}			
+			return array("start" => $start, "count" => count($rows), "total" => $count, "data" => $list);
+		}
 	}
 ?>

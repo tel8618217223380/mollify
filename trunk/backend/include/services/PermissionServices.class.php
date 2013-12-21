@@ -71,6 +71,14 @@
 			}
 			throw $this->invalidRequestException();
 		}
+
+		public function processPost() {
+			if ($this->path[0] === 'query') {
+				$this->response()->success($this->env->permissions()->processQuery($this->request->data));
+				return;
+			}
+			throw $this->invalidRequestException();
+		}
 		
 		public function __toString() {
 			return "PermissionServices";

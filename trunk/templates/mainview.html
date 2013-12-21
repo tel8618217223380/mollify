@@ -412,6 +412,54 @@
 	</div>
 </script>
 
+<script id="mollify-tmpl-permission-admin-options" type="text/x-jquery-tmpl">
+	<div class="mollify-permission-admin-options accordion">
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle localized" data-toggle="collapse" href="#eventLoggingOptions" text-key="pluginEventLoggingAdminOptionsTitle"></a>
+			</div>
+			<div id="eventLoggingOptions" class="accordion-body collapse">
+				<div class="accordion-inner">
+		      
+					<form class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label localized" for="eventlogging-event-type" text-key="pluginEventLoggingAdminOptionEventType"></label>
+							<div class="controls">
+								<select id="eventlogging-event-type"></select>
+								<input id="eventlogging-event-type-custom" type="text" style="display:none"></input>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label localized" for="eventlogging-user" text-key="pluginEventLoggingAdminOptionUser"></label>
+							<div class="controls">
+								<select id="eventlogging-user"></select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label localized" for="eventlogging-start" text-key="pluginEventLoggingAdminOptionTime"></label>
+							<div class="controls">
+								<div id="eventlogging-start" class="input-append">
+								    <input id="eventlogging-start-input" type="text"></input>
+								    <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+								</div>
+								-
+								<div id="eventlogging-end" class="input-append">
+								    <input id="eventlogging-end-input" type="text"></input>
+								    <span class="add-on">
+								      <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+								    </span>
+								</div>
+							</div>
+						</div>
+					</form>
+		
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
 <script id="mollify-tmpl-mainview-dropbox" type="text/x-jquery-tmpl">
 	<div id="mollify-dropbox" class="closed">
 		<div id="mollify-dropbox-handle">
