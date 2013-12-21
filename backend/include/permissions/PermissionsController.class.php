@@ -164,6 +164,10 @@
 			$this->dao->removeFilesystemPermissions($name, $item);
 		}
 		
+		public function processQuery($data) {
+			return $this->dao->processQuery($data);
+		}
+		
 		public function getSessionInfo() {
 			$result = array();
 			$result["permissions"] = $this->getGenericPermissions(NULL, $this->env->session()->userId());
