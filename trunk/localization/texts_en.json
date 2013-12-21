@@ -187,8 +187,10 @@
 		"pluginPermissionsEditDialogTitle": "Permissions",
 				
 		"pluginPermissionsEditColUser": "User",
-		"pluginPermissionsEditColPermissionName": "Name",
-		"pluginPermissionsEditColPermission": "Permission",
+		"pluginPermissionsPermissionName": "Name",
+		"pluginPermissionsPermissionValue": "Permission",
+		"pluginPermissionsPermissionUser": "User",
+		"pluginPermissionsPermissionSubject": "Subject",
 		"pluginPermissionsEditRemove": "Remove",
 		"pluginPermissionsEditNewTitle": "Add or Update Permission",
 		"pluginPermissionsEditDefaultPermission": "Any (default permission)",
