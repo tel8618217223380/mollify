@@ -1220,84 +1220,102 @@
 		};
 		
 		this.onActivateConfigView = function($c, cv) {
-			var getQueryParams = function(i) {
-				/*var start = $optionStart.get();
-				var end = $optionEnd.get();
-				var tp = $optionType.get();
-				if (tp == "custom") tp = $("#eventlogging-event-type-custom").val();
-				if (!tp || tp.length === 0) tp = null;
-				var user = $optionUser.get();*/
+			mollify.service.get("permissions/types?u=1").done(function(r) {
+				var users = that.processUserData(r.users);
 				
-				var params = {};
-				/*if (start) params.start_time = mollify.helpers.formatInternalTime(start);
-				if (end) params.end_time = mollify.helpers.formatInternalTime(end);
-				if (user) params.user = user.name;
-				if (tp) params.type = tp;*/
-				
-				return params;
-			};
-			
-			var refresh = function() {
-				cv.showLoading(true);
-				listView.table.refresh().done(function(){ cv.showLoading(false); });
-			};
+				var allTypeKeys = mollify.helpers.getKeys(r.types.generic).concat(mollify.helpers.getKeys(r.types.filesystem));
+				var allTypes = $.extend({}, r.types.generic, r.types.filesystem);
+				var values = mollify.helpers.mapByKey(r.permissions, "name", "value");
 
-			var listView = new mollify.view.ConfigListView($c, {
-				actions: [
-					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: refresh }
-				],
-				table: {
-					id: "config-permissions-list",
-					key: "id",
-					narrow: true,
-					hilight: true,
-					remote: {
-						path : "permissions/query",
-						paging: { max: 50 },
-						queryParams: getQueryParams,
-						onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
+				var getQueryParams = function(i) {
+					/*var start = $optionStart.get();
+					var end = $optionEnd.get();
+					var tp = $optionType.get();
+					if (tp == "custom") tp = $("#eventlogging-event-type-custom").val();
+					if (!tp || tp.length === 0) tp = null;
+					var user = $optionUser.get();*/
+					
+					var params = {
+						
+					};
+					/*if (start) params.start_time = mollify.helpers.formatInternalTime(start);
+					if (end) params.end_time = mollify.helpers.formatInternalTime(end);
+					if (user) params.user = user.name;
+					if (tp) params.type = tp;*/
+					
+					return params;
+				};
+				
+				var refresh = function() {
+					cv.showLoading(true);
+					listView.table.refresh().done(function(){ cv.showLoading(false); });
+				};
+	
+				var listView = new mollify.view.ConfigListView($c, {
+					actions: [
+						{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: refresh }
+					],
+					table: {
+						id: "config-permissions-list",
+						key: "id",
+						narrow: true,
+						hilight: true,
+						remote: {
+							path : "permissions/query",
+							paging: { max: 50 },
+							queryParams: getQueryParams,
+							onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
+						},
+						defaultSort: { id: "time", asc: false },
+						columns: [
+							{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), sortable: true, formatter: function(item, name) {
+								if (r.types.filesystem[name])
+									return mollify.ui.texts.get('permission_default_'+name);
+								return mollify.ui.texts.get('permission_'+name);
+							} },
+							{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), sortable: true, formatter: function(item, k) {
+								var itemValues = allTypes[item.name];
+								if (itemValues) return mollify.ui.texts.get('permission_'+item.name+'_'+k);
+								return mollify.ui.texts.get('permission_'+k);
+							} },
+							{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsPermissionUser'), sortable: true },
+							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(v) { return "..."; } }
+						]
+					}
+				});
+				var $options = $c.find(".mollify-configlistview-options");
+				mollify.dom.template("mollify-tmpl-permission-admin-options").appendTo($options);
+				mollify.ui.process($options, ["localize"]);
+				
+				/*$optionType = mollify.ui.controls.select("eventlogging-event-type", {
+					values: that._types.concat(["custom"]),
+					formatter: function(v) {
+						if (v == "custom") return mollify.ui.texts.get('pluginEventLoggingAdminEventTypeCustom');
+						return that._typeTexts[v] + " ("+v+")";
 					},
-					defaultSort: { id: "time", asc: false },
-					columns: [
-						{ id: "name", title: mollify.ui.texts.get('configAdminTableIdTitle'), sortable: true },
-						{ id: "value", title: mollify.ui.texts.get('pluginEventLoggingEventTypeTitle'), sortable: true },
-						{ id: "user_id", title: mollify.ui.texts.get('pluginEventLoggingUserTitle'), sortable: true },
-						{ id: "subject", title: mollify.ui.texts.get('pluginEventLoggingTimeTitle'), formatter: function(v) { return "..."; } }
-					]
-				}
+					none: mollify.ui.texts.get('pluginEventLoggingAdminAny'),
+					onChange: function(t) {
+						if (t == "custom")
+							$("#eventlogging-event-type-custom").show().val("").focus();
+						else
+							$("#eventlogging-event-type-custom").hide();
+					}
+				});
+				$optionUser = mollify.ui.controls.select("eventlogging-user", {
+					values: users,
+					formatter: function(u) { return u.name; },
+					none: mollify.ui.texts.get('pluginEventLoggingAdminAny')
+				});
+				$optionStart = mollify.ui.controls.datepicker("eventlogging-start", {
+					format: mollify.ui.texts.get('shortDateTimeFormat'),
+					time: true
+				});
+				$optionEnd = mollify.ui.controls.datepicker("eventlogging-end", {
+					format: mollify.ui.texts.get('shortDateTimeFormat'),
+					time: true
+				});*/
+				refresh();
 			});
-			var $options = $c.find(".mollify-configlistview-options");
-			mollify.dom.template("mollify-tmpl-permission-admin-options").appendTo($options);
-			mollify.ui.process($options, ["localize"]);
-			
-			/*$optionType = mollify.ui.controls.select("eventlogging-event-type", {
-				values: that._types.concat(["custom"]),
-				formatter: function(v) {
-					if (v == "custom") return mollify.ui.texts.get('pluginEventLoggingAdminEventTypeCustom');
-					return that._typeTexts[v] + " ("+v+")";
-				},
-				none: mollify.ui.texts.get('pluginEventLoggingAdminAny'),
-				onChange: function(t) {
-					if (t == "custom")
-						$("#eventlogging-event-type-custom").show().val("").focus();
-					else
-						$("#eventlogging-event-type-custom").hide();
-				}
-			});
-			$optionUser = mollify.ui.controls.select("eventlogging-user", {
-				values: users,
-				formatter: function(u) { return u.name; },
-				none: mollify.ui.texts.get('pluginEventLoggingAdminAny')
-			});
-			$optionStart = mollify.ui.controls.datepicker("eventlogging-start", {
-				format: mollify.ui.texts.get('shortDateTimeFormat'),
-				time: true
-			});
-			$optionEnd = mollify.ui.controls.datepicker("eventlogging-end", {
-				format: mollify.ui.texts.get('shortDateTimeFormat'),
-				time: true
-			});*/
-			refresh();
 		};
 		
 		this.editUserGenericPermissions = function(user) {
@@ -1349,14 +1367,14 @@
 						$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-generic-permission-list", {
 							key: "name",
 							columns: [
-								{ id: "name", title: mollify.ui.texts.get('pluginPermissionsEditColPermissionName'), valueMapper: function(item, name) {
+								{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(item, name) {
 									if (r.types.filesystem[name])
 										return mollify.ui.texts.get('permission_default_'+name);
 									return mollify.ui.texts.get('permission_'+name);
 								} },
 								{
 									id: "value",
-									title: mollify.ui.texts.get('pluginPermissionsEditColPermission'),
+									title: mollify.ui.texts.get('pluginPermissionsPermissionValue'),
 									type: "select",
 									options: function(item) {
 										var itemValues = allTypes[item.name];

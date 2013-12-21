@@ -14,9 +14,10 @@ CREATE TABLE permission (
 INSERT INTO permission (name, user_id, subject, value) SELECT 'filesystem_item_access' as name, user_id, item_id as subject, permission as value FROM item_permission;
 
 INSERT INTO permission (name, user_id, subject, value) SELECT 'filesystem_item_access' as name, id as user_id, NULL as subject, permission_mode as value FROM user where permission_mode != 'A';
+UPDATE permission SET value = 'n' WHERE value = 'NO';
 UPDATE permission SET value = 'r' WHERE value = 'RO';
-UPDATE permission SET value = 'rw' WHERE value = 'RW';
-UPDATE permission SET value = 'rwd' WHERE value = 'WD';
+UPDATE permission SET value = 'rwd' WHERE value = 'RW';
+UPDATE permission SET value = 'rw' WHERE value = 'WD';
 
 ALTER TABLE user DROP COLUMN permission_mode;
 
