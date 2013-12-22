@@ -216,7 +216,7 @@
 		public function processQuery($data) {
 			$criteria = ((isset($data["name"]) and $data["name"] != NULL) ? "name=".$this->db->string($data["name"], TRUE) : "1=1");
 			//$criteria .= ($data["subject"] != NULL ? " AND subject=".$this->db->string($subject, TRUE) : "");
-			$criteria .= ((isset($data["user_id"]) and $data["user_id"] != NULL) ? " AND user.id=".$this->db->string($data["user_id"]) : "");
+			$criteria .= ((isset($data["user_id"]) and $data["user_id"] != NULL) ? " AND user_id=".$this->db->string($data["user_id"]) : "");
 			
 			$count = $this->db->query("select count(name) FROM ".$this->db->table("permission")." WHERE ".$criteria)->value(0);
 			$rows = isset($data["count"]) ? $data["count"] : 50;
