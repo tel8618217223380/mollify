@@ -1240,10 +1240,15 @@
 					
 					var name = $optionName.get();
 					var user = $optionUser.get();
+					var subject = $('input[name=permissions-subject-option]:checked').val();
 										
 					var params = {};
 					if (name) params.name = name;
 					if (user) params.user_id = user.id;
+					if (subject != 'any') {
+						params.subject_type = subject;
+						//TODO get filesystem item
+					}
 					/*if (start) params.start_time = mollify.helpers.formatInternalTime(start);
 					if (end) params.end_time = mollify.helpers.formatInternalTime(end);
 
@@ -1289,13 +1294,15 @@
 									return "";
 								return users.usersById[u].name;
 							} },
-							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(v) { return "..."; } }
+							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(item, s) { if (!s) return ""; return s; } }
 						]
 					}
 				});
 				var $options = $c.find(".mollify-configlistview-options");
-				mollify.dom.template("mollify-tmpl-permission-admin-options").appendTo($options);
+				mollify.dom.template("mollify-tmpl-permission-admin-options").appendTo($options);				
 				mollify.ui.process($options, ["localize"]);
+				
+				$("#permissions-subject-any").attr('checked', true);
 
 				$optionName = mollify.ui.controls.select("permissions-name", {
 					values: allTypeKeys,
@@ -1331,7 +1338,7 @@
 					format: mollify.ui.texts.get('shortDateTimeFormat'),
 					time: true
 				});*/
-				refresh();
+				//refresh();
 			});
 		};
 		
