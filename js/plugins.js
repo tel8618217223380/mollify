@@ -1228,7 +1228,7 @@
 				
 				var allTypeKeys = mollify.helpers.getKeys(r.types.generic).concat(mollify.helpers.getKeys(r.types.filesystem));
 				var allTypes = $.extend({}, r.types.generic, r.types.filesystem);
-				var $optionName, $optionUser;
+				var $optionName, $optionUser, $optionSubject;
 
 				var getQueryParams = function(i) {
 					/*var start = $optionStart.get();
@@ -1240,12 +1240,12 @@
 					
 					var name = $optionName.get();
 					var user = $optionUser.get();
-					var subject = $('input[name=permissions-subject-option]:checked').val();
+					var subject = $optionSubject.get();
 										
 					var params = {};
 					if (name) params.name = name;
 					if (user) params.user_id = user.id;
-					if (subject != 'any') {
+					if (subject) {
 						params.subject_type = subject;
 						//TODO get filesystem item
 					}
@@ -1313,6 +1313,12 @@
 				$optionUser = mollify.ui.controls.select("permissions-user", {
 					values: users.all,
 					formatter: function(u) { return u.name; },
+					none: mollify.ui.texts.get('pluginPermissionsAdminAny')
+				});
+				
+				$optionSubject = mollify.ui.controls.select("permissions-subject", {
+					values: ['none', 'filesystem_item', 'filesystem_child'],
+					formatter: function(s) { return mollify.ui.texts.get('pluginPermissionsAdminOptionSubject_'+s); },
 					none: mollify.ui.texts.get('pluginPermissionsAdminAny')
 				});
 				/*$optionType = mollify.ui.controls.select("eventlogging-event-type", {
