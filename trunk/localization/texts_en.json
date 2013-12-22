@@ -213,9 +213,9 @@
 		"pluginPermissionsAdminOptionName": "Permission",
 		"pluginPermissionsAdminOptionUser": "User",
 		"pluginPermissionsAdminOptionSubject": "Subject",
-		"pluginPermissionsAdminOptionSubjectNone": "None",
-		"pluginPermissionsAdminOptionSubjectFilesystemItem": "File or folder",
-		"pluginPermissionsAdminOptionSubjectFilesystemChild": "Any file or folder under",
+		"pluginPermissionsAdminOptionSubject_none": "None (generic/default)",
+		"pluginPermissionsAdminOptionSubject_filesystem_item": "File or folder",
+		"pluginPermissionsAdminOptionSubject_filesystem_child": "Any file or folder under",
 				
 		"pluginDropboxAddTo": "Add to Dropbox",
 
