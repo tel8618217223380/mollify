@@ -1078,15 +1078,18 @@
 			var userData = {
 				users : [],
 				groups : [],
+				all : [],
 				usersById : {}
 			};
 			for (var i=0,j=l.length; i<j; i++) {
 				var u = l[i];
 				if (u.is_group == "0") {
 					userData.users.push(u);
+					userData.all.push(u);
 					userData.usersById[u.id] = u;
 				} else {
 					userData.groups.push(u);
+					userData.all.push(u);
 					userData.usersById[u.id] = u;
 				}
 			}
@@ -1225,6 +1228,7 @@
 				
 				var allTypeKeys = mollify.helpers.getKeys(r.types.generic).concat(mollify.helpers.getKeys(r.types.filesystem));
 				var allTypes = $.extend({}, r.types.generic, r.types.filesystem);
+				var $optionName, $optionUser;
 
 				var getQueryParams = function(i) {
 					/*var start = $optionStart.get();
@@ -1234,12 +1238,15 @@
 					if (!tp || tp.length === 0) tp = null;
 					var user = $optionUser.get();*/
 					
-					var params = {
-						
-					};
+					var name = $optionName.get();
+					var user = $optionUser.get();
+										
+					var params = {};
+					if (name) params.name = name;
+					if (user) params.user_id = user.id;
 					/*if (start) params.start_time = mollify.helpers.formatInternalTime(start);
 					if (end) params.end_time = mollify.helpers.formatInternalTime(end);
-					if (user) params.user = user.name;
+
 					if (tp) params.type = tp;*/
 					
 					return params;
@@ -1289,7 +1296,18 @@
 				var $options = $c.find(".mollify-configlistview-options");
 				mollify.dom.template("mollify-tmpl-permission-admin-options").appendTo($options);
 				mollify.ui.process($options, ["localize"]);
+
+				$optionName = mollify.ui.controls.select("permissions-name", {
+					values: allTypeKeys,
+					formatter: function(t) { return mollify.ui.texts.get('permission_'+t); },
+					none: mollify.ui.texts.get('pluginPermissionsAdminAny')
+				});
 				
+				$optionUser = mollify.ui.controls.select("permissions-user", {
+					values: users.all,
+					formatter: function(u) { return u.name; },
+					none: mollify.ui.texts.get('pluginPermissionsAdminAny')
+				});
 				/*$optionType = mollify.ui.controls.select("eventlogging-event-type", {
 					values: that._types.concat(["custom"]),
 					formatter: function(v) {
@@ -1304,11 +1322,7 @@
 							$("#eventlogging-event-type-custom").hide();
 					}
 				});
-				$optionUser = mollify.ui.controls.select("eventlogging-user", {
-					values: users,
-					formatter: function(u) { return u.name; },
-					none: mollify.ui.texts.get('pluginEventLoggingAdminAny')
-				});
+
 				$optionStart = mollify.ui.controls.datepicker("eventlogging-start", {
 					format: mollify.ui.texts.get('shortDateTimeFormat'),
 					time: true
