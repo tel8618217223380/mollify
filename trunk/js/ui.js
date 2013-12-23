@@ -1176,6 +1176,7 @@
 							dataInfo = { start: r.start, count: r.count, total: r.total };
 							refreshPagingControls();
 						} else dataInfo = false;
+						if (o.remote.onData) o.remote.onData(r);
 						api.set(r.data);
 						df.resolve();
 					}).fail(df.reject);

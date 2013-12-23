@@ -1229,6 +1229,7 @@
 				var allTypeKeys = mollify.helpers.getKeys(r.types.generic).concat(mollify.helpers.getKeys(r.types.filesystem));
 				var allTypes = $.extend({}, r.types.generic, r.types.filesystem);
 				var $optionName, $optionUser, $optionSubject;
+				var queryItems = [];
 
 				var getQueryParams = function(i) {
 					/*var start = $optionStart.get();
@@ -1265,8 +1266,7 @@
 				
 				var refresh = function() {
 					cv.showLoading(true);
-					listView.table.refresh().done(function(d){
-						that.items = d.items;
+					listView.table.refresh().done(function(){
 						cv.showLoading(false);
 					});
 				};
@@ -1284,7 +1284,13 @@
 							path : "permissions/query",
 							paging: { max: 50 },
 							queryParams: getQueryParams,
-							onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
+							onData: function(r) { queryItems = r.items; },
+							onLoad: function(pr) {
+								$c.addClass("loading");
+								pr.done(function(r) {
+									$c.removeClass("loading");
+								});
+							}
 						},
 						defaultSort: { id: "time", asc: false },
 						columns: [
@@ -1305,7 +1311,11 @@
 							} },
 							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(item, s) {
 								if (!s) return "";
-								if (r.types.filesystem[item.name]) return "fs: "+s;
+								if (r.types.filesystem[item.name] && queryItems[s]) {
+									var item = queryItems[s];
+									//TODO all roots
+									if (item) return item.root_id + ":" + item.path;
+								}
 								return s;
 							} }
 						]
