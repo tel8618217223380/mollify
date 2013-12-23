@@ -1316,10 +1316,46 @@
 					none: mollify.ui.texts.get('pluginPermissionsAdminAny')
 				});
 				
+				var $subjectItemSelector = $("#permissions-subject-filesystem-item-selector");
+				var $subjectItemSelectorValue = $("#permissions-subject-filesystem-item-value");
+				var onSelectItem = function(i) {
+					$subjectItemSelectorValue.val(i.id);	//TODO
+				};
+				$("#permissions-subject-filesystem-item-select").click(function(e) {
+					if ($optionSubject.get() == 'filesystem_item') {
+						mollify.ui.dialogs.itemSelector({
+							title: mollify.ui.texts.get('pluginPermissionsSelectItemTitle'),
+							message: mollify.ui.texts.get('pluginPermissionsSelectItemMsg'),
+							actionTitle: mollify.ui.texts.get('ok'),
+							handler: {
+								onSelect: onSelectItem,
+								canSelect: function(f) { return true; }
+							}
+						});
+					} else {
+						mollify.ui.dialogs.folderSelector({
+							title: mollify.ui.texts.get('pluginPermissionsSelectFolderTitle'),
+							message: mollify.ui.texts.get('pluginPermissionsSelectFolderMsg'),
+							actionTitle: mollify.ui.texts.get('ok'),
+							handler: {
+								onSelect: onSelectItem,
+								canSelect: function(f) { return true; }
+							}
+						});
+					}
+					return false;
+				});
 				$optionSubject = mollify.ui.controls.select("permissions-subject", {
 					values: ['none', 'filesystem_item', 'filesystem_child'],
 					formatter: function(s) { return mollify.ui.texts.get('pluginPermissionsAdminOptionSubject_'+s); },
-					none: mollify.ui.texts.get('pluginPermissionsAdminAny')
+					none: mollify.ui.texts.get('pluginPermissionsAdminAny'),
+					onChange: function(s) {
+						if (s == 'filesystem_item' || s == 'filesystem_child') {
+							$subjectItemSelector.show();
+						} else {
+							$subjectItemSelector.hide();
+						}
+					}
 				});
 				/*$optionType = mollify.ui.controls.select("eventlogging-event-type", {
 					values: that._types.concat(["custom"]),

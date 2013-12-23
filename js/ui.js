@@ -1723,8 +1723,13 @@
 	};
 	
 	dh.folderSelector = function(spec) {
-		var selectedFolder = false;
-		var content = $("#mollify-tmpl-dialog-folderselector").tmpl({message: spec.message});
+		return dh.itemSelector($.extend({ allowFiles: false }, spec));
+	};
+	
+	dh.itemSelector = function(s) {
+		var spec = $.extend({ allowFiles: true, allowFolders: true }, s);
+		var selectedItem = false;
+		var content = $("#mollify-tmpl-dialog-itemselector").tmpl({message: spec.message});
 		var $selector = false;
 		var loaded = {};
 		
@@ -1732,12 +1737,14 @@
 			if (loaded[parent ? parent.id : "root"]) return;
 			
 			$selector.addClass("loading");
-			mollify.filesystem.folders(parent).done(function(l) {
+			mollify.filesystem.items(parent, spec.allowFiles).done(function(r) {
 				$selector.removeClass("loading");
 				loaded[parent ? parent.id : "root"] = true;
 				
-				if (!l || l.length === 0) {
-					if ($e) $e.find(".mollify-folderselector-folder-indicator").empty();
+				var all = r.files ? (r.folders.concat(r.files)) : r.folders;
+				
+				if (!all || all.length === 0) {
+					if ($e) $e.find(".mollify-itemselector-folder-indicator").empty();
 					return;
 				}
 				
@@ -1751,16 +1758,16 @@
 					//generate array for template to iterate
 					for(var i=0;i<level;i++) levels.push({});
 				}
-				var c = $("#mollify-tmpl-dialog-folderselector-folder").tmpl(l, {cls:(level === 0 ? 'root' : ''),levels:levels});
+				var c = $("#mollify-tmpl-dialog-itemselector-item").tmpl(all, {cls:(level === 0 ? 'root' : ''), levels: levels});
 				if ($e) {
 					$e.after(c);
 					$e.addClass("loaded");
-					if ($e) $e.find(".mollify-folderselector-folder-indicator").find("i").removeClass("icon-caret-right").addClass("icon-caret-down");
+					if ($e) $e.find(".mollify-itemselector-folder-indicator").find("i").removeClass("icon-caret-right").addClass("icon-caret-down");
 				} else {
 					$selector.append(c);
 				}
-				if (!parent && l.length == 1) {
-					load($(c[0]), l[0]);
+				if (!parent && all.length == 1) {
+					load($(c[0]), all[0]);
 				}
 			});
 		};
@@ -1774,26 +1781,29 @@
 			],
 			"on-button": function(btn, d) {
 				if (btn.id === 'action') {
-					if (!selectedFolder || !spec.handler || !spec.handler.canSelect(selectedFolder)) return;	
+					if (!selectedItem || !spec.handler || !spec.handler.canSelect(selectedItem)) return;	
 				}
 				d.close();
-				if (btn.id === 'action') spec.handler.onSelect(selectedFolder);
+				if (btn.id === 'action') spec.handler.onSelect(selectedItem);
 				
 			},
 			"on-show": function(h, $dlg) {
-				$selector = $dlg.find(".mollify-folderselector-tree");
-				$selector.on("click", ".mollify-folderselector-folder-indicator", function(e) {
+				$selector = $dlg.find(".mollify-itemselector-tree");
+				$selector.on("click", ".mollify-itemselector-folder-indicator", function(e) {
 					var $e = $(this).parent();
 					var p = $e.tmplItem().data;
 					load($e, p);
 					return false;
 				});
-				$selector.on("click", ".mollify-folderselector-folder", function(e) {
+				$selector.on("click", ".mollify-itemselector-item", function(e) {
 					var $e = $(this);
 					var p = $(this).tmplItem().data;
+					if (p.is_file && !spec.allowFiles) return;
+					if (!p.is_file && !spec.allowFolders) return;
+					
 					if (spec.handler.canSelect(p)) {
-						selectedFolder = p;
-						$(".mollify-folderselector-folder").removeClass("selected");
+						selectedItem = p;
+						$(".mollify-itemselector-item").removeClass("selected");
 						$e.addClass("selected");
 					}
 				});

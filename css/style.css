@@ -951,7 +951,7 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	margin-top: 8px;
 }
 
-.mollify-folderselector-tree {
+.mollify-itemselector-tree {
 	margin-top: 18px;
 	width: 512px;
 	height: 300px;
@@ -960,25 +960,25 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	background-color: #fcfcfc;
 }
 
-.mollify-folderselector-folder {
+.mollify-itemselector-item {
 	display: inline-block;
 	float: left;
 	clear: both;
 }
 
-.mollify-folderselector-folder-indentation {
+.mollify-itemselector-item-indentation {
 	float: left;
 	display: inline-block;
 }
 
-.mollify-folderselector-folder-indentation-step {
+.mollify-itemselector-item-indentation-step {
 	float: left;
 	width: 20px;
 	height: 10px;
 	display: inline-block;
 }
 
-.mollify-folderselector-folder-indicator {
+.mollify-itemselector-folder-indicator {
 	float: left;
 	display: inline-block;
 	margin-right: 2px;
@@ -987,10 +987,9 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	cursor: pointer;
 }
 
-.mollify-folderselector-folder-name {
+.mollify-itemselector-item-name {
 	display: inline-block;
 	font-size: 12px;
-	background: url(images/folder.png) no-repeat 2px 3px;
 	padding-left: 20px;
 	padding-right: 4px;
 	float: left;
@@ -998,11 +997,20 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	cursor: pointer;
 }
 
-.mollify-folderselector-folder.selected > .mollify-folderselector-folder-name {
+.mollify-itemselector-item.folder .mollify-itemselector-item-name {
+	background: url(images/folder.png) no-repeat 2px 3px;
+}
+
+.mollify-itemselector-item.file .mollify-itemselector-item-name {
+	background: url(images/mimetypes/empty.png) no-repeat 13px 3px;
+	padding-left: 32px;
+}
+
+.mollify-itemselector-item.selected > .mollify-itemselector-item-name {
 	background-color: #dedaff;
 }
 
-.mollify-folderselector-folder.root > .mollify-folderselector-folder-name {
+.mollify-itemselector-item.root > .mollify-itemselector-item-name {
 	font-weight: bold;
 }
 
