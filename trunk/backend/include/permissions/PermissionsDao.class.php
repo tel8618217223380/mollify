@@ -219,7 +219,13 @@
 			if (isset($data["subject_type"]) and $data["subject_type"] != NULL and $data["subject_type"] != 'any') {
 				if ($data["subject_type"] == "none")
 					$criteria .= " AND subject is null";
-				//TODO filesystem item types...
+					
+				if (($data["subject_type"] == "filesystem_item" or $data["subject_type"] == "filesystem_child") and isset($data["subject_value"]) and $data["subject_value"] != NULL) {
+					if ($data["subject_type"] == "filesystem_item")
+						$criteria .= " AND subject = ".$this->db->string($data["subject_value"], TRUE);
+					else
+						$criteria .= " AND subject = ".$this->db->string($data["subject_value"], TRUE);	//TODO children query
+				}
 			}
 			
 			$criteria .= ((isset($data["user_id"]) and $data["user_id"] != NULL) ? " AND user_id=".$this->db->string($data["user_id"]) : "");
