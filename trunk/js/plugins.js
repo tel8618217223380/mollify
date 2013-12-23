@@ -1265,7 +1265,10 @@
 				
 				var refresh = function() {
 					cv.showLoading(true);
-					listView.table.refresh().done(function(){ cv.showLoading(false); });
+					listView.table.refresh().done(function(d){
+						that.items = d.items;
+						cv.showLoading(false);
+					});
 				};
 	
 				var listView = new mollify.view.ConfigListView($c, {
@@ -1300,7 +1303,11 @@
 									return "";
 								return users.usersById[u].name;
 							} },
-							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(item, s) { if (!s) return ""; return s; } }
+							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(item, s) {
+								if (!s) return "";
+								if (r.types.filesystem[item.name]) return "fs: "+s;
+								return s;
+							} }
 						]
 					}
 				});

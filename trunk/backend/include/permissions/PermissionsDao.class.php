@@ -9,10 +9,12 @@
 	 */
 
 	class Mollify_PermissionsDao {
+		private $env;
 		private $db;
 
-		public function __construct($db) {
-			$this->db = $db;
+		public function __construct($env) {
+			$this->env = $env;
+			$this->db = $env->db();
 		}
 		
 		public function getFilesystemPermission($name, $item, $userId, $groupIds = NULL) {
@@ -223,8 +225,13 @@
 				if (($data["subject_type"] == "filesystem_item" or $data["subject_type"] == "filesystem_child") and isset($data["subject_value"]) and $data["subject_value"] != NULL) {
 					if ($data["subject_type"] == "filesystem_item")
 						$criteria .= " AND subject = ".$this->db->string($data["subject_value"], TRUE);
-					else
-						$criteria .= " AND subject = ".$this->db->string($data["subject_value"], TRUE);	//TODO children query
+					else {
+						$item = $this->env->filesystem()->item($data["subject_value"]);
+						$location = str_replace("'", "\'", $item->location());
+						$criteria .= sprintf(" AND subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $location);
+						
+						//TODO get items
+					}
 				}
 			}
 			
@@ -241,8 +248,8 @@
 				if (!isset($row["user_id"]))
 					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => '0', "is_group" => 0, "value" => $row["value"]);
 				else
-					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => $row["user_id"], "is_group" => $row["is_group"], "value" => $row["value"]);
-			}			
+					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => $row["user_id"], "is_group" => $row["is_group"], "value" => $row["value"]);				
+			}
 			return array("start" => $start, "count" => count($rows), "total" => $count, "data" => $list);
 		}
 	}
