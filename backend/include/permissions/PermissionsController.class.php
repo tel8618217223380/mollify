@@ -21,7 +21,7 @@
 
 		public function __construct($env) {
 			$this->env = $env;
-			$this->dao = new Mollify_PermissionsDao($this->env->db());
+			$this->dao = new Mollify_PermissionsDao($this->env);
 		}
 		
 		public function registerFilesystemPermission($name, $values = NULL) {
@@ -165,7 +165,26 @@
 		}
 		
 		public function processQuery($data) {
-			return $this->dao->processQuery($data);
+			$result = $this->dao->processQuery($data);
+			
+			$items = array();
+			foreach($result["data"] as $row) {
+				$name = $row["name"];
+				
+				if (array_key_exists($name, $this->filesystemPermissions)) {
+					$subjectId = $row["subject"];
+					
+					if ($subjectId != NULL and !array_key_exists($subjectId, $items)) {
+						$item = $this->env->filesystem()->item($subjectId);
+						if ($item->exists())
+							$items[$subjectId] = $item->data();
+						//TODO else clean
+					}
+				}
+			}
+			$result["items"] = $items;
+			
+			return $result;
 		}
 		
 		public function getSessionInfo() {
