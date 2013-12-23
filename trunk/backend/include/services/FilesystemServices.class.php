@@ -239,6 +239,17 @@
 						if (!$i->isFile()) $folders[] = $i->data();
 					$this->response()->success($folders);
 					break;
+				case 'items':
+					$items = $this->env->filesystem()->items($item);
+					$includeFiles = (!$this->request->hasParam("files") or strcmp($this->request->param("files"), "1") == 0);
+					$folders = array();
+					$files = array();
+					foreach($items as $i) {
+						if ($i->isFile()) { if ($includeFiles) $files[] = $i->data(); }
+						else $folders[] = $i->data();
+					}
+					$this->response()->success(array("folders" => $folders, "files" => $files));
+					break;
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;

@@ -57,25 +57,25 @@
 	</div>
 </script>
 
-<script id="mollify-tmpl-dialog-folderselector" type="text/x-jquery-tmpl">
-	<div class="mollify-folderselector">
-		<div class="mollify-folderselector-message">{{html $item.data.message}}</div>
-		<div class="mollify-folderselector-tree well well-large">
+<script id="mollify-tmpl-dialog-itemselector" type="text/x-jquery-tmpl">
+	<div class="mollify-itemselector">
+		<div class="mollify-itemselector-message">{{html $item.data.message}}</div>
+		<div class="mollify-itemselector-tree well well-large">
 		</div>
 	</div>
 </script>
 
-<script id="mollify-tmpl-dialog-folderselector-folder" type="text/x-jquery-tmpl">
-	<div class="mollify-folderselector-folder ${$item.cls}">
-		<div class="mollify-folderselector-folder-indentation">
+<script id="mollify-tmpl-dialog-itemselector-item" type="text/x-jquery-tmpl">
+	<div class="mollify-itemselector-item ${$item.cls} {{if $item.data.is_file}}file{{else}}folder{{/if}}">
+		<div class="mollify-itemselector-item-indentation">
 			{{each $item.levels}}
-			<div class="mollify-folderselector-folder-indentation-step"></div>
+			<div class="mollify-itemselector-item-indentation-step"></div>
 			{{/each}}
 		</div>
-		<div class="mollify-folderselector-folder-indicator"><i class="icon-caret-right"></i></div>
-		<div class="mollify-folderselector-folder-name">
-		${name}
-		</div>
+		{{if !$item.data.is_file}}
+		<div class="mollify-itemselector-folder-indicator"><i class="icon-caret-right"></i></div>
+		{{/if}}
+		<div class="mollify-itemselector-item-name">${name}</div>
 	</div>
 </script>
 

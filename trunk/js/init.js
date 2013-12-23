@@ -397,13 +397,13 @@ var mollifyDefaults = {
 		return mollify.service.post("filesystem/find/", { folder: d, data : data });
 	};
 		
-	mfs.folders = function(parent) {
+	mfs.items = function(parent, files) {
 		if (parent == null) {
 			var df = $.Deferred();
-			df.resolve(mfs.roots);
+			df.resolve({ folders: mfs.roots , files: [] });
 			return df.promise();
 		}
-		return mollify.service.get("filesystem/"+parent.id+"/folders/");
+		return mollify.service.get("filesystem/"+parent.id+"/items/?files=" + (files ? '1' : '0'));
 	};
 	
 	mfs.copy = function(i, to) {
