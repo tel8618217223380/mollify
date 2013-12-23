@@ -1247,7 +1247,13 @@
 					if (user) params.user_id = user.id;
 					if (subject) {
 						params.subject_type = subject;
-						//TODO get filesystem item
+						
+						if (subject == 'filesystem_item' || subject == 'filesystem_child') {
+							if (selectedSubjectItem)
+								params.subject_value = selectedSubjectItem.id;
+							else
+								params.subject_type = null;
+						}
 					}
 					/*if (start) params.start_time = mollify.helpers.formatInternalTime(start);
 					if (end) params.end_time = mollify.helpers.formatInternalTime(end);
@@ -1318,8 +1324,10 @@
 				
 				var $subjectItemSelector = $("#permissions-subject-filesystem-item-selector");
 				var $subjectItemSelectorValue = $("#permissions-subject-filesystem-item-value");
+				var selectedSubjectItem = false;
 				var onSelectItem = function(i) {
-					$subjectItemSelectorValue.val(i.id);	//TODO
+					selectedSubjectItem = i;
+					$subjectItemSelectorValue.val(mollify.filesystem.rootsById[i.root_id].name + ":" + i.path);
 				};
 				$("#permissions-subject-filesystem-item-select").click(function(e) {
 					if ($optionSubject.get() == 'filesystem_item') {
@@ -1351,6 +1359,8 @@
 					none: mollify.ui.texts.get('pluginPermissionsAdminAny'),
 					onChange: function(s) {
 						if (s == 'filesystem_item' || s == 'filesystem_child') {
+							selectedSubjectItem = false;
+							$subjectItemSelectorValue.val("");
 							$subjectItemSelector.show();
 						} else {
 							$subjectItemSelector.hide();
