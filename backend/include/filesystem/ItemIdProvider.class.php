@@ -83,6 +83,11 @@
 			else
 				return $db->update(sprintf("DELETE FROM ".$db->table("item_id")." WHERE path like '%s%%'", $db->string(str_replace("\\", "\\\\", $this->itemPath($item)))));
 		}
+		
+		public function deleteIds($ids) {
+			$db = $this->env->db();
+			return $db->update("DELETE FROM ".$db->table("item_id")." WHERE id in (".$db->arrayString($ids, TRUE).")");
+		}
 
 		public function move($item, $to) {
 			$db = $this->env->db();

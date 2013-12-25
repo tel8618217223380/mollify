@@ -61,6 +61,10 @@
 			return $this->getDao()->getCommentCountForItems($items);
 		}
 		
+		public function cleanupItemIds($ids) {
+			$this->getDao()->cleanupItemIds($ids);
+		}
+		
 		private function getDao() {
 			return new CommentDao($this->env);
 		}

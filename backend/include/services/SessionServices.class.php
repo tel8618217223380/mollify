@@ -43,7 +43,7 @@
 				$this->env->authentication()->logout();
 				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
 				$this->env->session()->end();
-				$this->response()->success($this->getSessionInfo(self::$PROTOCOL_VERSION));
+				$this->response()->success($this->getSessionInfo());
 				return;
 			}
 			

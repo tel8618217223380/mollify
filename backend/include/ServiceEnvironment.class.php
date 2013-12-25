@@ -153,6 +153,7 @@
 			$this->configuration->initialize($this);
 			$this->filesystem->initialize();
 			$this->authentication->initialize();
+			$this->permissions->initialize();
 			$this->plugins->initialize($this);
 
 			$this->log();

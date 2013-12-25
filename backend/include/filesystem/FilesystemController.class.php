@@ -26,6 +26,7 @@
 		private $contextPlugins = array();
 		private $actionValidators = array();
 		private $dataRequestPlugins = array();
+		private $itemCleanupHandlers = array();
 		private $searchers = array();
 		private $filesystems = array();
 		private $idProvider;
@@ -71,6 +72,10 @@
 		public function registerFilesystem($id, $factory) {
 			Logging::logDebug("Filesystem registered: ".$id);
 			$this->filesystems[$id] = $factory;
+		}
+
+		public function registerItemCleanupHandler($h) {
+			$this->itemCleanupHandlers[] = $h;
 		}
 
 		public function registerItemContextPlugin($key, $plugin) {
@@ -252,6 +257,23 @@
 				);
 			}
 
+			if ($this->env->authentication()->isAdmin()) {
+				$result["roots"] = array();
+				foreach($this->getRootFolders(TRUE) as $id => $folder) {
+					$nameParts = explode("/", str_replace("\\", "/",$folder->name()));
+					$name = array_pop($nameParts);
+					
+					$result["roots"][] = array(
+						"id" => $folder->id(),
+						"name" => $name,
+						"group" => implode("/", $nameParts),
+						"parent_id" => NULL,
+						"root_id" => $folder->id(),
+						"path" => ""
+					);
+				}
+			}
+			
 			return $result;
 		}
 
@@ -292,6 +314,16 @@
 			if (strlen($path) == 0) return $this->filesystem($folderDef)->root();
 			
 			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
+		}
+		
+		public function cleanupItemIds($ids) {
+			$this->env->db()->startTransaction();
+			$this->idProvider->deleteIds($ids);
+			$this->env->configuration->cleanupItemIds($ids);
+			
+			foreach ($this->itemCleanupHandlers as $cleanupHandler)
+				$cleanupHandler->cleanupItemIds($ids);
+			$this->env->db()->commit();
 		}
 				
 		public function assertFilesystem($folderDef) {

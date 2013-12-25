@@ -66,6 +66,10 @@
 			else
 				return $db->update(sprintf("DELETE FROM ".$db->table("comment")." WHERE item_id in (select id from ".$db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $db->string($item->location()))));
 		}
+		
+		public function cleanupItemIds($ids) {
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("comment")." WHERE item_id in (%s)", $this->db->arrayString($ids, TRUE)));
+		}
 						
 		public function __toString() {
 			return "CommentDao";

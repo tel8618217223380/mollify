@@ -1270,9 +1270,20 @@
 						cv.showLoading(false);
 					});
 				};
+				
+				var removePermissions = function(list) {
+					return mollify.service.del("permissions/list/", { list: list });
+				}
 	
 				var listView = new mollify.view.ConfigListView($c, {
 					actions: [
+						{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
+							mollify.ui.dialogs.confirmation({
+								title: mollify.ui.texts.get("configAdminPermissionsRemoveConfirmationTitle"),
+								message: mollify.ui.texts.get("configAdminPermissionsRemoveConfirmationMessage", [sel.length]),
+								callback: function() { removePermissions(sel).done(refresh); }
+							});
+						}},
 						{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: refresh }
 					],
 					table: {
@@ -1294,6 +1305,7 @@
 						},
 						defaultSort: { id: "time", asc: false },
 						columns: [
+							{ type:"selectrow" },
 							{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), sortable: true, formatter: function(item, name) {
 								if (item.subject == null && r.types.filesystem[name])
 									return mollify.ui.texts.get('permission_default_'+name);
@@ -1313,12 +1325,13 @@
 								if (!s) return "";
 								if (r.types.filesystem[item.name] && queryItems[s]) {
 									var item = queryItems[s];
-									//TODO all roots
-									if (item) return item.root_id + ":" + item.path;
+									if (item) return mollify.filesystem.rootsById[item.root_id].name + ":" + item.path;
 								}
 								return s;
-							} }
-						]
+							} },
+							{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
+						],
+						onRowAction: function(id, permission) { removePermissions([permission]).done(refresh); }
 					}
 				});
 				var $options = $c.find(".mollify-configlistview-options");

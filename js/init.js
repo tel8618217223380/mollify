@@ -112,7 +112,7 @@ var mollifyDefaults = {
 		mollify.session.id = mollify.session.session_id;
 		mollify.session.admin = (mollify.session.user_type == 'a');
 		
-		mollify.filesystem.init(mollify.session.folders);
+		mollify.filesystem.init(mollify.session.folders, (mollify.session.admin ? mollify.session.roots : false));
 		
 		var onError = function() {
 			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
@@ -361,14 +361,22 @@ var mollifyDefaults = {
 	
 	var mfs = mollify.filesystem;
 	
-	mfs.init = function(f) {
+	mfs.init = function(f, allRoots) {
 		mollify.filesystem.roots = [];
+		mollify.filesystem.allRoots = false;
 		mollify.filesystem.rootsById = {};
 		
 		if (f && mollify.session.authenticated) {
 			mollify.filesystem.roots = f;
 			for (var i=0,j=f.length; i<j; i++)
 				mollify.filesystem.rootsById[f[i].id] = f[i];
+			
+			if (allRoots) {
+				mollify.filesystem.allRoots = allRoots;
+				for (var i=0,j=allRoots.length; i<j; i++)
+					if (!mollify.filesystem.rootsById[allRoots[i].id])
+						mollify.filesystem.rootsById[allRoots[i].id] = allRoots[i];
+			}
 		}
 	};
 	

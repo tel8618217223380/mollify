@@ -24,6 +24,10 @@
 			$this->dao = new Mollify_PermissionsDao($this->env);
 		}
 		
+		public function initialize() {
+			$this->env->filesystem()->registerItemCleanupHandler($this);
+		}
+		
 		public function registerFilesystemPermission($name, $values = NULL) {
 			$this->filesystemPermissions[$name] = $values;
 		}
@@ -68,10 +72,13 @@
 			if ($permission !== FALSE) return $permission;
 			
 			// if parent folder has been prefetched, we know item does not have specific permissions -> try parent permission
-			$parentId = $item->parent()->id();
-			if (array_key_exists($name, $this->filesystemPermissionPrefetchedParents) and in_array($parentId, $this->filesystemPermissionPrefetchedParents[$name])) {
-				$permission = $this->getFromCache($name, $parentId);
-				if ($permission !== FALSE) return $permission;				
+			$parent = $item->parent();
+			if ($parent != NULL) {
+				$parentId = $item->parent()->id();
+				if (array_key_exists($name, $this->filesystemPermissionPrefetchedParents) and in_array($parentId, $this->filesystemPermissionPrefetchedParents[$name])) {
+					$permission = $this->getFromCache($name, $parentId);
+					if ($permission !== FALSE) return $permission;				
+				}
 			}
 
 			$permission = $this->dao->getFilesystemPermission($name, $item, $this->env->session()->userId(), $this->getGroupIds());
@@ -124,7 +131,7 @@
 			$permissions = $this->dao->getFilesystemPermissionsForChildren($name, $parent, $this->env->session()->userId(), $this->getGroupIds());
 
 			if (!array_key_exists($name, $this->filesystemPermissionPrefetchedParents)) $this->filesystemPermissionPrefetchedParents[$name] = array();
-			$this->filesystemPermissionPrefetchedParents[$name][] = $folder->id();
+			$this->filesystemPermissionPrefetchedParents[$name][] = $parent->id();
 			
 			if (!array_key_exists($name, $this->permissionCaches)) $this->permissionCaches[$name] = array();
 			foreach($permissions as $id => $p)
@@ -168,23 +175,43 @@
 			$result = $this->dao->processQuery($data);
 			
 			$items = array();
+			$invalid = array();
+			$newResult = array();
 			foreach($result["data"] as $row) {
+				$valid = TRUE;
 				$name = $row["name"];
 				
 				if (array_key_exists($name, $this->filesystemPermissions)) {
 					$subjectId = $row["subject"];
 					
 					if ($subjectId != NULL and !array_key_exists($subjectId, $items)) {
-						$item = $this->env->filesystem()->item($subjectId);
-						if ($item->exists())
-							$items[$subjectId] = $item->data();
-						//TODO else clean
+						try {
+							$item = $this->env->filesystem()->item($subjectId);
+							if ($item->exists())
+								$items[$subjectId] = $item->data();
+							else {
+								$invalid[] = $subjectId;
+								$valid = FALSE;
+							}
+						} catch (ServiceException $e) {
+							$invalid[] = $subjectId;
+							$valid = FALSE;
+						}
 					}
 				}
+				if ($valid)
+					$newResult[] = $row;
 			}
+			if (count($invalid) > 0)
+				$this->env->filesystem()->cleanupItemIds($invalid);
 			$result["items"] = $items;
+			$result["data"] = $newResult;
 			
 			return $result;
+		}
+		
+		public function cleanupItemIds($ids) {
+			$this->dao->cleanupItemIds($ids);
 		}
 		
 		public function getSessionInfo() {

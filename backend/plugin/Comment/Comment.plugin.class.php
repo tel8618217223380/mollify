@@ -30,6 +30,7 @@
 
 			$this->env->filesystem()->registerDataRequestPlugin(array("plugin-comment-count"), $this->handler);
 			$this->env->filesystem()->registerItemContextPlugin("plugin-comment", $this->handler);
+			$this->env->filesystem()->registerItemCleanupHandler($this->handler);
 
 			if ($this->env->plugins()->hasPlugin("ItemDetails")) {
 				$dp = $this->env->plugins()->getPlugin("ItemDetails");
