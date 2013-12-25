@@ -1446,11 +1446,11 @@
 						d.close();
 						return;
 					}
-					/*if (permissionData["new"].length === 0 && permissionData.modified.length === 0 && permissionData.removed.length === 0)
+					if (permissionData["new"].length === 0 && permissionData.modified.length === 0 && permissionData.removed.length === 0)
 						return;
 					
 					$content.addClass("loading");
-					mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);*/
+					mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-generic-content");
@@ -1467,7 +1467,9 @@
 						var permissions = [];
 						
 						$.each(allTypeKeys, function(i, t) {
-							permissions.push({ name: t, value: values[t] });
+							var p = { name: t, value: values[t], subject: null, user_id: user.id };
+							if (!values[t]) p.isnew = true;
+							permissions.push(p);
 						});
 						
 						$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-generic-permission-list", {
@@ -1503,10 +1505,23 @@
 										if (itemValues) return mollify.ui.texts.get('permission_'+item.name+'_'+k);
 										return mollify.ui.texts.get('permission_'+k);
 									},
-									//onChange: function(item, p) {
+									onChange: function(item, p) {
+										item.value = p;
+										
+										permissionData.new.remove(item);
+										permissionData.modified.remove(item);
+										permissionData.removed.remove(item);
+										
+										if (p != null) {
+											if (item.isnew) permissionData.new.push(item);
+											else permissionData.modified.push(item);
+										} else {
+											if (!item.isnew) permissionData.removed.push(item);											
+										}
+										//alert(p);
 									//	item.value = p.value;
 									//	onEdit(item);
-									//},
+									},
 								}
 							]
 						});

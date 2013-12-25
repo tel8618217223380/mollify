@@ -1173,6 +1173,7 @@ var mollifyDefaults = {
 		Array.prototype.remove = function(from, to) {
 			if (typeof(to) == 'undefined' && typeof(from) == 'object')
 				from = this.indexOf(from);
+			if (from < 0) return;
 			var rest = this.slice((to || from) + 1 || this.length);
 			this.length = from < 0 ? this.length + from : from;
 			return this.push.apply(this, rest);
