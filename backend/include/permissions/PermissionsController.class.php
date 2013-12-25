@@ -52,43 +52,62 @@
 		}
 		
 		public function getAllFilesystemPermissions($item) {
-			$result = array();
-			foreach($this->filesystemPermissions as $name -> $values) {
-				$result[$name] = $this->getFilesystemPermission($name, $item);
-			}
-			return $result;
+			return getFilesystemPermission(NULL, $item);
 		}
 		
 		public function getFilesystemPermission($name, $item) {
-			if (!array_key_exists($name, $this->filesystemPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
-			if ($this->env->authentication()->isAdmin()) {
-				$values = $this->filesystemPermissions[$name];
-				if ($values != NULL) return $values[count($values)-1];
-				return TRUE;
-			}
+			if ($name != NULL and !array_key_exists($name, $this->filesystemPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			
+			$nameKeys = ($name != NULL ? array($name) : array_keys($this->filesystemPermissions));
+						
 			$id = $item->id();
-			$permission = $this->getFromCache($name, $id);
-			if ($permission !== FALSE) return $permission;
+			$result = array();
+			$queryResult = NULL;
 			
-			// if parent folder has been prefetched, we know item does not have specific permissions -> try parent permission
-			$parent = $item->parent();
-			if ($parent != NULL) {
-				$parentId = $item->parent()->id();
-				if (array_key_exists($name, $this->filesystemPermissionPrefetchedParents) and in_array($parentId, $this->filesystemPermissionPrefetchedParents[$name])) {
-					$permission = $this->getFromCache($name, $parentId);
-					if ($permission !== FALSE) return $permission;				
+			foreach($nameKeys as $nk) {
+				if ($this->env->authentication()->isAdmin()) {
+					$values = $this->filesystemPermissions[$nk];
+					
+					if ($values != NULL) $result[$nk] = $values[count($values)-1];
+					else $result[$nk] = TRUE;
+					
+					continue;
 				}
+
+				$permission = $this->getFromCache($nk, $id);
+				if ($permission !== FALSE) return $permission;
+				
+				// if parent folder has been prefetched, we know item does not have specific permissions -> try parent permission
+				$parent = $item->parent();
+				if ($parent != NULL) {
+					$parentId = $item->parent()->id();
+					if (array_key_exists($nk, $this->filesystemPermissionPrefetchedParents) and in_array($parentId, $this->filesystemPermissionPrefetchedParents[$nk])) {
+						$permission = $this->getFromCache($nk, $parentId);
+						if ($permission !== FALSE) {
+							$result[$nk] = $permission;
+							continue;
+						}
+					}
+				}
+	
+				if ($queryResult == NULL)
+					$queryResult = $this->dao->getFilesystemPermission(($name != NULL ? $name : $nameKeys), $item, $this->env->session()->userId(), $this->getGroupIds());
+				//Logging::logDebug("PERMISSION query: ".Util::array2str($queryResult));
+
+				$permission = array_key_exists($nk, $queryResult) ? $queryResult[$nk] : NULL;
+				//Logging::logDebug("PERMISSION query: ".$permission);
+				
+				if ($permission == NULL) {
+					$values = $this->filesystemPermissions[$nk];
+					if ($values != NULL) $permission = $values[0];	//fallback to first
+				}
+				$this->putToCache($nk, $id, $permission);
+				
+				$result[$nk] = $permission;
 			}
 
-			$permission = $this->dao->getFilesystemPermission($name, $item, $this->env->session()->userId(), $this->getGroupIds());
-			if ($permission == NULL) {
-				$values = $this->filesystemPermissions[$name];
-				if ($values != NULL) $permission = $values[0];	//fallback to first
-			}
-			$this->putToCache($name, $id, $permission);
-			
-			return $permission;
+			if ($name != NULL) return $permission;
+			return $result;
 		}
 		
 		private function getGroupIds() {
@@ -129,17 +148,18 @@
 			if ($this->env->authentication()->isAdmin()) return;
 			
 			$permissions = $this->dao->getFilesystemPermissionsForChildren($name, $parent, $this->env->session()->userId(), $this->getGroupIds());
-
+			//Logging::logDebug("PERMISSIONS QUERY ".Util::array2str($permissions));
+			
 			if (!array_key_exists($name, $this->filesystemPermissionPrefetchedParents)) $this->filesystemPermissionPrefetchedParents[$name] = array();
 			$this->filesystemPermissionPrefetchedParents[$name][] = $parent->id();
 			
-			if (!array_key_exists($name, $this->permissionCaches)) $this->permissionCaches[$name] = array();
+			//if (!array_key_exists($name, $this->permissionCaches)) $this->permissionCaches[$name] = array();
 			foreach($permissions as $id => $p)
-				$this->permissionCaches[$name][$id] = $p;
+				$this->putToCache($name, $id, $p);
 		}
 		
 		public function temporaryFilesystemPermission($name, $item, $permission) {
-			$this->permissionCaches[$name][$item->id()] = $permission;
+			$this->putToCache($name, $item->id(), $permission);
 		}
 		
 		public function getPermissions($name = NULL, $subject = NULL, $userId = NULL) {			
