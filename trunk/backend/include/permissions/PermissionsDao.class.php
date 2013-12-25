@@ -176,11 +176,11 @@
 			foreach($list as $item) {
 				$name = $this->db->string($item["name"], TRUE);
 				$value = $this->db->string(strtolower($item["value"]), TRUE);
-				$subject = $this->db->string($item["subject"], TRUE);
+				$subject = $item["subject"] != NULL ? '='.$this->db->string($item["subject"], TRUE) : 'is null';
 				$user = '0';
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 			
-				$this->db->update(sprintf("UPDATE ".$this->db->table("permission")." SET value=%s WHERE name=%s AND subject=%s AND user_id=%s", $value, $name, $subject, $user));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("permission")." SET value=%s WHERE name=%s AND subject %s AND user_id=%s", $value, $name, $subject, $user));
 			}
 							
 			return TRUE;
@@ -189,10 +189,10 @@
 		private function removePermissionValues($list) {
 			foreach($list as $item) {
 				$name = $this->db->string($item["name"], TRUE);
-				$subject = $this->db->string($item["subject"], TRUE);
+				$subject = $item["subject"] != NULL ? '='.$this->db->string($item["subject"], TRUE) : 'is null';
 				$user = "0";
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name = %s AND subject=%s AND user_id = %s", $name, $subject, $user));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name = %s AND subject %s AND user_id = %s", $name, $subject, $user));
 			}
 							
 			return TRUE;
