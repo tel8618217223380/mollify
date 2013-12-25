@@ -34,9 +34,11 @@
 			} else {
 				$subcategoryQuery = sprintf("(case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end)", $userId);
 			}
+			
+			$nameQuery = is_array($name) ? "in (".$this->db->arrayString($name, TRUE).")" : "=".$this->db->string($name, TRUE);
 
 			// item permissions
-			$query = sprintf("SELECT value, user_id, (case when subject is null then 2 else 1 end) as category, %s as subcategory FROM ".$table." WHERE name='%s' AND (subject is null OR subject = '%s') AND %s", $subcategoryQuery, $name, $id, $userQuery);
+			$query = sprintf("SELECT value, name, user_id, (case when subject is null then 2 else 1 end) as category, %s as subcategory FROM ".$table." WHERE name %s AND (subject is null OR subject = '%s') AND %s", $subcategoryQuery, $nameQuery, $id, $userQuery);
 					
 			if ($item->isFile() or !$item->isRoot()) {
 				$parentLocation = $item->parent()->location();
@@ -66,14 +68,23 @@
 				} else {
 					$subcategoryQuery = sprintf("((%s - LENGTH(i.path)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentLocation), $userId);
 				}
-				$query = sprintf("SELECT value, user_id, %s AS category, %s AS subcategory FROM ".$table." p, ".$this->db->table("item_id")." i WHERE p.name = '%s' AND (p.subject is null OR (p.subject = i.id AND (i.id = '%s' OR %s))) AND %s", $categoryQuery, $subcategoryQuery, $name, $id, $hierarchyQuery, $userQuery);
+				$query = sprintf("SELECT p.name as name, value, user_id, %s AS category, %s AS subcategory FROM ".$table." p, ".$this->db->table("item_id")." i WHERE p.name %s AND (p.subject is null OR (p.subject = i.id AND (i.id = '%s' OR %s))) AND %s", $categoryQuery, $subcategoryQuery, $nameQuery, $id, $hierarchyQuery, $userQuery);
 			}
 			
-			$query = "SELECT value FROM (".$query.") as u ORDER BY u.category ASC, u.subcategory ASC, u.value DESC";
+			$query = "SELECT name, value FROM (".$query.") as u ORDER BY name ASC, u.category ASC, u.subcategory ASC, u.value DESC";
 			
-			$result = $this->db->query($query);
-			if ($result->count() < 1) return NULL;
-			return $result->value();
+			$rows = $this->db->query($query)->rows();
+			if (count($rows) < 1) return NULL;
+			
+			$result = array();
+			$prevName = NULL;
+			foreach($rows as $row) {
+				if ($row["name"] != $prevName) {
+					$prevName = $row["name"];
+					$result[$prevName] = $row["value"];
+				}
+			}
+			return $result;
 		}
 		
 		public function getFilesystemPermissionsForChildren($name, $parent, $userId, $groupIds = NULL) {
@@ -86,24 +97,35 @@
 				foreach($groupIds as $g)
 					$userIds[] = $g;
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
+			
+			$nameQuery = ($name != NULL) ? "name = ".$this->db->string($name, TRUE) : "";
 
 			//TODO subject asc? -> join p.subject = item.id & item.location asc
 			if ($mysql) {
 				$itemFilter = "SELECT distinct subject from ".$table." p, ".$this->db->table("item_id")." i where p.subject = i.id and ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/\\\\]+[/\\\\]?$'";
-				$query = sprintf("SELECT subject, value, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and subject in (%s) order by subject asc, ind asc, value desc", $userId, $table, $userQuery, $itemFilter);
+				$query = sprintf("SELECT subject, name, value, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and %s and subject in (%s) order by subject asc, ind asc, value desc", $userId, $table, $nameQuery, $userQuery, $itemFilter);
 			} else {
 				$itemFilter = "SELECT distinct subject from ".$table." p, ".$this->db->table("item_id")." i where p.subject = i.id and ".$userQuery." and REGEX(i.path, \"#^".$parentLocation."[^/\\\\]+[/\\\\]?$#\")";
-				$query = sprintf("SELECT subject, value, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and subject in (%s) order by subject asc, ind asc, value desc", $userId, $table, $userQuery, $itemFilter);
+				$query = sprintf("SELECT subject, name, value, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and %s and subject in (%s) order by name asc, subject asc, ind asc, value desc", $userId, $table, $nameQuery, $userQuery, $itemFilter);
 			}			
 			
 			$all = $this->db->query($query)->rows();
-			$all[] = array(
-				"subject" => $parent->id(),
-				"value" => $this->getFilesystemPermission($name, $parent, $userId, $groupIds)
-			);
+			
+			$parentPermission = $this->getFilesystemPermission($name, $parent, $userId, $groupIds);
+			if ($parentPermission != NULL and array_key_exists($name, $parentPermission))
+				$all[] = array(
+					"subject" => $parent->id(),
+					"value" => $parentPermission[$name]
+				);
+			//$result = array();
 			$k = array();
 			$prev = NULL;
+			//$prevName = NULL;
 			foreach($all as $p) {
+				/*if ($p["name"] != $prevName) {
+					$prevName = $p["name"];
+					$result[$p["name"]] = $k;
+				}*/
 				$id = $p["subject"];
 				if ($id != $prev) $k[$id] = $p["value"];
 				$prev = $id;
