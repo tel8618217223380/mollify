@@ -328,7 +328,7 @@
 			$this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $folderId));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name='filesystem_item_access' AND subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $folderId));
 			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$rootId." not found");
@@ -425,6 +425,11 @@
 			if ($text) $query .= " and description like '%".$this->db->string($text)."%'";
 			
 			return $this->db->query($query)->valueMap("item_id", "description");
+		}
+		
+		public function cleanupItemIds($ids) {
+			$this->db->update("DELETE FROM ".$this->db->table("item_description")." WHERE item_id in (".$db->arrayString($ids, TRUE).")");
+
 		}
 				
 		private function itemId($item) {

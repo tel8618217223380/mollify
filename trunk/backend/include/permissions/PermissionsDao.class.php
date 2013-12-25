@@ -89,23 +89,23 @@
 
 			//TODO subject asc? -> join p.subject = item.id & item.location asc
 			if ($mysql) {
-				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.subject = i.id and ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/\\\\]+[/\\\\]?$'";
+				$itemFilter = "SELECT distinct subject from ".$table." p, ".$this->db->table("item_id")." i where p.subject = i.id and ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/\\\\]+[/\\\\]?$'";
 				$query = sprintf("SELECT subject, value, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and subject in (%s) order by subject asc, ind asc, value desc", $userId, $table, $userQuery, $itemFilter);
 			} else {
-				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.subject = i.id and ".$userQuery." and REGEX(i.path, \"#^".$parentLocation."[^/\\\\]+[/\\\\]?$#\")";
+				$itemFilter = "SELECT distinct subject from ".$table." p, ".$this->db->table("item_id")." i where p.subject = i.id and ".$userQuery." and REGEX(i.path, \"#^".$parentLocation."[^/\\\\]+[/\\\\]?$#\")";
 				$query = sprintf("SELECT subject, value, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and subject in (%s) order by subject asc, ind asc, value desc", $userId, $table, $userQuery, $itemFilter);
 			}			
 			
 			$all = $this->db->query($query)->rows();
 			$all[] = array(
-				"item_id" => $parent->id(),
-				"permission" => $this->getItemPermission($parent, $userId)
+				"subject" => $parent->id(),
+				"value" => $this->getFilesystemPermission($name, $parent, $userId, $groupIds)
 			);
 			$k = array();
 			$prev = NULL;
 			foreach($all as $p) {
-				$id = $p["item_id"];
-				if ($id != $prev) $k[$id] = strtoupper($p["permission"]);
+				$id = $p["subject"];
+				if ($id != $prev) $k[$id] = $p["value"];
 				$prev = $id;
 			}
 			return $k;
@@ -139,9 +139,9 @@
 		}
 			
 		public function updatePermissions($updates) {
-			$new = $updates['new'];
-			$modified = $updates['modified'];
-			$removed = $updates['removed'];
+			$new = isset($updates['new']) ? $updates['new'] : array();
+			$modified = isset($updates['modified']) ? $updates['modified'] : array();
+			$removed = isset($updates['removed']) ? $updates['removed'] : array();
 			
 			$this->db->startTransaction();
 			if (count($new) > 0) $this->addPermissionValues($new);
@@ -229,8 +229,6 @@
 						$item = $this->env->filesystem()->item($data["subject_value"]);
 						$location = str_replace("'", "\'", $item->location());
 						$criteria .= sprintf(" AND subject in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $location);
-						
-						//TODO get items
 					}
 				}
 			}
@@ -251,6 +249,10 @@
 					$list[] = array("name" => $row["name"], "subject" => $row["subject"], "user_id" => $row["user_id"], "is_group" => $row["is_group"], "value" => $row["value"]);				
 			}
 			return array("start" => $start, "count" => count($rows), "total" => $count, "data" => $list);
+		}
+		
+		public function cleanupItemIds($ids) {
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE subject in (%s)", $this->db->arrayString($ids, TRUE)));
 		}
 	}
 ?>

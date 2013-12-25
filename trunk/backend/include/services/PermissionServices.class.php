@@ -72,6 +72,17 @@
 			throw $this->invalidRequestException();
 		}
 
+		public function processDelete() {
+			if ($this->path[0] === 'list') {
+				if (!isset($this->request->data["list"]) or !is_array($this->request->data["list"])) throw $this->invalidRequestException();
+				$this->response()->success($this->env->permissions()->updatePermissions(array(
+					"removed" => $this->request->data["list"])
+				));
+				return;
+			}
+			throw $this->invalidRequestException();
+		}
+		
 		public function processPost() {
 			if ($this->path[0] === 'query') {
 				$this->response()->success($this->env->permissions()->processQuery($this->request->data));
