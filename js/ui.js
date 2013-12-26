@@ -811,6 +811,13 @@
 		table: function(id, o) {
 			var $e = (typeof(id) == 'string') ? $("#"+id) : $(id);
 			if ($e.length === 0 || !o.columns) return false;
+			
+			if ($e.hasClass("mollify-table")) {
+				//already initialized, create new element
+				var $n = $("<table></table>").insertAfter($e).attr("id", $e.attr("id"));
+				$e.remove();
+				$e = $n;
+			}
 
 			var selectionChangedCb = $.Callbacks();
 			$e.addClass("mollify-table");
@@ -1190,6 +1197,7 @@
 		select: function(e, o) {				
 			var $e = (typeof(e) === "string") ? $("#"+e) : e;
 			if (!$e || $e.length === 0) return false;
+			$e.empty();
 
 			var addItem = function(item) {
 				var $row = $("<option></option>").appendTo($e);

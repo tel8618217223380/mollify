@@ -576,12 +576,12 @@
 					key: "id",
 					narrow: true,
 					columns: [
-						{ id: "name", title: mollify.ui.texts.get('pluginPermissionsEditColPermissionName'), formatter: function(p, v) {
+						{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(p, v) {
 							if (permissionTypes.filesystem[v])
 								return mollify.ui.texts.get('permission_default_'+v);
 							return mollify.ui.texts.get('permission_'+v);
 						} },
-						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), formatter: function(p, v) {
+						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(p, v) {
 							return mollify.ui.texts.get('permission_'+p.name+"_"+v);
 						} }
 					]

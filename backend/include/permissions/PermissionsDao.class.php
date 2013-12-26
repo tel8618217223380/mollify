@@ -134,14 +134,14 @@
 		}
 
 		public function getGenericPermissions($name = NULL, $userId) {
-			$criteria = ($name != NULL ? "name=".$this->db->string($name, TRUE) : "1=1");
+			$criteria = ($name != NULL ? "permission.name=".$this->db->string($name, TRUE) : "1=1");
 			$criteria .= " AND subject is null";
 			$criteria .= ($userId != NULL ? " AND user.id=".$this->db->string($userId) : "");
 			return $this->doGetPermissions($criteria);
 		}
 		
 		public function getPermissions($name = NULL, $subject = NULL, $userId) {
-			$criteria = ($name != NULL ? "name=".$this->db->string($name, TRUE) : "1=1");
+			$criteria = ($name != NULL ? "permission.name=".$this->db->string($name, TRUE) : "1=1");
 			$criteria .= ($subject != NULL ? " AND subject=".$this->db->string($subject, TRUE) : "");
 			$criteria .= ($userId != NULL ? " AND user.id=".$this->db->string($userId) : "");
 			return $this->doGetPermissions($criteria);
