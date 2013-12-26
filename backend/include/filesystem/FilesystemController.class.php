@@ -190,11 +190,11 @@
 		private function hasRights($item, $required) {
 			if (is_array($item)) {
 				foreach($item as $i)
-					if (!$this->env->permissions()->hasFilesystemRights("filesystem_item_access", $item, $required)) return FALSE;
+					if (!$this->env->permissions()->hasFilesystemPermission("filesystem_item_access", $item, $required)) return FALSE;
 				return TRUE;
 			}
 
-			return $this->env->permissions()->hasFilesystemRights("filesystem_item_access", $item, $required);
+			return $this->env->permissions()->hasFilesystemPermission("filesystem_item_access", $item, $required);
 		}
 		
 		public function assertRights($item, $required, $desc = "Unknown action") {
@@ -360,8 +360,8 @@
 	
 			$details = $item->details();
 			$details["description"] = $this->description($item);
-			$details["permission"] = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item);
-			$details["parent_permission"] = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item->parent());
+			$details["permissions"] = $this->env->permissions()->getAllFilesystemPermissions($item);
+			$details["parent_access_permission"] = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item->parent());
 			$details["plugins"] = array();
 
 			foreach($this->contextPlugins as $k=>$p) {
@@ -392,14 +392,12 @@
 		}
 
 		public function setDescription($item, $desc) {
-			//TODO own permission
-			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITE, "set description");
+			if (!$this->env->permissions()->hasFilesystemPermission("edit_description", $item)) throw new ServiceException("UNAUTHORIZED");
 			return $this->env->configuration()->setItemDescription($item, $desc);
 		}
 
 		public function removeDescription($item) {
-			//TODO own permission
-			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITE, "remove description");
+			if (!$this->env->permissions()->hasFilesystemPermission("edit_description", $item)) throw new ServiceException("UNAUTHORIZED");
 			return $this->env->configuration()->removeItemDescription($item);
 		}
 		

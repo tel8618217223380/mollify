@@ -207,8 +207,8 @@
 		"permission_filesystem_item_access_r": "Read Only",
 		"permission_filesystem_item_access_n": "No Rights",
 		
-		"permission_no": "No",
-		"permission_yes": "Yes",
+		"permission_0": "No",
+		"permission_1": "Yes",
 		"permission_value_undefined": "Undefined ({0})",
 		
 		"pluginPermissionsConfigViewNavTitle": "Permissions",
