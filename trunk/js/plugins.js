@@ -20,9 +20,9 @@
 			id: "plugin-core",
 			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
-				var writable = !root && (ctx.details.permission.toLowerCase() == "rw" || ctx.details.permission.toLowerCase() == "rwd");
-				var deletable = !root && (ctx.details.permission.toLowerCase() == "rwd");
-				var parentWritable = !root && (ctx.details.parent_permission.toLowerCase() == "rw" || ctx.details.parent_permission.toLowerCase() == "rwd");
+				var writable = !root && (ctx.details.permissions.filesystem_item_access.indexOf("rw") >=0);
+				var deletable = !root && (ctx.details.permissions.filesystem_item_access == "rwd");
+				var parentWritable = !root && (ctx.details.parent_access_permission.indexOf("rw") >= 0);
 
 				var actions = [];				
 				if (item.is_file ) {
@@ -590,10 +590,9 @@
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 
-				//TODO check only "w" for writable
-				var writable = !root && (ctx.details.permission.toLowerCase() == "rw" || ctx.details.permission.toLowerCase() == "rwd");
-				var parentWritable = !root && (ctx.details.parent_permission.toLowerCase() == "rwd" || ctx.details.parent_permission.toLowerCase() == "rwd");
-				var folderWritable = !root && ctx.folder_permission && (ctx.folder_permission.toLowerCase() == "rw" || ctx.folder_permission.toLowerCase() == "rwd");
+				var writable = !root && (ctx.details.permissions.filesystem_item_access.indexOf("rw") >=0);
+				var parentWritable = !root && (ctx.details.parent_access_permission.indexOf("rw") >= 0);
+				var folderWritable = !root && ctx.folder_permissions && (ctx.folder_permissions.filesystem_item_access.indexOf("rw") >=0);
 
 				if (parentWritable && that._isArchive(item)) {
 					return {
@@ -1093,7 +1092,7 @@
 		};
 		
 		this.loadPermissions = function(item, name) {
-			return mollify.service.get("permissions/list?subject="+item.id+"&name="+name);
+			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
 		};
 		
 		this.initEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
@@ -1146,7 +1145,7 @@
 						id: "value",
 						title: mollify.ui.texts.get('pluginPermissionsPermissionName'),
 						type: "select",
-						options: permissionValues || ['no', 'yes'],
+						options: permissionValues || ['0', '1'],
 						formatter: function(item, k) {
 							if (permissionValues)
 								return mollify.ui.texts.get('permission_'+item.name+'_'+k);
@@ -1172,7 +1171,7 @@
 			$newUser.add(userData.groups);
 			
 			var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
-				values: permissionValues || ['no', 'yes'],
+				values: permissionValues || ['0', '1'],
 				none: mollify.ui.texts.get('pluginPermissionsEditNoPermission'),
 				formatter : function(p) {
 					if (permissionValues)
@@ -1202,7 +1201,7 @@
 			mollify.dom.template("mollify-tmpl-permission-context").appendTo($content);
 			mollify.ui.process($content, ["localize"]);
 			
-			that.loadPermissions(item, function(permissions, userData) {
+			/*that.loadPermissions(item).done(function(permissions, userData) {
 				$("#mollify-pluginpermissions-context-content").removeClass("loading");
 				
 				var $list = mollify.ui.controls.table("mollify-pluginpermissions-context-permission-list", {
@@ -1221,7 +1220,7 @@
 				});
 			}).fail(function(e) {
 				el.close();
-			});
+			});*/
 		};
 		
 		this.onActivateConfigView = function($c, cv) {

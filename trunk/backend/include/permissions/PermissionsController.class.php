@@ -52,7 +52,7 @@
 		}
 		
 		public function getAllFilesystemPermissions($item) {
-			return getFilesystemPermission(NULL, $item);
+			return $this->getFilesystemPermission(NULL, $item);
 		}
 		
 		public function getFilesystemPermission($name, $item) {
@@ -69,7 +69,7 @@
 					$values = $this->filesystemPermissions[$nk];
 					
 					if ($values != NULL) $result[$nk] = $values[count($values)-1];
-					else $result[$nk] = TRUE;
+					else $result[$nk] = "1";
 					
 					continue;
 				}
@@ -122,7 +122,7 @@
 			return $groupIds;
 		}
 		
-		public function hasFilesystemRights($name, $item, $required = NULL) {
+		public function hasFilesystemPermission($name, $item, $required = NULL) {
 			if (!array_key_exists($name, $this->filesystemPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			$values = $this->filesystemPermissions[$name];
 			if ($required != NULL and $values != NULL) {
@@ -137,7 +137,7 @@
 			if (!$userValue) return FALSE;
 			
 			// on/off permission is found
-			if ($values == NULL) return TRUE;
+			if ($values == NULL) return ($userValue == "1");
 			
 			$userValueIndex = array_search($userValue, $values);
 			if ($userValueIndex === FALSE)

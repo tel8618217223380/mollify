@@ -319,7 +319,7 @@
 					var ctx = {
 						details: d,
 						folder : spec.folder,
-						folder_permission: spec.folder_permission
+						folder_permissions: spec.folder_permissions
 					};
 					ict.renderItemContext(api, $content, item, ctx);
 					//$e[0].scrollIntoView();
@@ -332,7 +332,7 @@
 		};
 		
 		ict.renderItemContext = function(cApi, $e, item, ctx) {
-			var descriptionEditable = mollify.features.hasFeature("descriptions") && mollify.session.admin;
+			var descriptionEditable = mollify.features.hasFeature("descriptions") && ctx.details.permissions.edit_description === '1';
 			var showDescription = descriptionEditable || !!ctx.details.description;
 			
 			var plugins = mollify.plugins.getItemContextPlugins(item, ctx);

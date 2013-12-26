@@ -1126,7 +1126,7 @@
 				viewport: that.itemWidget.getContainerElement(),
 				container: $("#mollify-folderview-items"),
 				folder: that._currentFolder,
-				folder_permission: that._currentFolderData ? that._currentFolderData.permission : false
+				folder_permissions: that._currentFolderData ? that._currentFolderData.permissions : false
 			};
 
 			var response = actions[action](item, ctx);
@@ -1188,7 +1188,7 @@
 							viewport: that.itemWidget.getContainerElement(),
 							container: $("#mollify-folderview-items"),
 							folder: that._currentFolder,
-							folder_permission: that._currentFolderData ? that._currentFolderData.permission : false
+							folder_permissions: that._currentFolderData ? that._currentFolderData.permissions : false
 						};
 						that.itemContext.open(ctx);
 					}
@@ -1264,7 +1264,7 @@
 				var ctx = {
 					details: d,
 					folder: that._currentFolder,
-					folder_permission: d.parent_permission
+					folder_permissions: d.parent_permissions
 				};
 				cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(mollify.plugins.getItemContextPlugins(item, ctx))));
 			});
