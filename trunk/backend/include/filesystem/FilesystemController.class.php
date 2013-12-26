@@ -63,6 +63,8 @@
 				self::PERMISSION_LEVEL_READWRITE,
 				self::PERMISSION_LEVEL_READWRITEDELETE
 			));
+			
+			$this->env->permissions()->registerFilesystemPermission("edit_description");
 		}
 		
 		public function itemIdProvider() {

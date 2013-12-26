@@ -75,7 +75,10 @@
 				}
 
 				$permission = $this->getFromCache($nk, $id);
-				if ($permission !== FALSE) return $permission;
+				if ($permission !== FALSE) {
+					$result[$nk] = $permission;
+					continue;
+				}
 				
 				// if parent folder has been prefetched, we know item does not have specific permissions -> try parent permission
 				$parent = $item->parent();
@@ -106,7 +109,7 @@
 				$result[$nk] = $permission;
 			}
 
-			if ($name != NULL) return $permission;
+			if ($name != NULL) return $result[$nk];
 			return $result;
 		}
 		

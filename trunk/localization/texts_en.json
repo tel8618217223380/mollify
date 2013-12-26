@@ -200,11 +200,15 @@
 		"permission_filesystem_item_access": "Filesystem access",
 		"permission_default_filesystem_item_access": "Filesystem access (default)",
 		
+		"permission_edit_description": "Edit file/folder description",
+		
 		"permission_filesystem_item_access_rwd": "Read&Write&Delete",
 		"permission_filesystem_item_access_rw": "Read&Write, No delete",
 		"permission_filesystem_item_access_r": "Read Only",
 		"permission_filesystem_item_access_n": "No Rights",
 		
+		"permission_no": "No",
+		"permission_yes": "Yes",
 		"permission_value_undefined": "Undefined ({0})",
 		
 		"pluginPermissionsConfigViewNavTitle": "Permissions",
