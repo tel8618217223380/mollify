@@ -47,17 +47,10 @@ CREATE TABLE `{TABLE_PREFIX}item_description` (
   PRIMARY KEY (`item_id`)
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify item descriptions';
 
-CREATE TABLE `{TABLE_PREFIX}item_permission` (
-  `user_id` int(11) NULL DEFAULT 0,
-  `item_id` char(255) NOT NULL,
-  `permission` char(2) NOT NULL,
-  PRIMARY KEY (`user_id`,`item_id`)
-) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify item permissions';
-
 CREATE TABLE `{TABLE_PREFIX}permission` (
   `name` char(64) NOT NULL,
   `user_id` int(11) NULL DEFAULT 0,
-  `subject` char(255) NULL,
+  `subject` char(255) NOT NULL DEFAULT '',
   `value` char(32) NOT NULL,
   PRIMARY KEY (`name`,`user_id`,`subject`)
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify permissions';

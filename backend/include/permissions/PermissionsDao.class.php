@@ -38,7 +38,7 @@
 			$nameQuery = is_array($name) ? "in (".$this->db->arrayString($name, TRUE).")" : "=".$this->db->string($name, TRUE);
 
 			// item permissions
-			$query = sprintf("SELECT value, name, user_id, (case when subject is null then 2 else 1 end) as category, %s as subcategory FROM ".$table." WHERE name %s AND (subject is null OR subject = '%s') AND %s", $subcategoryQuery, $nameQuery, $id, $userQuery);
+			$query = sprintf("SELECT value, name, user_id, (case when subject = '' then 2 else 1 end) as cat1, %s as cat2, 0 as cat3 FROM ".$table." WHERE name %s AND (subject = '' OR subject = '%s') AND %s", $subcategoryQuery, $nameQuery, $id, $userQuery);
 					
 			if ($item->isFile() or !$item->isRoot()) {
 				$parentLocation = $item->parent()->location();
@@ -61,20 +61,24 @@
 				else
 					$hierarchyQuery .= $hierarchyQueryEnd."$#')";
 			
-				$categoryQuery = "case when p.subject is null then 3 when i.id = '".$id."' then 1 else 2 end";
+				$cat1 = "case when p.subject = '' then 3 when p.subject = '".$id."' then 1 else 2 end";
 				
 				if ($mysql) {
-					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(i.path)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentLocation), $userId);
+					$cat2 = sprintf("(0 - CHAR_LENGTH(i.path))");
+					$cat3 = sprintf("(IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", $userId);
 				} else {
-					$subcategoryQuery = sprintf("((%s - LENGTH(i.path)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentLocation), $userId);
+					$cat2 = sprintf("(0 - LENGTH(i.path))");
+					$cat3 = sprintf("(case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", $userId);
 				}
-				$query = sprintf("SELECT p.name as name, value, user_id, %s AS category, %s AS subcategory FROM ".$table." p, ".$this->db->table("item_id")." i WHERE p.name %s AND (p.subject is null OR (p.subject = i.id AND (i.id = '%s' OR %s))) AND %s", $categoryQuery, $subcategoryQuery, $nameQuery, $id, $hierarchyQuery, $userQuery);
+				$query = sprintf("SELECT p.name as name, value, user_id, i.path as path, %s AS cat1, %s AS cat2, %s AS cat3 FROM ".$table." p LEFT OUTER JOIN ".$this->db->table("item_id")." i on p.subject = i.id WHERE p.name %s AND (p.subject = '' OR (i.id = '%s' OR %s)) AND %s", $cat1, $cat2, $cat3, $nameQuery, $id, $hierarchyQuery, $userQuery);
+				//Logging::logDebug(Util::array2str($this->db->query("select * from item_id i where ".$hierarchyQuery)->rows()));
 			}
 			
-			$query = "SELECT name, value FROM (".$query.") as u ORDER BY name ASC, u.category ASC, u.subcategory ASC, u.value DESC";
+			$query = "SELECT name, value FROM (".$query.") as u ORDER BY name ASC, u.cat1 ASC, u.cat2 ASC, u.cat3 ASC, u.value DESC";
 			
 			$rows = $this->db->query($query)->rows();
-			if (count($rows) < 1) return NULL;
+			if (count($rows) < 1) return array();
+			//Logging::logDebug(Util::array2str($rows));
 			
 			$result = array();
 			$prevName = NULL;
@@ -135,7 +139,7 @@
 
 		public function getGenericPermissions($name = NULL, $userId) {
 			$criteria = ($name != NULL ? "permission.name=".$this->db->string($name, TRUE) : "1=1");
-			$criteria .= " AND subject is null";
+			$criteria .= " AND subject = ''";
 			$criteria .= ($userId != NULL ? " AND user.id=".$this->db->string($userId) : "");
 			return $this->doGetPermissions($criteria);
 		}
@@ -198,7 +202,7 @@
 			foreach($list as $item) {
 				$name = $this->db->string($item["name"], TRUE);
 				$value = $this->db->string(strtolower($item["value"]), TRUE);
-				$subject = $item["subject"] != NULL ? '='.$this->db->string($item["subject"], TRUE) : 'is null';
+				$subject = $item["subject"] != NULL ? '='.$this->db->string($item["subject"], TRUE) : "= ''";
 				$user = '0';
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 			
@@ -211,7 +215,7 @@
 		private function removePermissionValues($list) {
 			foreach($list as $item) {
 				$name = $this->db->string($item["name"], TRUE);
-				$subject = $item["subject"] != NULL ? '='.$this->db->string($item["subject"], TRUE) : 'is null';
+				$subject = $item["subject"] != NULL ? '='.$this->db->string($item["subject"], TRUE) : "= ''";
 				$user = "0";
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("permission")." WHERE name = %s AND subject %s AND user_id = %s", $name, $subject, $user));
@@ -238,11 +242,11 @@
 		}
 		
 		public function processQuery($data) {
-			$criteria = ((isset($data["name"]) and $data["name"] != NULL) ? "name=".$this->db->string($data["name"], TRUE) : "1=1");
+			$criteria = ((isset($data["name"]) and $data["name"] != NULL) ? "permission.name=".$this->db->string($data["name"], TRUE) : "1=1");
 			
 			if (isset($data["subject_type"]) and $data["subject_type"] != NULL and $data["subject_type"] != 'any') {
 				if ($data["subject_type"] == "none")
-					$criteria .= " AND subject is null";
+					$criteria .= " AND subject = ''";
 					
 				if (($data["subject_type"] == "filesystem_item" or $data["subject_type"] == "filesystem_child") and isset($data["subject_value"]) and $data["subject_value"] != NULL) {
 					if ($data["subject_type"] == "filesystem_item")

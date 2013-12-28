@@ -582,6 +582,8 @@
 							return mollify.ui.texts.get('permission_'+v);
 						} },
 						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(p, v) {
+							if (!permissionTypes.filesystem[p.name])
+								return mollify.ui.texts.get('permission_'+v);
 							return mollify.ui.texts.get('permission_'+p.name+"_"+v);
 						} }
 					]
@@ -703,7 +705,7 @@
 						$expiration.set(mollify.helpers.parseInternalTime(u.expiration));
 						if (showLanguages && u.lang) $language.select(u.lang);
 					} else {
-						$permission.select("no");	
+						$type.select(null);	
 					}
 					$name.focus();
 
@@ -805,10 +807,14 @@
 			mollify.ui.process($e, ["localize"]);
 			var $users = $e.find(".mollify-config-admin-groupdetails-users");
 			var $folders = $e.find(".mollify-config-admin-groupdetails-folders");
+			var $permissions = $e.find(".mollify-config-admin-groupdetails-permissions");
 			var foldersView = false;
 			var usersView = false;
+			var permissionsView = false;
 			var folders = false;
 			var users = false;
+			var permissions = false;
+			var permissionTypes = false;
 			
 			var updateUsers = function() {
 				$users.addClass("loading");
@@ -824,6 +830,16 @@
 					$folders.removeClass("loading");
 					folders = l;
 					foldersView.table.set(folders);
+				});
+			};
+			var updatePermissions = function() {
+				$permissions.addClass("loading");
+				mollify.service.get("permissions/user/"+g.id+"/generic/" + (!permissionTypes ? "?t=1" : "")).done(function(l) {
+					$permissions.removeClass("loading");
+					permissions = l.permissions;
+					if (!permissionTypes)
+						permissionTypes = l.types;
+					permissionsView.table.set(permissions);
 				});
 			};
 			var onAddGroupUsers = function() {
@@ -934,6 +950,28 @@
 							mollify.service.post("configuration/usergroups/"+g.id+"/remove_users/", [u.id]).done(updateUsers);
 						}
 					}
+				}
+			});
+			
+			permissionsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-groupdetails-permissions"), {
+				title: mollify.ui.texts.get('configAdminGroupsPermissionsTitle'),
+				actions: [
+					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editUserGenericPermissions(g) } }
+				],
+				table: {
+					id: "config-admin-grouppermissions",
+					key: "id",
+					narrow: true,
+					columns: [
+						{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(p, v) {
+							if (permissionTypes.filesystem[v])
+								return mollify.ui.texts.get('permission_default_'+v);
+							return mollify.ui.texts.get('permission_'+v);
+						} },
+						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(p, v) {
+							return mollify.ui.texts.get('permission_'+p.name+"_"+v);
+						} }
+					]
 				}
 			});
 			

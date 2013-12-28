@@ -361,7 +361,7 @@
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permissions"] = $this->env->permissions()->getAllFilesystemPermissions($item);
-			$details["parent_access_permission"] = $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item->parent());
+			$details["parent_access_permission"] = $item->isRoot() ? NULL : $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item->parent());
 			$details["plugins"] = array();
 
 			foreach($this->contextPlugins as $k=>$p) {
