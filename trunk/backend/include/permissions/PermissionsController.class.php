@@ -56,10 +56,11 @@
 		}
 		
 		public function getFilesystemPermission($name, $item) {
+			if ($item == NULL) throw new ServiceException("INVALID_CONFIGURATION");
 			if ($name != NULL and !array_key_exists($name, $this->filesystemPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
 			
 			$nameKeys = ($name != NULL ? array($name) : array_keys($this->filesystemPermissions));
-						
+
 			$id = $item->id();
 			$result = array();
 			$queryResult = NULL;
@@ -207,7 +208,7 @@
 				if (array_key_exists($name, $this->filesystemPermissions)) {
 					$subjectId = $row["subject"];
 					
-					if ($subjectId != NULL and !array_key_exists($subjectId, $items)) {
+					if (strlen($subjectId) > 0 and !array_key_exists($subjectId, $items)) {
 						try {
 							$item = $this->env->filesystem()->item($subjectId);
 							if ($item->exists())

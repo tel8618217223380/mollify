@@ -995,13 +995,6 @@
 		var that = this;
 		
 		this.initialize = function() {
-			/*that.permissionOptions = [
-				{ title: mollify.ui.texts.get('pluginPermissionsValueRWD'), value: "rwd"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueR'), value: "r"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
-			];
-			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");*/
 		};
 		
 		this.editItemPermissions = function(item) {
@@ -1201,6 +1194,8 @@
 			mollify.dom.template("mollify-tmpl-permission-context").appendTo($content);
 			mollify.ui.process($content, ["localize"]);
 			
+			//TODO
+			
 			/*that.loadPermissions(item).done(function(permissions, userData) {
 				$("#mollify-pluginpermissions-context-content").removeClass("loading");
 				
@@ -1314,7 +1309,7 @@
 							} },
 							{ id: "subject", title: mollify.ui.texts.get('pluginPermissionsPermissionSubject'), formatter: function(item, s) {
 								if (!s) return "";
-								if (r.types.filesystem[item.name] && queryItems[s]) {
+								if ((item.name in r.types.filesystem) && queryItems[s]) {
 									var item = queryItems[s];
 									if (item) return mollify.filesystem.rootsById[item.root_id].name + ":" + item.path;
 								}
@@ -1435,7 +1430,7 @@
 						var permissions = [];
 						
 						$.each(allTypeKeys, function(i, t) {
-							var p = { name: t, value: values[t], subject: null, user_id: user.id };
+							var p = { name: t, value: values[t], subject: '', user_id: user.id };
 							if (!values[t]) p.isnew = true;
 							permissions.push(p);
 						});
@@ -1455,7 +1450,7 @@
 									options: function(item) {
 										var itemValues = allTypes[item.name];
 										if (itemValues) return itemValues;
-										return ["no", "yes"];
+										return ["0", "1"];
 									},
 									none: function(item) {
 										var itemValues = allTypes[item.name];
@@ -1463,7 +1458,7 @@
 										if (itemValues) {
 											fallback = mollify.ui.texts.get('permission_'+item.name+'_'+itemValues[0]);
 										} else {
-											fallback = mollify.ui.texts.get('permission_no');
+											fallback = mollify.ui.texts.get('permission_0');
 										}
 										var text = mollify.ui.texts.get('permission_value_undefined', fallback);
 										return text;

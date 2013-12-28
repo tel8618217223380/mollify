@@ -79,6 +79,8 @@
 		
 		public function registerActionValidator($p) {}
 		
+		public function registerItemCleanupHandler($p) {}
+		
 		public function onError($e) {
 			Logging::logException($e);
 		}

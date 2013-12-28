@@ -186,7 +186,7 @@
 			if ($matches > 0)
 				throw new ServiceException("INVALID_REQUEST", "Duplicate user found with name [".$name."] or email [".$email."]");
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, lang, email, user_type, is_group, expiration) VALUES (%s, %s, %s, %s, 0, %s)", $this->db->string($name, TRUE), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($user_type, TRUE), $this->db->string($expiration)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, lang, email, user_type, is_group, expiration) VALUES (%s, %s, %s, %s, 0, %s)", $this->db->string($name, TRUE), $this->db->string($lang, TRUE), $this->db->string($email, TRUE), $this->db->string($type, TRUE), $this->db->string($expiration)));
 			return $this->db->lastId();
 		}
 	
