@@ -1008,7 +1008,7 @@
 			mollify.ui.dialogs.custom({
 				resizable: true,
 				initSize: [600, 400],
-				title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle'),
+				title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle', item.name),
 				content: mollify.dom.template("mollify-tmpl-permission-editor", {item: item}),
 				buttons: [
 					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
@@ -1022,41 +1022,81 @@
 					if (permissionData["new"].length === 0 && permissionData.modified.length === 0 && permissionData.removed.length === 0)
 						return;
 					
-					$content.addClass("loading");
 					mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-content");
+					var $subContents = $content.find(".mollify-pluginpermissions-editor-subcontent").hide();
 
 					h.center();
 					
 					mollify.service.get("permissions/types?u=1").done(function(r) {
 						var users = that.processUserData(r.users);
 						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
-						var init = names[0];
-						var onChange = function(sel) {
-							permissionData = {
-								"new": [],
-								"modified": [],
-								"removed": []
-							};
-							$content.addClass("loading");
+						
+						var activateTab = function(i) {
+							$("#mollify-pluginpermissions-editor-tab > li").removeClass("active").eq(i).addClass("active");
+							var $subContent = $subContents.hide().eq(i).show();
 							
-							that.loadPermissions(item, sel).done(function(p) {
-								$content.removeClass("loading");
-								that.initEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
-							}).fail(h.close);
+							if (i == 0) onActivateByPermission($subContent);
+							else onActivateByUser($subContent);
 						};
 						
-						var $permissionName = mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
-							onChange: onChange,
-							formatter: function(name) {
-								return mollify.ui.texts.get('permission_'+name);
-							},
-							values: names,
-							value: init
+						$("#mollify-pluginpermissions-editor-tab > li").click(function() {
+							var i = $(this).addClass("active").index();
+							activateTab(i);
 						});
-						onChange(init);
+						
+						var onActivateByPermission = function($sc) {
+							var init = names[0];
+							var onChangePermission = function(sel) {
+								permissionData = {
+									"new": [],
+									"modified": [],
+									"removed": []
+								};
+								$sc.addClass("loading");
+								
+								that.loadPermissions(item, sel).done(function(p) {
+									$sc.removeClass("loading");
+									that.initByPermissionEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
+								}).fail(h.close);
+							};
+							
+							mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
+								onChange: onChangePermission,
+								formatter: function(name) {
+									return mollify.ui.texts.get('permission_'+name);
+								},
+								values: names,
+								value: init
+							});
+							onChangePermission(init);
+						};
+						
+						var onActivateByUser = function($sc) {
+							var onChangeUser = function(sel) {
+								$sc.addClass("loading");
+								
+								/*that.loadPermissions(item, sel).done(function(p) {
+									$sc.removeClass("loading");
+									that.initByPermissionEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
+								}).fail(h.close);*/
+							};
+							
+							mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-user", {
+								onChange: onChangeUser,
+								/*formatter: function(name) {
+									return mollify.ui.texts.get('permission_'+name);
+								},*/
+								none: "todo",
+								values: users.users.concat(users.groups),
+								title: "name"
+							});
+							//onChangePermission(init);							
+						};
+						
+						activateTab(0);
 					}).fail(h.close);
 				}
 			});
@@ -1088,7 +1128,7 @@
 			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
 		};
 		
-		this.initEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
+		this.initByPermissionEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
 			var $list;
 			
 			var isGroup = function(id) {
@@ -1398,7 +1438,7 @@
 			mollify.ui.dialogs.custom({
 				resizable: true,
 				initSize: [600, 400],
-				title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle'),
+				title: mollify.ui.texts.get('pluginPermissionsEditUserDialogTitle', user.name),
 				content: mollify.dom.template("mollify-tmpl-permission-generic-editor", {user: user}),
 				buttons: [
 					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },

@@ -184,8 +184,11 @@
 		"pluginPermissionsAction": "Permissions...",
 		"pluginPermissionsContextTitle": "Permissions",
 		"pluginPermissionsContextEditAction": "Edit...",
-		"pluginPermissionsEditDialogTitle": "Permissions",
-				
+		
+		"pluginPermissionsEditDialogTitle": "Permissions for {0}",
+		"pluginPermissionsEditDialogByPermission": "By permission",
+		"pluginPermissionsEditDialogByUser": "By user",
+								
 		"pluginPermissionsEditColUser": "User",
 		"pluginPermissionsPermissionName": "Name",
 		"pluginPermissionsPermissionValue": "Permission",
