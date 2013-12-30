@@ -368,24 +368,37 @@
 </script>
 
 <script id="mollify-tmpl-permission-editor" type="text/x-jquery-tmpl">
-	<div id="mollify-pluginpermissions-editor-content" class="loading">
-		{{if item}}
-		<div id="mollify-pluginpermissions-editor-item">
-			<span class="name">${item.name}</span>
-		</div>
-		{{/if}}
-		<select id="mollify-pluginpermissions-editor-permission-name"></select>
-		<table id="mollify-pluginpermissions-editor-permission-list" class="table">
-		</table>
-		<p>
-			<span class="localized" text-key="pluginPermissionsEditNewTitle"></span>
-		</p>
-		<div id="mollify-pluginpermissions-editor-new">
-			<select id="mollify-pluginpermissions-editor-new-user">
-			</select>
-			<select id="mollify-pluginpermissions-editor-new-permission">
-			</select>
-			<button id="mollify-pluginpermissions-editor-new-add" class="btn btn-success"><i class="icon-plus"></i></button>
+	<div id="mollify-pluginpermissions-editor-content">
+		<ul id="mollify-pluginpermissions-editor-tab" class="nav nav-tabs">
+			<li id="mollify-pluginpermissions-editor-by-permission">
+				<a href="javascript: void(0)" class="localized" text-key="pluginPermissionsEditDialogByPermission"></a>
+			</li>
+			<li id="mollify-pluginpermissions-editor-by-user">
+				<a href="javascript: void(0)" class="localized" text-key="pluginPermissionsEditDialogByUser"></a>
+			</li>
+		</ul>
+		
+		<div id="mollify-pluginpermissions-editor-subcontent-container">
+			<div id="mollify-pluginpermissions-editor-subcontent-by-permission" class="mollify-pluginpermissions-editor-subcontent">
+				<select id="mollify-pluginpermissions-editor-permission-name"></select>
+				
+				<table id="mollify-pluginpermissions-editor-permission-list" class="table">
+				</table>
+				<p>
+					<span class="localized" text-key="pluginPermissionsEditNewTitle"></span>
+				</p>
+				<div id="mollify-pluginpermissions-editor-new">
+					<select id="mollify-pluginpermissions-editor-new-user">
+					</select>
+					<select id="mollify-pluginpermissions-editor-new-permission">
+					</select>
+					<button id="mollify-pluginpermissions-editor-new-add" class="btn btn-success"><i class="icon-plus"></i></button>
+				</div>
+			</div>
+			
+			<div id="mollify-pluginpermissions-editor-subcontent-by-user" class="mollify-pluginpermissions-editor-subcontent">
+				<select id="mollify-pluginpermissions-editor-permission-user"></select>
+			</div>
 		</div>
 	</div>
 </script>
