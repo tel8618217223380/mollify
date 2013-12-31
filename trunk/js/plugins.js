@@ -1027,60 +1027,65 @@
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-content");
 					var $subContents = $content.find(".mollify-pluginpermissions-editor-subcontent").hide();
-
+					var $activeSubContent = false;
+					var activeTab = 0;
+					var selectedPermission = false;
+					
 					h.center();
 					
 					mollify.service.get("permissions/types?u=1").done(function(r) {
 						var users = that.processUserData(r.users);
 						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
+						var init = names[0];
 						
 						var activateTab = function(i) {
 							$("#mollify-pluginpermissions-editor-tab > li").removeClass("active").eq(i).addClass("active");
-							var $subContent = $subContents.hide().eq(i).show();
+							$activeSubContent = $subContents.hide().eq(i).show();
+							activeTab = i;
 							
-							if (i == 0) onActivateByPermission($subContent);
-							else onActivateByUser($subContent);
+							if (i == 0) onActivateItemPermissions($activeSubContent);
+							else onActivateUserPermissions($activeSubContent);
 						};
+						var onChangePermission = function(sel) {
+							selectedPermission = selectedPermission;
+							permissionData = {
+								"new": [],
+								"modified": [],
+								"removed": []
+							};
+							activateTab(activeTab);
+						};
+						
+						mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
+							onChange: onChangePermission,
+							formatter: function(name) {
+								return mollify.ui.texts.get('permission_'+name);
+							},
+							values: names,
+							value: init
+						});
 						
 						$("#mollify-pluginpermissions-editor-tab > li").click(function() {
 							var i = $(this).addClass("active").index();
 							activateTab(i);
 						});
 						
-						var onActivateByPermission = function($sc) {
-							var init = names[0];
-							var onChangePermission = function(sel) {
-								permissionData = {
-									"new": [],
-									"modified": [],
-									"removed": []
-								};
-								$sc.addClass("loading");
-								
-								that.loadPermissions(item, sel).done(function(p) {
-									$sc.removeClass("loading");
-									that.initByPermissionEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
-								}).fail(h.close);
-							};
+						var onActivateItemPermissions = function($sc) {
+							$sc.addClass("loading");
 							
-							mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-name", {
-								onChange: onChangePermission,
-								formatter: function(name) {
-									return mollify.ui.texts.get('permission_'+name);
-								},
-								values: names,
-								value: init
-							});
-							onChangePermission(init);
+							that.loadPermissions(item, selectedPermission).done(function(p) {
+								$sc.removeClass("loading");
+								that.initItemPermissionEditor(item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions, users, permissionData);
+							}).fail(h.close);
 						};
 						
-						var onActivateByUser = function($sc) {
+						var onActivateUserPermissions = function($sc) {
 							var onChangeUser = function(sel) {
 								$sc.addClass("loading");
 								
 								/*that.loadPermissions(item, sel).done(function(p) {
 									$sc.removeClass("loading");
-									that.initByPermissionEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
+									that.initItemPermissionEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
 								}).fail(h.close);*/
 							};
 							
@@ -1096,7 +1101,7 @@
 							//onChangePermission(init);							
 						};
 						
-						activateTab(0);
+						onChangePermission(init);
 					}).fail(h.close);
 				}
 			});
@@ -1128,7 +1133,7 @@
 			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
 		};
 		
-		this.initByPermissionEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
+		this.initItemPermissionEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
 			var $list;
 			
 			var isGroup = function(id) {
