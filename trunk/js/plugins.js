@@ -1047,7 +1047,7 @@
 							else onActivateUserPermissions($activeSubContent);
 						};
 						var onChangePermission = function(sel) {
-							selectedPermission = selectedPermission;
+							selectedPermission = sel;
 							permissionData = {
 								"new": [],
 								"modified": [],
@@ -1083,6 +1083,11 @@
 							var onChangeUser = function(sel) {
 								$sc.addClass("loading");
 								
+								mollify.service.get("permissions/user/"+sel.id+"?e=1&subject="+item.id+"&name="+selectedPermission).done(function(p) {
+									$sc.removeClass("loading");
+									that.initUserPermissionInspector(item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions, users);									
+								}).fail(h.close);
+								
 								/*that.loadPermissions(item, sel).done(function(p) {
 									$sc.removeClass("loading");
 									that.initItemPermissionEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
@@ -1091,10 +1096,7 @@
 							
 							mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-user", {
 								onChange: onChangeUser,
-								/*formatter: function(name) {
-									return mollify.ui.texts.get('permission_'+name);
-								},*/
-								none: "todo",
+								none: mollify.ui.texts.get("pluginPermissionsEditNoUser"),
 								values: users.users.concat(users.groups),
 								title: "name"
 							});
@@ -1132,7 +1134,50 @@
 		this.loadPermissions = function(item, name) {
 			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
 		};
-		
+
+		this.initUserPermissionInspector = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
+			var isGroup = function(id) {
+				return (id != 0 && userData.usersById[id].is_group != "0");
+			};
+
+			var $list = mollify.ui.controls.table("mollify-pluginpermissions-editor-user-permission-list", {
+				key: "user_id",
+				onRow: function($r, i) { if (isGroup(i.user_id)) $r.addClass("group"); },
+				columns: [
+					{
+						id: "user_id",
+						title: mollify.ui.texts.get('pluginPermissionsEditColUser'),
+						renderer: function(i, v, $c){
+							var name = v != 0 ? userData.usersById[v].name : mollify.ui.texts.get('pluginPermissionsEditDefaultPermission');
+							$c.html(name).addClass("user");
+						}
+					},
+					{
+						id: "value",
+						title: mollify.ui.texts.get('pluginPermissionsPermissionName'),
+						formatter: function(item, k) {
+							if (permissionValues)
+								return mollify.ui.texts.get('permission_'+item.name+'_'+k);
+							return mollify.ui.texts.get('permission_'+k);
+						}
+					},
+					{
+						id: "subject",
+						title: mollify.ui.texts.get('pluginPermissionsEditColUser'),
+						/*renderer: function(i, v, $c){
+							var name = v != 0 ? userData.usersById[v].name : mollify.ui.texts.get('pluginPermissionsEditDefaultPermission');
+							$c.html(name).addClass("user");
+						}*/
+					},
+					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
+				],
+				onRowAction: function(id, permission) {
+					//onRemove(permission); $list.remove(permission);
+				}
+			});
+			$list.add(permissions);
+		};
+				
 		this.initItemPermissionEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
 			var $list;
 			

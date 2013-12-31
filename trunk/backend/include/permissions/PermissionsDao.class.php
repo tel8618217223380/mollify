@@ -18,6 +18,22 @@
 		}
 		
 		public function getFilesystemPermission($name, $item, $userId, $groupIds = NULL) {
+			$rows = $this->getEffectiveFilesystemPermissions($name, $item, $userId, $groupIds);
+			if (count($rows) < 1) return array();
+			//Logging::logDebug(Util::array2str($rows));
+			
+			$result = array();
+			$prevName = NULL;
+			foreach($rows as $row) {
+				if ($row["name"] != $prevName) {
+					$prevName = $row["name"];
+					$result[$prevName] = $row["value"];
+				}
+			}
+			return $result;
+		}
+		
+		public function getEffectiveFilesystemPermissions($name, $item, $userId, $groupIds) {
 			$mysql = (strcmp("mysql", $this->db->type()) == 0);
 			$table = $this->db->table("permission");
 			$id = $item->id();
@@ -70,25 +86,13 @@
 					$cat2 = sprintf("(0 - LENGTH(i.path))");
 					$cat3 = sprintf("(case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", $userId);
 				}
-				$query = sprintf("SELECT p.name as name, value, user_id, i.path as path, %s AS cat1, %s AS cat2, %s AS cat3 FROM ".$table." p LEFT OUTER JOIN ".$this->db->table("item_id")." i on p.subject = i.id WHERE p.name %s AND (p.subject = '' OR (i.id = '%s' OR %s)) AND %s", $cat1, $cat2, $cat3, $nameQuery, $id, $hierarchyQuery, $userQuery);
+				$query = sprintf("SELECT p.name as name, value, user_id, p.subject as subject, i.path as path, %s AS cat1, %s AS cat2, %s AS cat3 FROM ".$table." p LEFT OUTER JOIN ".$this->db->table("item_id")." i on p.subject = i.id WHERE p.name %s AND (p.subject = '' OR (i.id = '%s' OR %s)) AND %s", $cat1, $cat2, $cat3, $nameQuery, $id, $hierarchyQuery, $userQuery);
 				//Logging::logDebug(Util::array2str($this->db->query("select * from item_id i where ".$hierarchyQuery)->rows()));
 			}
 			
-			$query = "SELECT name, value FROM (".$query.") as u ORDER BY name ASC, u.cat1 ASC, u.cat2 ASC, u.cat3 ASC, u.value DESC";
+			$query = "SELECT name, value, user_id, subject FROM (".$query.") as u ORDER BY name ASC, u.cat1 ASC, u.cat2 ASC, u.cat3 ASC, u.value DESC";
 			
-			$rows = $this->db->query($query)->rows();
-			if (count($rows) < 1) return array();
-			//Logging::logDebug(Util::array2str($rows));
-			
-			$result = array();
-			$prevName = NULL;
-			foreach($rows as $row) {
-				if ($row["name"] != $prevName) {
-					$prevName = $row["name"];
-					$result[$prevName] = $row["value"];
-				}
-			}
-			return $result;
+			return $this->db->query($query)->rows();
 		}
 		
 		public function getFilesystemPermissionsForChildren($name, $parent, $userId, $groupIds = NULL) {

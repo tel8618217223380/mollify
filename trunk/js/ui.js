@@ -1020,52 +1020,58 @@
 				var v = item[col.id];
 				if (col.cellClass) $cell.addClass(col.cellClass);
 				if (col.type == 'selectrow') {
-					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell);
+					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell.empty());
 				} else if (col.type == 'action') {
 					var html = col.content;
 					if (col.formatter) html = col.formatter(item, v);
-					if (html) $("<a class='mollify-tableaction' title='"+col.title+"'></a>").html(html).appendTo($cell);
+					if (html) $("<a class='mollify-tableaction' title='"+col.title+"'></a>").html(html).appendTo($cell.empty());
 				} else if (col.type == "input") {
-					var $s = $('<input type="text"></input>').appendTo($cell).change(function() {
-						var v = $s.val();
-						$cell[0].ctrlVal = v;
-						if (o.selectOnEdit) setRowSelected(item, true);
-						if (col.onChange) col.onChange(item, v);
-					});
-					$cell[0].ctrl = $s;
-					var sv = v;
-					if (col.valueMapper) sv = col.valueMapper(item, v);
-					$s.val(sv);
-				} else if (col.type == "select") {
-					var selOptions = [];
-					if (typeof(col.options) == "function") selOptions = col.options(item);
-					else if (window.isArray(col.options)) selOptions = col.options;
-					
-					var noneOption = undefined;
-					if (col.none) {
-						if (typeof(col.none) == "function") noneOption = col.none(item);
-						else noneOption = col.none;
-					}
-					
-					var formatter = undefined;
-					if (col.formatter) {
-						formatter = function(sv) {
-							return col.formatter(item, sv);
-						};
-					}
-					
-					var $sl = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
-						values: selOptions,
-						title : col.title,
-						none: noneOption,
-						formatter: formatter,
-						onChange: function(v) {
+					var $s = $cell[0].ctrl;
+					if (!$s) {
+						$s = $('<input type="text"></input>').appendTo($cell).change(function() {
+							var v = $s.val();
 							$cell[0].ctrlVal = v;
 							if (o.selectOnEdit) setRowSelected(item, true);
 							if (col.onChange) col.onChange(item, v);
+						});
+						$cell[0].ctrl = $s;
+					}
+					var sv = v;
+					if (col.valueMapper) sv = col.valueMapper(item, v);
+					$s.val(sv);
+				} else if (col.type == "select") {					
+					var $sl = $cell[0].ctrl;
+					if (!$sl) {
+						var selOptions = [];
+						if (typeof(col.options) == "function") selOptions = col.options(item);
+						else if (window.isArray(col.options)) selOptions = col.options;
+						
+						var noneOption = undefined;
+						if (col.none) {
+							if (typeof(col.none) == "function") noneOption = col.none(item);
+							else noneOption = col.none;
 						}
-					});
-					$cell[0].ctrl = $sl;
+						
+						var formatter = undefined;
+						if (col.formatter) {
+							formatter = function(sv) {
+								return col.formatter(item, sv);
+							};
+						}
+
+						$sl = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
+							values: selOptions,
+							title : col.title,
+							none: noneOption,
+							formatter: formatter,
+							onChange: function(v) {
+								$cell[0].ctrlVal = v;
+								if (o.selectOnEdit) setRowSelected(item, true);
+								if (col.onChange) col.onChange(item, v);
+							}
+						});
+						$cell[0].ctrl = $sl;
+					} else {}
 					var sv2 = v;
 					if (col.valueMapper) sv2 = col.valueMapper(item, v);
 					$sl.select(sv2);

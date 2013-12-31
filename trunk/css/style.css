@@ -1038,6 +1038,25 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	display: block;
 }
 
+.mollify-pluginpermissions-editor-permission-selector {
+	float: left;
+	padding-bottom: 8px;
+	width: 100%;
+}
+
+.mollify-pluginpermissions-editor-permission-selector > * {
+	float: left;
+	padding-right: 8px;
+}
+
+.mollify-pluginpermissions-editor-permission-selector > select {
+	margin-top: 6px;
+}
+
+#mollify-pluginpermissions-editor-tab {
+	margin-bottom: 8px;
+}
+
 .modal .ui-resizable-s {
   bottom: 0;
 }

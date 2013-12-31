@@ -186,6 +186,13 @@
 			return $this->dao->getGenericPermissions($name, $userId);
 		}
 		
+		public function getEffectiveFilesystemPermissions($name, $item, $userId) {
+			$groupIds = array();
+			foreach($this->env->configuration()->getUsersGroups($userId) as $g)
+				$groupIds[] = $g['id'];
+			return $this->dao->getEffectiveFilesystemPermissions($name, $item, $userId, $groupIds);
+		}
+		
 		public function updatePermissions($permissionData) {
 			//TODO validate			
 			return $this->dao->updatePermissions($permissionData);
