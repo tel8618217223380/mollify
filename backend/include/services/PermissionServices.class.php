@@ -51,8 +51,16 @@
 				
 				if (count($this->path) == 3 and $this->path[2] == "generic")
 					$permissions = $this->env->permissions()->getGenericPermissions(NULL, $userId);
-				else
-					$permissions = $this->env->permissions()->getPermissions(NULL, $subject, $userId);
+				else {
+					$effective = ($this->env->request()->hasParam("e") and strcmp($this->env->request()->param("e"), "1") == 0);
+					$name = $this->env->request()->hasParam("name") ? $this->env->request()->param("name") : NULL;
+					
+					if ($subject != NULL and $effective and $name != NULL) {
+						$item = $this->env->filesystem()->item($subject);
+						$permissions = $this->env->permissions()->getEffectiveFilesystemPermissions($name, $item, $userId);
+					} else
+						$permissions = $this->env->permissions()->getPermissions(NULL, $subject, $userId);
+				}
 				$result = array("permissions" => $permissions);
 				
 				$types = ($this->env->request()->hasParam("t") and strcmp($this->env->request()->param("t"), "1") == 0);

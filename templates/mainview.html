@@ -369,7 +369,9 @@
 
 <script id="mollify-tmpl-permission-editor" type="text/x-jquery-tmpl">
 	<div id="mollify-pluginpermissions-editor-content">
-		<select id="mollify-pluginpermissions-editor-permission-name"></select>
+		<div class="mollify-pluginpermissions-editor-permission-selector">
+			<h4 class="localized" text-key="pluginPermissionsEditDialogPermissionName"></h4><select id="mollify-pluginpermissions-editor-permission-name"></select>
+		</div>
 				
 		<ul id="mollify-pluginpermissions-editor-tab" class="nav nav-tabs">
 			<li id="mollify-pluginpermissions-editor-item-permissions">
@@ -398,6 +400,9 @@
 			
 			<div id="mollify-pluginpermissions-editor-subcontent-by-user" class="mollify-pluginpermissions-editor-subcontent">
 				<select id="mollify-pluginpermissions-editor-permission-user"></select>
+				
+				<table id="mollify-pluginpermissions-editor-user-permission-list" class="table">
+				</table>
 			</div>
 		</div>
 	</div>
