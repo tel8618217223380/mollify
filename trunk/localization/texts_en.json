@@ -187,9 +187,13 @@
 		
 		"pluginPermissionsEditDialogTitle": "Permissions for {0}",
 		"pluginPermissionsEditDialogPermissionName": "Permission:",
-		"pluginPermissionsEditDialogItemPermissions": "Item permissions",
-		"pluginPermissionsEditDialogUserPermissions": "User permissions",
-								
+		"pluginPermissionsEditDialogItemPermissions": "Explicit item permissions",
+		"pluginPermissionsEditDialogUserPermissions": "Effective user permissions",
+		"pluginPermissionsUserPermissionsAdmin": "User is admin, and has all permissions.",
+		"pluginPermissionsEffectiveUserPermission": "User effective permission for this item is: \"{0}\"",
+		"pluginPermissionsNoEffectiveUserPermission": "User has no permissions related to this item, and permission defaults to: \"{0}\"",
+		"pluginPermissionsEffectiveUserRelatedPermissions": "Related permissions:",
+										
 		"pluginPermissionsEditColUser": "User",
 		"pluginPermissionsPermissionName": "Name",
 		"pluginPermissionsPermissionValue": "Permission",

@@ -995,6 +995,7 @@
 		var that = this;
 		
 		this.initialize = function() {
+			that._pathFormatter = new mollify.ui.formatters.FilesystemItemPath();
 		};
 		
 		this.editItemPermissions = function(item) {
@@ -1081,26 +1082,28 @@
 						
 						var onActivateUserPermissions = function($sc) {
 							var onChangeUser = function(sel) {
+								$("#mollify-pluginpermissions-editor-user-related-permissions").hide();
+								$("#mollify-pluginpermissions-editor-user-permissions-description").html("");								
+								if (!sel) return;
+								
+								if (sel.user_type == 'a') {
+									$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get("pluginPermissionsUserPermissionsAdmin"));
+									return;
+								}
 								$sc.addClass("loading");
 								
 								mollify.service.get("permissions/user/"+sel.id+"?e=1&subject="+item.id+"&name="+selectedPermission).done(function(p) {
 									$sc.removeClass("loading");
-									that.initUserPermissionInspector(item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions, users);									
-								}).fail(h.close);
-								
-								/*that.loadPermissions(item, sel).done(function(p) {
-									$sc.removeClass("loading");
-									that.initItemPermissionEditor(item, sel, r.types.filesystem[sel], p.permissions, users, permissionData);
-								}).fail(h.close);*/
+									that.initUserPermissionInspector(sel, item, selectedPermission, r.types.filesystem[selectedPermission], p, users);									
+								}).fail(h.close);								
 							};
 							
 							mollify.ui.controls.select("mollify-pluginpermissions-editor-permission-user", {
 								onChange: onChangeUser,
 								none: mollify.ui.texts.get("pluginPermissionsEditNoUser"),
-								values: users.users.concat(users.groups),
+								values: users.users,
 								title: "name"
-							});
-							//onChangePermission(init);							
+							});			
 						};
 						
 						onChangePermission(init);
@@ -1135,7 +1138,24 @@
 			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
 		};
 
-		this.initUserPermissionInspector = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
+		this.initUserPermissionInspector = function(user, item, permissionName, permissionValues, permissionData, userData) {
+			var permissions = permissionData.permissions;
+			var permissionValueFormatter = function(v) {
+				if (permissionValues)
+					return mollify.ui.texts.get('permission_'+permissionName+'_'+v);
+				return mollify.ui.texts.get('permission_'+v);
+			};
+			
+			var ep = false;
+			if (permissions.length > 0) ep = permissions[0].value;
+			if (ep) {
+				$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsEffectiveUserPermission', permissionValueFormatter(ep)));
+				$("#mollify-pluginpermissions-editor-user-related-permissions").show();
+			} else {
+				$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsNoEffectiveUserPermission', permissionValueFormatter(permissionValues ? permissionValues[0] : '0')));
+				return;
+			}
+
 			var isGroup = function(id) {
 				return (id != 0 && userData.usersById[id].is_group != "0");
 			};
@@ -1156,14 +1176,15 @@
 						id: "value",
 						title: mollify.ui.texts.get('pluginPermissionsPermissionName'),
 						formatter: function(item, k) {
-							if (permissionValues)
-								return mollify.ui.texts.get('permission_'+item.name+'_'+k);
-							return mollify.ui.texts.get('permission_'+k);
+							return permissionValueFormatter(k);
 						}
 					},
 					{
 						id: "subject",
 						title: mollify.ui.texts.get('pluginPermissionsEditColUser'),
+						formatter: function(i, s) {
+							return that._pathFormatter.format(permissionData.items[s]);
+						}
 						/*renderer: function(i, v, $c){
 							var name = v != 0 ? userData.usersById[v].name : mollify.ui.texts.get('pluginPermissionsEditDefaultPermission');
 							$c.html(name).addClass("user");
@@ -1401,7 +1422,7 @@
 								if (!s) return "";
 								if ((item.name in r.types.filesystem) && queryItems[s]) {
 									var item = queryItems[s];
-									if (item) return mollify.filesystem.rootsById[item.root_id].name + ":" + item.path;
+									if (item) return that._pathFormatter.format(item);
 								}
 								return s;
 							} },
@@ -1433,7 +1454,7 @@
 				var selectedSubjectItem = false;
 				var onSelectItem = function(i) {
 					selectedSubjectItem = i;
-					$subjectItemSelectorValue.val(mollify.filesystem.rootsById[i.root_id].name + ":" + i.path);
+					$subjectItemSelectorValue.val(that._pathFormatter.format(i));
 				};
 				$("#permissions-subject-filesystem-item-select").click(function(e) {
 					if ($optionSubject.get() == 'filesystem_item') {
@@ -1624,6 +1645,7 @@
 		that.itemsByKey = {};
 		
 		this.initialize = function() {
+			that._pathFormatter = new mollify.ui.formatters.FilesystemItemPath();
 			that.itemContext = new mollify.ui.itemContext();
 			mollify.events.addEventHandler(function(e) {
 				if (e.type == 'filesystem/delete') that.onRemoveItems(mollify.helpers.extractValue(e.payload.items, "id"));
@@ -1786,7 +1808,7 @@
 				$i.tooltip({
 					placement: "bottom",
 					html: true,
-					title: mollify.filesystem.rootsById[item.root_id].name + (item.path.length > 0 ? ":&nbsp;" + item.path : ""),
+					title: that._pathFormatter.format(item),
 					trigger: "hover"
 				});
 			});
