@@ -1094,7 +1094,7 @@
 								
 								mollify.service.get("permissions/user/"+sel.id+"?e=1&subject="+item.id+"&name="+selectedPermission).done(function(p) {
 									$sc.removeClass("loading");
-									that.initUserPermissionInspector(sel, item, selectedPermission, r.types.filesystem[selectedPermission], p, users);									
+									that.initUserPermissionInspector(sel, item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions.slice(0), p.items, users, permissionData);
 								}).fail(h.close);								
 							};
 							
@@ -1138,28 +1138,34 @@
 			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
 		};
 
-		this.initUserPermissionInspector = function(user, item, permissionName, permissionValues, permissionData, userData) {
-			var permissions = permissionData.permissions;
+		this.initUserPermissionInspector = function(user, item, permissionName, permissionValues, relatedPermissions, items, userData, permissionData) {
 			var permissionValueFormatter = function(v) {
 				if (permissionValues)
 					return mollify.ui.texts.get('permission_'+permissionName+'_'+v);
 				return mollify.ui.texts.get('permission_'+v);
 			};
-			
-			var ep = false;
-			if (permissions.length > 0) ep = permissions[0].value;
-			if (ep) {
-				$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsEffectiveUserPermission', permissionValueFormatter(ep)));
-				$("#mollify-pluginpermissions-editor-user-related-permissions").show();
-			} else {
-				$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsNoEffectiveUserPermission', permissionValueFormatter(permissionValues ? permissionValues[0] : '0')));
-				return;
+			var updateEffectivePermission = function() {
+				var ep = false;
+				if (relatedPermissions.length > 0) ep = relatedPermissions[0].value;
+				if (ep) {
+					$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsEffectiveUserPermission', permissionValueFormatter(ep)));
+					$("#mollify-pluginpermissions-editor-user-related-permissions").show();
+				} else {
+					$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsNoEffectiveUserPermission', permissionValueFormatter(permissionValues ? permissionValues[0] : '0')));
+				}
 			}
+			updateEffectivePermission();
+			if (relatedPermissions.length === 0) return;
 
 			var isGroup = function(id) {
 				return (id != 0 && userData.usersById[id].is_group != "0");
 			};
-
+			var onRemove = function(permission) {
+				if (!permission.isnew) permissionData.removed.push(permission);
+				relatedPermissions.remove(permission);
+				updateEffectivePermission();
+			};
+			
 			var $list = mollify.ui.controls.table("mollify-pluginpermissions-editor-user-permission-list", {
 				key: "user_id",
 				onRow: function($r, i) { if (isGroup(i.user_id)) $r.addClass("group"); },
@@ -1183,18 +1189,32 @@
 						id: "subject",
 						title: mollify.ui.texts.get('pluginPermissionsEditColItem'),
 						renderer: function(i, s, $c) {
-							var subject = permissionData.items[s];
-							
-							if (subject && subject.id == item.id) $c.html('<em>'+mollify.ui.texts.get('pluginPermissionsEditColItemCurrent')+'</em>');								else $c.html(that._pathFormatter.format(subject));
+							var subject = items[s];
+							if (!subject) {
+								//TODO default
+							} else if (subject.id == item.id) {
+								$c.html(mollify.ui.texts.get('pluginPermissionsEditColItemCurrent'));
+							} else {
+								var level = Math.max(item.path.count("/"), item.path.count("\\")) - Math.max(subject.path.count("/"), subject.path.count("\\")) + 1;
+								$c.html(mollify.ui.texts.get('pluginPermissionsEditColItemParent', level));
+								$c.tooltip({
+									placement: "bottom",
+									html: true,
+									title: that._pathFormatter.format(subject),
+									trigger: "hover",
+									container: "#mollify-pluginpermissions-editor-user-related-permissions"
+								});
+							}
 						}
 					},
 					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
 				],
 				onRowAction: function(id, permission) {
-					//onRemove(permission); $list.remove(permission);
+					onRemove(permission);
+					$list.remove(permission);
 				}
 			});
-			$list.add(permissions);
+			$list.add(relatedPermissions);
 		};
 				
 		this.initItemPermissionEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {

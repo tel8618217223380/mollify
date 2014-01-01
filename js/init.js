@@ -1155,6 +1155,13 @@ var mollifyDefaults = {
 			return this.substring(0, s.length) == s; 
 		}
 	}
+
+	if(typeof String.prototype.count !== 'function') {	
+		String.prototype.count = function(search) {
+		    var m = this.match(new RegExp(search.toString().replace(/(?=[.\\+*?[^\]$(){}\|])/g, "\\"), "g"));
+		    return m ? m.length:0;
+		}
+	}
 	
 	window.def = function(o) {
 		return (typeof(o) != 'undefined');
