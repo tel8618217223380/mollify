@@ -1174,21 +1174,19 @@
 					},
 					{
 						id: "value",
-						title: mollify.ui.texts.get('pluginPermissionsPermissionName'),
+						title: mollify.ui.texts.get('pluginPermissionsPermissionValue'),
 						formatter: function(item, k) {
 							return permissionValueFormatter(k);
 						}
 					},
 					{
 						id: "subject",
-						title: mollify.ui.texts.get('pluginPermissionsEditColUser'),
-						formatter: function(i, s) {
-							return that._pathFormatter.format(permissionData.items[s]);
+						title: mollify.ui.texts.get('pluginPermissionsEditColItem'),
+						renderer: function(i, s, $c) {
+							var subject = permissionData.items[s];
+							
+							if (subject && subject.id == item.id) $c.html('<em>'+mollify.ui.texts.get('pluginPermissionsEditColItemCurrent')+'</em>');								else $c.html(that._pathFormatter.format(subject));
 						}
-						/*renderer: function(i, v, $c){
-							var name = v != 0 ? userData.usersById[v].name : mollify.ui.texts.get('pluginPermissionsEditDefaultPermission');
-							$c.html(name).addClass("user");
-						}*/
 					},
 					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
 				],

@@ -387,7 +387,7 @@
 				<table id="mollify-pluginpermissions-editor-permission-list" class="table">
 				</table>
 				<p>
-					<span class="localized" text-key="pluginPermissionsEditNewTitle"></span>
+					<h5 class="localized" text-key="pluginPermissionsEditNewTitle"></h5>
 				</p>
 				<div id="mollify-pluginpermissions-editor-new">
 					<select id="mollify-pluginpermissions-editor-new-user">
@@ -399,14 +399,17 @@
 			</div>
 			
 			<div id="mollify-pluginpermissions-editor-subcontent-by-user" class="mollify-pluginpermissions-editor-subcontent">
-				<select id="mollify-pluginpermissions-editor-permission-user"></select>
+				<div class="mollify-pluginpermissions-editor-user-selector">
+					<h5 class="localized" text-key="pluginPermissionsEditDialogUserPermissionsSelectUser"></h5>
+					<select id="mollify-pluginpermissions-editor-permission-user"></select>
+				</div>
 				
 				<p>
 					<span id="mollify-pluginpermissions-editor-user-permissions-description"></span>
 				</p>
 
 				<div id="mollify-pluginpermissions-editor-user-related-permissions" style="display: none">
-					<span class="localized" text-key="pluginPermissionsEffectiveUserRelatedPermissions"></span>				
+					<h5 class="localized" text-key="pluginPermissionsEffectiveUserRelatedPermissions"></h5>				
 					<table id="mollify-pluginpermissions-editor-user-permission-list" class="table">
 					</table>
 				</div>

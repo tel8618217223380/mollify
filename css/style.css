@@ -1038,18 +1038,18 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 	display: block;
 }
 
-.mollify-pluginpermissions-editor-permission-selector {
+.mollify-pluginpermissions-editor-permission-selector, .mollify-pluginpermissions-editor-user-selector {
 	float: left;
 	padding-bottom: 8px;
 	width: 100%;
 }
 
-.mollify-pluginpermissions-editor-permission-selector > * {
+.mollify-pluginpermissions-editor-permission-selector > *, .mollify-pluginpermissions-editor-user-selector > * {
 	float: left;
 	padding-right: 8px;
 }
 
-.mollify-pluginpermissions-editor-permission-selector > select {
+.mollify-pluginpermissions-editor-permission-selector > select, .mollify-pluginpermissions-editor-user-selector > select {
 	margin-top: 6px;
 }
 
