@@ -190,7 +190,8 @@
 			$groupIds = array();
 			foreach($this->env->configuration()->getUsersGroups($userId) as $g)
 				$groupIds[] = $g['id'];
-			return $this->dao->getEffectiveFilesystemPermissions($name, $item, $userId, $groupIds);
+			$result = $this->dao->getEffectiveFilesystemPermissions($name, $item, $userId, $groupIds);
+			return $this->getRelatedFilesystemItemsAndFilterInvalid($result);
 		}
 		
 		public function updatePermissions($permissionData) {
@@ -204,11 +205,16 @@
 		
 		public function processQuery($data) {
 			$result = $this->dao->processQuery($data);
-			
+			$filtered = $this->getRelatedFilesystemItemsAndFilterInvalid($result["data"]);
+			$result["data"] = $filtered["permissions"];
+			return $result;
+		}
+		
+		private function getRelatedFilesystemItemsAndFilterInvalid($list) {
 			$items = array();
 			$invalid = array();
-			$newResult = array();
-			foreach($result["data"] as $row) {
+			$result = array();
+			foreach($list as $row) {
 				$valid = TRUE;
 				$name = $row["name"];
 				
@@ -231,14 +237,12 @@
 					}
 				}
 				if ($valid)
-					$newResult[] = $row;
+					$result[] = $row;
 			}
 			if (count($invalid) > 0)
 				$this->env->filesystem()->cleanupItemIds($invalid);
-			$result["items"] = $items;
-			$result["data"] = $newResult;
-			
-			return $result;
+
+			return array("permissions" => $result, "items" => $items);
 		}
 		
 		public function cleanupItemIds($ids) {

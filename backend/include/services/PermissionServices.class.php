@@ -57,7 +57,8 @@
 					
 					if ($subject != NULL and $effective and $name != NULL) {
 						$item = $this->env->filesystem()->item($subject);
-						$permissions = $this->env->permissions()->getEffectiveFilesystemPermissions($name, $item, $userId);
+						$this->response()->success($this->env->permissions()->getEffectiveFilesystemPermissions($name, $item, $userId));
+						return;
 					} else
 						$permissions = $this->env->permissions()->getPermissions(NULL, $subject, $userId);
 				}

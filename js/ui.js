@@ -156,6 +156,12 @@
 				if (unit) return sv + " " + unit;
 				return sv;
 			};
+		},
+		FilesystemItemPath: function() {
+			this.format = function(item) {
+				if (!item) return "";
+				return mollify.filesystem.rootsById[item.root_id].name + (item.path.length > 0 ? ":&nbsp;" + item.path : "");
+			}
 		}
 	};
 	
