@@ -96,7 +96,7 @@
 		if (!id) return "";
 		var t = tt._dict[id];
 		if (!t) return "!"+tt.locale+":"+id;
-		if (p) {
+		if (p != undefined) {
 			if (!window.isArray(p)) p = [p];
 			for (var i=0,j=p.length; i<j; i++)
 				t = t.replace("{" + i + "}", p[i]);

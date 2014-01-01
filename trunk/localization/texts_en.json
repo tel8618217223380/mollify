@@ -202,6 +202,7 @@
 		"pluginPermissionsPermissionSubject": "Subject",
 		"pluginPermissionsEditColItem": "Item",
 		"pluginPermissionsEditColItemCurrent": "This",
+		"pluginPermissionsEditColItemParent": "Parent ({0})",
 		"pluginPermissionsEditRemove": "Remove",
 		"pluginPermissionsEditNewTitle": "Add or Update Permission",
 		"pluginPermissionsEditDefaultPermission": "Any (default permission)",
