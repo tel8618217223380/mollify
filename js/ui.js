@@ -1700,11 +1700,16 @@
 			},
 			center: function() {
 				center($dlg);
+			},
+			setInfo : function(n) {
+				var $n = $dlg.find(".modal-footer > .info").empty();
+				if (n) $n.html(n);
 			}
 		};
 		$dlg.find(".modal-footer .btn").click(function(e) {
 			e.preventDefault();
-			var btn = spec.buttons[$(this).index()];
+			var ind = $dlg.find(".modal-footer .btn").index($(this));
+			var btn = spec.buttons[ind];
 			if (spec["on-button"]) spec["on-button"](btn, h);
 		});
 		if (spec.resizable) {

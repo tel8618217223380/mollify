@@ -999,11 +999,12 @@
 		};
 		
 		this.editItemPermissions = function(item) {
-			var permissionData = {
+			var modificationData = {
 				"new": [],
 				"modified": [],
 				"removed": []
 			};
+			var originalValues = [];
 			var $content = false;
 			
 			mollify.ui.dialogs.custom({
@@ -1020,10 +1021,10 @@
 						d.close();
 						return;
 					}
-					if (permissionData["new"].length === 0 && permissionData.modified.length === 0 && permissionData.removed.length === 0)
+					if (modificationData["new"].length === 0 && modificationData.modified.length === 0 && modificationData.removed.length === 0)
 						return;
 					
-					mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);
+					mollify.service.put("permissions/list", modificationData).done(d.close).fail(d.close);
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-content");
@@ -1038,6 +1039,51 @@
 						var users = that.processUserData(r.users);
 						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
 						var init = names[0];
+						var onPermissionsModified = function() {
+							var info = (modificationData["new"].length > 0 || modificationData["modified"].length > 0 || modificationData["removed"].length > 0) ? "<i class='icon-exclamation-sign '/>&nbsp;" + mollify.ui.texts.get('pluginPermissionsEditDialogUnsaved') : false;
+							h.setInfo(info);
+						};
+						var changes = {
+							addNew : function(p) {
+								if (!p.isnew) return;
+								modificationData["new"].push(p);
+								onPermissionsModified();
+							},
+							remove : function(p) {
+								if (p.isnew) {
+									modificationData["new"].remove(modificationData["new"].indexOf(p));
+								} else {
+									modificationData.removed.push(p);
+								}
+								onPermissionsModified();
+							},
+							update : function(p, v) {
+								if (!p.isnew) {
+									var key = p.user_id+":"+p.subject+":"+p.name;
+									// store original value
+									if (!originalValues[key]) originalValues[key] = p.value;
+									
+									var ri = modificationData.removed.indexOf(p);
+									if (ri >= 0) modificationData.removed.remove(ri);
+									
+									p.value = v;
+									
+									var mi = modificationData.modified.indexOf(p);
+									if (originalValues[key] == v) {
+										if (mi >= 0) modificationData.modified.remove(mi);
+									} else if (mi < 0) modificationData.modified.push(p);
+								}
+								onPermissionsModified();
+							},
+							findRemoved : function(userId, subject, permissionName) {
+								for (var i=0,j=modificationData.removed.length; i<j; i++) {
+									var d = modificationData.removed[i];
+									if (d.user_id == userId && d.subject == subject && d.name == permissionName)
+										return d;
+								}
+								return false;
+							}
+						};
 						
 						var activateTab = function(i) {
 							$("#mollify-pluginpermissions-editor-tab > li").removeClass("active").eq(i).addClass("active");
@@ -1047,13 +1093,9 @@
 							if (i == 0) onActivateItemPermissions($activeSubContent);
 							else onActivateUserPermissions($activeSubContent);
 						};
+
 						var onChangePermission = function(sel) {
 							selectedPermission = sel;
-							permissionData = {
-								"new": [],
-								"modified": [],
-								"removed": []
-							};
 							activateTab(activeTab);
 						};
 						
@@ -1076,7 +1118,7 @@
 							
 							that.loadPermissions(item, selectedPermission).done(function(p) {
 								$sc.removeClass("loading");
-								that.initItemPermissionEditor(item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions, users, permissionData);
+								that.initItemPermissionEditor(changes, item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions, users);
 							}).fail(h.close);
 						};
 						
@@ -1094,7 +1136,7 @@
 								
 								mollify.service.get("permissions/user/"+sel.id+"?e=1&subject="+item.id+"&name="+selectedPermission).done(function(p) {
 									$sc.removeClass("loading");
-									that.initUserPermissionInspector(sel, item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions.slice(0), p.items, users, permissionData);
+									that.initUserPermissionInspector(changes, sel, item, selectedPermission, r.types.filesystem[selectedPermission], p.permissions.slice(0), p.items, users);
 								}).fail(h.close);								
 							};
 							
@@ -1138,7 +1180,7 @@
 			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
 		};
 
-		this.initUserPermissionInspector = function(user, item, permissionName, permissionValues, relatedPermissions, items, userData, permissionData) {
+		this.initUserPermissionInspector = function(changes, user, item, permissionName, permissionValues, relatedPermissions, items, userData) {
 			var permissionValueFormatter = function(v) {
 				if (permissionValues)
 					return mollify.ui.texts.get('permission_'+permissionName+'_'+v);
@@ -1161,7 +1203,7 @@
 				return (id != 0 && userData.usersById[id].is_group != "0");
 			};
 			var onRemove = function(permission) {
-				if (!permission.isnew) permissionData.removed.push(permission);
+				changes.remove(permission);
 				relatedPermissions.remove(permission);
 				updateEffectivePermission();
 			};
@@ -1217,7 +1259,7 @@
 			$list.add(relatedPermissions);
 		};
 				
-		this.initItemPermissionEditor = function(item, permissionName, permissionValues, permissions, userData, permissionData) {
+		this.initItemPermissionEditor = function(changes, item, permissionName, permissionValues, permissions, userData) {
 			var $list;
 			
 			var isGroup = function(id) {
@@ -1226,33 +1268,22 @@
 			var onAddOrUpdate = function(user, permissionVal) {
 				var userVal = $list.findByKey(user.id);
 				if (userVal) {
-					if (!userVal.isnew) permissionData.modified.push(userVal);
-					userVal.value = permissionVal;
+					changes.update(userVal, permissionVal);
 					$list.update(userVal);
 				} else {
-					// if previously deleted, move it to modified
-					for (var i=0,j=permissionData.removed.length; i<j; i++) {
-						var d = permissionData.removed[i];
-						if (d.user_id == user.id) {
-							permissionData.removed.remove(i);
-							permissionData.modified.push(d);
-							d.permission = permissionVal;
-							$list.add(d);
-							return;
-						}
+					var removed = changes.findRemoved(user.id, item.id, permissionName);
+					if (removed) {
+						// if previously deleted, move it to modified
+						removed.permission = permissionVal;
+						changes.update(removed);
+						$list.add(d);
+					} else {
+						// not modified or deleted => create new
+						var p = {"user_id": user.id, "subject": item.id, "name" : permissionName, "value": permissionVal, isnew: true };
+						changes.addNew(p);
+						$list.add(p);
 					}
-
-					// not modified or deleted => create new
-					var p = {"user_id": user.id, "subject": item.id, "name" : permissionName, "value": permissionVal, isnew: true };
-					permissionData["new"].push(p);
-					$list.add(p);
 				}					
-			};
-			var onRemove = function(permission) {
-				if (!permission.isnew) permissionData.removed.push(permission);
-			};
-			var onEdit = function(permission) {
-				if (!permission.isnew) permissionData.modified.push(permission);
 			};
 			
 			$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-permission-list", {
@@ -1274,12 +1305,14 @@
 							return mollify.ui.texts.get('permission_'+k);
 						},
 						onChange: function(item, p) {
-							item.value = p;
-							onEdit(item);
+							changes.update(item, p);
 						}, cellClass: "permission" },
 					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
 				],
-				onRowAction: function(id, permission) { onRemove(permission); $list.remove(permission); }
+				onRowAction: function(id, permission) {
+					changes.remove(permission);
+					$list.remove(permission);
+				}
 			});
 			
 			$list.add(permissions);

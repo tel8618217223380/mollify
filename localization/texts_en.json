@@ -187,13 +187,14 @@
 		
 		"pluginPermissionsEditDialogTitle": "Permissions for {0}",
 		"pluginPermissionsEditDialogPermissionName": "Permission:",
-		"pluginPermissionsEditDialogItemPermissions": "Explicit item permissions",
-		"pluginPermissionsEditDialogUserPermissions": "Effective user permissions",
+		"pluginPermissionsEditDialogItemPermissions": "Item permissions",
+		"pluginPermissionsEditDialogUserPermissions": "User permission",
 		"pluginPermissionsEditDialogUserPermissionsSelectUser": "Select user to inspect:",
 		"pluginPermissionsUserPermissionsAdmin": "User is administrator and has all permissions.",
-		"pluginPermissionsEffectiveUserPermission": "User effective permission for this item is: \"<strong>{0}</strong>\"",
+		"pluginPermissionsEffectiveUserPermission": "User effective permission for this item is: <span class='uneditable-input'>{0}</span>",
 		"pluginPermissionsNoEffectiveUserPermission": "User has no permissions related to this item, and permission defaults to: \"<strong>{0}</strong>\"",
 		"pluginPermissionsEffectiveUserRelatedPermissions": "Related permissions in priority order:",
+		"pluginPermissionsEditDialogUnsaved" : "Unsaved modifications",
 										
 		"pluginPermissionsEditColUser": "User",
 		"pluginPermissionsPermissionName": "Name",
