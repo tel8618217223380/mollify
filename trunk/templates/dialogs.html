@@ -38,6 +38,7 @@
 
 		<div class="modal-body">{{html $item.getContent()}}</div>
 		<div class="modal-footer">
+			<div class="info"></div>
 			{{each buttons}}
 			<a id="mollify-custom-dialog-button-${id}" class="mollify-custom-dialog-button btn ${cls}">${$item.getButtonTitle($value)}</a>
 			{{/each}}

@@ -1063,6 +1063,9 @@ li#mollify-folder-hierarchy-item-root a.dropdown-toggle {
 .modal .ui-resizable-e {
   right: 0;
 }
+.modal-footer .info {
+	float: left;
+}
 
 #mollify-dropbox {
 	position: fixed;
