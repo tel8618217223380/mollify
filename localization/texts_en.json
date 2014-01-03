@@ -201,7 +201,7 @@
 		"pluginPermissionsPermissionValue": "Permission",
 		"pluginPermissionsPermissionUser": "User",
 		"pluginPermissionsPermissionSubject": "Subject",
-		"pluginPermissionsEditColItem": "Item",
+		"pluginPermissionsEditColSource": "Source",
 		"pluginPermissionsEditColItemCurrent": "This",
 		"pluginPermissionsEditColItemParent": "Parent ({0})",
 		"pluginPermissionsEditRemove": "Remove",
