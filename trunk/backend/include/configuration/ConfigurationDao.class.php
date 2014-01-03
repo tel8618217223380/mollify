@@ -134,7 +134,26 @@
 			return $result->firstRow();
 		}
 		
-		public function getAllUsers($groups = FALSE) {
+		public function getAllUsers($groups = FALSE, $usersGroups = FALSE) {
+			if ($usersGroups) {
+				$rows = $this->db->query("SELECT u.id as id, u.name as name, u.lang as lang, u.email as email, u.user_type as user_type, u.expiration as expiration, u.is_group as is_group, ug.group_id as group_id FROM ".$this->db->table("user")." u LEFT OUTER JOIN ".$this->db->table("user_group")." ug on ug.user_id = u.id ORDER BY id ASC")->rows();
+				$prev = NULL;
+				$result = array();
+				$last = NULL;
+				foreach($rows as $r) {
+					if ($r["id"] != $prev) {
+						if ($last != NULL) $result[] = $last;
+						$last = $r;
+						$last["group_ids"] = array();
+					}
+					if ($r["group_id"] != NULL)
+						$last["group_ids"][] = $r["group_id"];
+					$prev = $r["id"];
+					unset($r["group_id"]);
+				}
+				if ($last != NULL) $result[] = $last;				
+				return $result;
+			}
 			return $this->db->query("SELECT id, name, lang, email, user_type, expiration, is_group FROM ".$this->db->table("user")." where ".($groups ? "1=1" : "is_group = 0")." ORDER BY id ASC")->rows();
 		}
 

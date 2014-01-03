@@ -27,7 +27,7 @@
 				$result = array("types" => $this->env->permissions()->getTypes());
 				
 				$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
-				if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
+				if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE, TRUE);
 				
 				$this->response()->success($result);
 				return;
