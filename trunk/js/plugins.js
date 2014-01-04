@@ -1109,8 +1109,37 @@
 							}
 						};
 						
-						var addNewUserAndGroupPermissions = function(list) {
-							return list;
+						var addNewUserAndGroupPermissions = function(list, user, permissionName) {
+							var usersAndGroups = [];
+							$.each(list, function(i, p) {
+								if (p.user_id != user.id && user.group_ids.indexOf(p.user_id) < 0) return false;
+								usersAndGroups.push(p);
+							});
+							$.each(usersAndGroups, function(i, p) {
+								list.remove(p);
+							});
+							var newList = [];
+							$.each(changes.getNew(permissionName), function(i, p) {
+								if (p.subject != item.id) return;
+								if (p.user_id == user.id || user.group_ids.indexOf(p.user_id) >= 0) usersAndGroups.push(p);
+							});
+							newList = usersAndGroups.concat(list);
+							var indx = function(p) {
+								var i = 0;
+
+								if (p.subject == item.id) i = 20;
+								else if (p.subject != null && p.subject != "") i = 10;
+																
+								if (p.user_id == user.id) i = i + 2;
+								else if (user.group_ids.indexOf(p.user_id) >= 0) i = i + 1;
+								
+								return i;
+							};
+							newList = newList.sort(function(a, b){
+								return indx(b) - indx(a);
+							});
+
+							return newList;
 						}
 						
 						var activateTab = function(i) {
@@ -1155,9 +1184,14 @@
 						};
 						
 						var onActivateUserPermissions = function($sc) {
-							var onChangeUser = function(sel) {
+							var resetUserPermissions = function() {
 								$("#mollify-pluginpermissions-editor-user-related-permissions").hide();
 								$("#mollify-pluginpermissions-editor-user-permissions-description").html("");								
+							}
+							resetUserPermissions();
+							
+							var onChangeUser = function(sel) {
+								resetUserPermissions();
 								if (!sel) return;
 								
 								if (sel.user_type == 'a') {
@@ -1171,7 +1205,7 @@
 									
 									var permissions = p.permissions.slice(0);
 									removeAndUpdate(permissions);
-									permissions = addNewUserAndGroupPermissions(permissions);
+									permissions = addNewUserAndGroupPermissions(permissions, sel, selectedPermission);
 									that.initUserPermissionInspector(changes, sel, item, selectedPermission, r.types.filesystem[selectedPermission], permissions, p.items, users);
 								}).fail(h.close);								
 							};
