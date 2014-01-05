@@ -1281,7 +1281,7 @@
 			if (o.none) api.add(o.none);
 			if (o.values) {
 				api.add(o.values);
-				if (o.value) this.select(o.value);
+				if (o.value) api.select(o.value);
 			}
 			return api;
 		},

@@ -252,6 +252,7 @@
 		public function getSessionInfo() {
 			$result = array();
 			$result["permissions"] = $this->getGenericPermissions(NULL, $this->env->session()->userId());
+			if ($this->env->authentication()->isAdmin()) $result["permission_types"] = $this->getTypes();
 			return $result;
 		}
 	}

@@ -28,6 +28,8 @@
 			
 			$this->handler = new ShareHandler($this->env, $this->getSettings());
 			$this->env->events()->register("filesystem/", $this->handler);
+			
+			$this->env->permissions()->registerFilesystemPermission("share_item");
 
 			$this->env->filesystem()->registerDataRequestPlugin(array("plugin-share-info"), $this->handler);
 			$this->env->filesystem()->registerItemContextPlugin("plugin-share", $this->handler);
