@@ -424,7 +424,6 @@
 			var permissionsView = false;
 			var folders = false;
 			var groups = false;
-			var permissionTypes = false;
 			var permissions = false;
 			
 			var updateGroups = function() {
@@ -445,11 +444,9 @@
 			};
 			var updatePermissions = function() {
 				$permissions.addClass("loading");
-				mollify.service.get("permissions/user/"+u.id+"/generic/" + (!permissionTypes ? "?t=1" : "")).done(function(l) {
+				mollify.service.get("permissions/user/"+u.id+"/generic/").done(function(l) {
 					$permissions.removeClass("loading");
 					permissions = l.permissions;
-					if (!permissionTypes)
-						permissionTypes = l.types;
 					permissionsView.table.set(permissions);
 				});
 			};
@@ -577,14 +574,14 @@
 					narrow: true,
 					columns: [
 						{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(p, v) {
-							if (permissionTypes.filesystem[v])
+							if (v in mollify.session.permission_types.keys.filesystem)
 								return mollify.ui.texts.get('permission_default_'+v);
 							return mollify.ui.texts.get('permission_'+v);
 						} },
 						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(p, v) {
-							if (!permissionTypes.filesystem[p.name])
-								return mollify.ui.texts.get('permission_'+v);
-							return mollify.ui.texts.get('permission_'+p.name+"_"+v);
+							if (!mollify.session.permission_types.values[p.name])
+								return mollify.ui.texts.get('permission_value_'+v);
+							return mollify.ui.texts.get('permission_'+p.name+"_value_"+v);
 						} }
 					]
 				}
@@ -814,7 +811,6 @@
 			var folders = false;
 			var users = false;
 			var permissions = false;
-			var permissionTypes = false;
 			
 			var updateUsers = function() {
 				$users.addClass("loading");
@@ -834,11 +830,9 @@
 			};
 			var updatePermissions = function() {
 				$permissions.addClass("loading");
-				mollify.service.get("permissions/user/"+g.id+"/generic/" + (!permissionTypes ? "?t=1" : "")).done(function(l) {
+				mollify.service.get("permissions/user/"+g.id+"/generic/").done(function(l) {
 					$permissions.removeClass("loading");
 					permissions = l.permissions;
-					if (!permissionTypes)
-						permissionTypes = l.types;
 					permissionsView.table.set(permissions);
 				});
 			};
@@ -964,12 +958,14 @@
 					narrow: true,
 					columns: [
 						{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(p, v) {
-							if (permissionTypes.filesystem[v])
+							if (v in mollify.session.permission_types.keys.filesystem)
 								return mollify.ui.texts.get('permission_default_'+v);
 							return mollify.ui.texts.get('permission_'+v);
 						} },
 						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(p, v) {
-							return mollify.ui.texts.get('permission_'+p.name+"_"+v);
+							if (!mollify.session.permission_types.values[p.name])
+								return mollify.ui.texts.get('permission_value_'+v);
+							return mollify.ui.texts.get('permission_'+p.name+"_value_"+v);
 						} }
 					]
 				}
@@ -977,6 +973,7 @@
 			
 			updateUsers();
 			updateFolders();
+			updatePermissions();
 		}
 		
 		this._removeGroups = function(groups) {
