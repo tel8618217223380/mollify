@@ -27,6 +27,8 @@
 			
 			$this->handler = new CommentHandler($this->env);
 			$this->env->events()->register("filesystem/", $this->handler);
+			
+			$this->env->permissions()->registerFilesystemPermission("comment_item");
 
 			$this->env->filesystem()->registerDataRequestPlugin(array("plugin-comment-count"), $this->handler);
 			$this->env->filesystem()->registerItemContextPlugin("plugin-comment", $this->handler);

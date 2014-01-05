@@ -214,7 +214,9 @@
 		"permission_default_filesystem_item_access": "Filesystem access (default)",
 		
 		"permission_edit_description": "Edit file/folder description",
-		
+		"permission_comment_item": "Comment files/folders",
+		"permission_share_item": "Share files/folders",
+				
 		"permission_filesystem_item_access_rwd": "Read&Write&Delete",
 		"permission_filesystem_item_access_rw": "Read&Write, No delete",
 		"permission_filesystem_item_access_r": "Read Only",

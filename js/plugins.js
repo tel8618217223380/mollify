@@ -998,6 +998,19 @@
 			that._pathFormatter = new mollify.ui.formatters.FilesystemItemPath();
 		};
 		
+		this._formatPermissionValue = function(name, val) {
+			var values = that._getPermissionValues(name);
+			if (values)
+				return mollify.ui.texts.get('permission_'+name+'_'+val);
+			return mollify.ui.texts.get('permission_'+val);
+		}
+		
+		this._getPermissionValues = function(name) {
+			if (name in mollify.session.permission_types.filesystem) return mollify.session.permission_types.filesystem[name];
+			if (name in mollify.session.permission_types.generic) return mollify.session.permission_types.generic[name];
+			return false;
+		}
+		
 		this.editItemPermissions = function(item) {
 			var modificationData = {
 				"new": [],
@@ -1035,10 +1048,10 @@
 					
 					h.center();
 					
-					mollify.service.get("permissions/types?u=1").done(function(r) {
-						var users = that.processUserData(r.users);
-						var names = mollify.helpers.getKeys(r.types.filesystem);	//param
-						var init = names[0];
+					mollify.service.get("configuration/users?g=1").done(function(l) {
+						var users = that.processUserData(l);
+						var names = mollify.helpers.getKeys(mollify.session.permission_types.filesystem);	//param
+						var init = 'filesystem_item_access';
 						var onPermissionsModified = function() {
 							var info = (modificationData["new"].length > 0 || modificationData["modified"].length > 0 || modificationData["removed"].length > 0) ? "<i class='icon-exclamation-sign '/>&nbsp;" + mollify.ui.texts.get('pluginPermissionsEditDialogUnsaved') : false;
 							h.setInfo(info);
@@ -1179,7 +1192,7 @@
 								var permissions = p.permissions.slice(0);
 								removeAndUpdate(permissions);
 								permissions = permissions.concat(changes.getNew(selectedPermission));
-								that.initItemPermissionEditor(changes, item, selectedPermission, r.types.filesystem[selectedPermission], permissions, users);
+								that.initItemPermissionEditor(changes, item, selectedPermission, permissions, users);
 							}).fail(h.close);
 						};
 						
@@ -1206,7 +1219,7 @@
 									var permissions = p.permissions.slice(0);
 									removeAndUpdate(permissions);
 									permissions = addNewUserAndGroupPermissions(permissions, sel, selectedPermission);
-									that.initUserPermissionInspector(changes, sel, item, selectedPermission, r.types.filesystem[selectedPermission], permissions, p.items, users);
+									that.initUserPermissionInspector(changes, sel, item, selectedPermission, permissions, p.items, users);
 								}).fail(h.close);								
 							};
 							
@@ -1246,24 +1259,20 @@
 			return userData;
 		};
 		
-		this.loadPermissions = function(item, name) {
-			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : ""));
+		this.loadPermissions = function(item, name, users) {
+			return mollify.service.get("permissions/list?subject="+item.id+(name ? "&name="+name : "")+(users?"&u=1":""));
 		};
 
-		this.initUserPermissionInspector = function(changes, user, item, permissionName, permissionValues, relatedPermissions, items, userData) {
-			var permissionValueFormatter = function(v) {
-				if (permissionValues)
-					return mollify.ui.texts.get('permission_'+permissionName+'_'+v);
-				return mollify.ui.texts.get('permission_'+v);
-			};
+		this.initUserPermissionInspector = function(changes, user, item, permissionName, relatedPermissions, items, userData) {
 			var updateEffectivePermission = function() {
 				var ep = false;
 				if (relatedPermissions.length > 0) ep = relatedPermissions[0].value;
 				if (ep) {
-					$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsEffectiveUserPermission', permissionValueFormatter(ep)));
+					$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsEffectiveUserPermission', that._formatPermissionValue(permissionName, ep)));
 					$("#mollify-pluginpermissions-editor-user-related-permissions").show();
 				} else {
-					$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsNoEffectiveUserPermission', permissionValueFormatter(permissionValues ? permissionValues[0] : '0')));
+					var values = that._getPermissionValues(permissionName);
+					$("#mollify-pluginpermissions-editor-user-permissions-description").html(mollify.ui.texts.get('pluginPermissionsNoEffectiveUserPermission', that._formatPermissionValue(permissionName, values ? values[0] : '0')));
 				}
 			}
 			updateEffectivePermission();
@@ -1294,7 +1303,7 @@
 						id: "value",
 						title: mollify.ui.texts.get('pluginPermissionsPermissionValue'),
 						formatter: function(item, k) {
-							return permissionValueFormatter(k);
+							return that.formatPermissionValue(permissionName, k);
 						}
 					},
 					{
@@ -1333,9 +1342,10 @@
 			$list.add(relatedPermissions);
 		};
 				
-		this.initItemPermissionEditor = function(changes, item, permissionName, permissionValues, permissions, userData) {
+		this.initItemPermissionEditor = function(changes, item, permissionName, permissions, userData) {
 			var $list;
 			
+			var permissionValues = that._getPermissionValues(permissionName);
 			var isGroup = function(id) {
 				return (id != 0 && userData.usersById[id].is_group != "0");
 			};
@@ -1429,29 +1439,32 @@
 		this.renderItemContextDetails = function(el, item, $content) {
 			mollify.dom.template("mollify-tmpl-permission-context").appendTo($content);
 			mollify.ui.process($content, ["localize"]);
-			
-			//TODO
-			
-			/*that.loadPermissions(item).done(function(permissions, userData) {
+						
+			that.loadPermissions(item, false, true).done(function(p) {
+				var userData = that.processUserData(p.users);
+				
 				$("#mollify-pluginpermissions-context-content").removeClass("loading");
 				
 				var $list = mollify.ui.controls.table("mollify-pluginpermissions-context-permission-list", {
 					key: "user_id",
 					columns: [
-						{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
-						{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), renderer: function(i, v, $c){
-							$c.html(that.permissionOptionsByKey[v].title);
+						{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), formatter: function(i, v){
+							return v != 0 ? userData.usersById[v].name : mollify.ui.texts.get('pluginPermissionsEditDefaultPermission');
+						} },
+						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), formatter: function(i, v){
+							return v;
+							//$c.html(that.permissionOptionsByKey[v].title);
 						}}
 					]
 				});
-				$list.add(permissions);
+				$list.add(p.permissions);
 				$("#mollify-pluginpermissions-context-edit").click(function(){
 					el.close();
-					that.onOpenPermissions(item);
+					that.editItemPermissions(item);
 				});
 			}).fail(function(e) {
 				el.close();
-			});*/
+			});
 		};
 		
 		this.onActivateConfigView = function($c, cv) {
@@ -1634,7 +1647,7 @@
 			mollify.ui.dialogs.custom({
 				resizable: true,
 				initSize: [600, 400],
-				title: mollify.ui.texts.get('pluginPermissionsEditUserDialogTitle', user.name),
+				title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle', user.name),
 				content: mollify.dom.template("mollify-tmpl-permission-generic-editor", {user: user}),
 				buttons: [
 					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
@@ -2587,7 +2600,8 @@
 				}
 			},
 			itemContextHandler : function(item, ctx, data) {
-				return {
+				if (!ctx.details.permissions.share_item) return false;
+				return {				
 					actions: [
 						{ id: 'pluginShare', 'title-key': 'itemContextShareMenuTitle', icon: 'external-link', callback: function() { that.onOpenShares(item); } }
 					]
