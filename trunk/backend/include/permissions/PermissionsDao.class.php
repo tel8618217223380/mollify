@@ -167,6 +167,42 @@
 			}
 			return $list;
 		}
+		
+		public function getEffectiveGenericPermissions($name, $userId, $groupIds) {
+			$mysql = (strcmp("mysql", $this->db->type()) == 0);
+			$table = $this->db->table("permission");
+			
+			$userIds = array(0, $userId);
+			if ($groupIds != NULL)
+				foreach($groupIds as $g)
+					$userIds[] = $g;
+			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
+
+			// order within category into 1) user specific 2) group 3) default
+			if ($mysql) {
+				$subcategoryQuery = sprintf("(IF(user_id = '%s', 1, IF(user_id = '0', 3, 2)))", $userId);
+			} else {
+				$subcategoryQuery = sprintf("(case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end)", $userId);
+			}
+			
+			$nameQuery = is_array($name) ? "in (".$this->db->arrayString($name, TRUE).")" : "=".$this->db->string($name, TRUE);
+
+			// item permissions
+			$query = sprintf("SELECT value, name, user_id, subject, %s as cat FROM ".$table." WHERE name %s AND subject = '' AND %s", $subcategoryQuery, $nameQuery, $userQuery);
+			
+			$query = "SELECT name, value, user_id, subject FROM (".$query.") as u ORDER BY name ASC, u.cat ASC, u.value DESC";
+			
+			$all = $this->db->query($query)->rows();
+			
+			$k = array();
+			$prev = NULL;
+			foreach($all as $p) {
+				$name = $p["name"];
+				if ($name != $prev) $k[$name] = $p["value"];
+				$prev = $name;
+			}
+			return $k;
+		}
 			
 		public function updatePermissions($updates) {
 			$new = isset($updates['new']) ? $updates['new'] : array();

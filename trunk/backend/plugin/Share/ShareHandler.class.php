@@ -98,11 +98,13 @@
 		}
 		
 		public function addShare($item, $name, $expirationTs, $active, $restriction) {
+			if (!$this->env->permissions()->hasFilesystemPermission("share_item", $item)) throw new ServiceException("UNAUTHORIZED");
 			$created = $this->env->configuration()->formatTimestampInternal(time());
 			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->session()->userId(), $expirationTs, $created, $active, $restriction);
 		}
 
 		public function editShare($id, $name, $expirationTs, $active, $restriction) {
+			//TODO if (!$this->env->permissions()->hasFilesystemPermission("share_item", $item)) throw new ServiceException("UNAUTHORIZED");
 			$this->dao()->editShare($id, $name, $expirationTs, $active, $restriction);
 		}
 		
@@ -307,7 +309,7 @@
 		}
 
 		public function processUpload($shareId, $folder) {
-		$this->env->permissions()->temporaryFilesystemPermission("filesystem_item_access", $folder, FilesystemController::PERMISSION_LEVEL_READWRITE);
+			$this->env->permissions()->temporaryFilesystemPermission("filesystem_item_access", $folder, FilesystemController::PERMISSION_LEVEL_READWRITE);
 			$this->env->filesystem()->uploadTo($folder);
 		}
 								
