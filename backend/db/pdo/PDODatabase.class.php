@@ -17,6 +17,7 @@
 		private $tablePrefix;
 		
 		private $db = NULL;
+		private $transaction = FALSE;
 		
 		public static function createFromConf($conf) {
 			if (!isset($conf["str"]) || !isset($conf["user"]) or !isset($conf["password"])) throw new ServiceException("INVALID_CONFIGURATION", "No PDO database information defined");
@@ -133,20 +134,28 @@
 		}
 		
 		public function startTransaction() {
+			if ($this->transaction) return;
 			if (!$this->db->beginTransaction())
 				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".Util::array2str($this->db->errorInfo()));
+			$this->transaction = TRUE;
 		}
 
 		public function commit() {
 			if (!$this->db->commit())
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".Util::array2str($this->db->errorInfo()));
+			$this->transaction = FALSE;
 		}
 		
 		public function rollback() {
 			if (!$this->db->rollBack())
 				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".Util::array2str($this->db->errorInfo()));
+			$this->transaction = FALSE;
 		}
-		
+
+		public function isTransaction() {
+			return $this->transaction;
+		}
+
 		public function string($s, $quote = FALSE) {
 			if ($s === NULL) return 'NULL';
 			$r = $this->db->quote($s);

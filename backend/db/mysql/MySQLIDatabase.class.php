@@ -21,7 +21,8 @@
 		private $engine;
 
 		private $db = NULL;
-		
+		private $transaction = FALSE;
+				
 		public static function createFromConf($conf) {
 			if (!isset($conf["user"]) or !isset($conf["password"])) throw new ServiceException("INVALID_CONFIGURATION", "No MySQL db user information defined");
 			
@@ -185,6 +186,7 @@
 		}
 		
 		public function startTransaction() {
+			if ($this->transaction) return;
 			try {
 				$result = @mysqli_query($this->db, "START TRANSACTION;");
 			} catch (mysqli_sql_exception $e) {
@@ -194,6 +196,7 @@
 
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".mysqli_error($this->db));
+			$this->transaction = TRUE;
 		}
 
 		public function commit() {
@@ -206,6 +209,7 @@
 
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysqli_error($this->db));
+			$this->transaction = FALSE;
 		}
 
 		public function rollback() {
@@ -218,6 +222,11 @@
 
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".mysqli_error($this->db));
+			$this->transaction = FALSE;
+		}
+
+		public function isTransaction() {
+			return $this->transaction;
 		}
 
 		public function arrayString($a, $quote = FALSE) {
