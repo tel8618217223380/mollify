@@ -37,7 +37,10 @@
 				$subject = $this->env->request()->hasParam("subject") ? $this->env->request()->param("subject") : NULL;
 				$userId = $this->env->request()->hasParam("user_id") ? $this->env->request()->param("user_id") : NULL;
 				
-				$permissions = $this->env->permissions()->getPermissions($name, $subject, $userId);
+				if (count($this->path) == 2 and $this->path[1] == "generic")
+					$permissions = $this->env->permissions()->getGenericPermissions(NULL, $userId);
+				else
+					$permissions = $this->env->permissions()->getPermissions($name, $subject, $userId);
 				$result = array("permissions" => $permissions);
 				
 				$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);

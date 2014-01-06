@@ -1525,6 +1525,7 @@
 								callback: function() { removePermissions(sel).done(refresh); }
 							});
 						}},
+						{ id: "action-edit-generic", content:'<i class="icon-plus"></i>', callback: function() { that.editGenericPermissions(); } },
 						{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: refresh }
 					],
 					table: {
@@ -1638,7 +1639,7 @@
 			});
 		};
 		
-		this.editUserGenericPermissions = function(user) {
+		this.editGenericPermissions = function(user) {
 			var permissionData = {
 				"new": [],
 				"modified": [],
@@ -1649,7 +1650,7 @@
 			mollify.ui.dialogs.custom({
 				resizable: true,
 				initSize: [600, 400],
-				title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle', user.name),
+				title: user ? mollify.ui.texts.get('pluginPermissionsEditDialogTitle', user.name) : mollify.ui.texts.get('pluginPermissionsEditGenericDialogTitle'),
 				content: mollify.dom.template("mollify-tmpl-permission-generic-editor", {user: user}),
 				buttons: [
 					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
@@ -1670,18 +1671,18 @@
 					$content = $d.find("#mollify-pluginpermissions-editor-generic-content");
 					h.center();
 					var $list = false;
+					var url = user ? "permissions/user/"+user.id+"/generic/" : "permissions/list/generic?user_id=0";
 					
-					mollify.service.get("permissions/user/"+user.id+"/generic/?t=1").done(function(r) {
+					mollify.service.get(url).done(function(r) {
 						$content.removeClass("loading");
 						
 						var allTypeKeys = mollify.session.permission_types.keys.all;
-						//var allTypes = $.extend({}, r.types.generic, r.types.filesystem);
 						var values = mollify.helpers.mapByKey(r.permissions, "name", "value");
 												
 						var permissions = [];
 						
 						$.each(allTypeKeys, function(i, t) {
-							var p = { name: t, value: values[t], subject: '', user_id: user.id };
+							var p = { name: t, value: values[t], subject: '', user_id: user ? user.id : '0' };
 							if (!values[t]) p.isnew = true;
 							permissions.push(p);
 						});
@@ -1690,6 +1691,10 @@
 							key: "name",
 							columns: [
 								{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(item, name) {
+									if (mollify.session.permission_types.keys.filesystem.indexOf(name) >= 0) {
+										if (!user) return that._formatPermissionName(item) + " (" + mollify.ui.texts.get('permission_system_default') + ")";
+										return that._formatPermissionName(item) + " (" + mollify.ui.texts.get(user.is_group == '1' ? 'permission_group_default' : 'permission_user_default') + ")";
+									}
 									return that._formatPermissionName(item);
 								} },
 								{
@@ -1766,7 +1771,7 @@
 					}];
 				}
 			},
-			editUserGenericPermissions: that.editUserGenericPermissions
+			editGenericPermissions: that.editGenericPermissions
 		};
 	}
 
