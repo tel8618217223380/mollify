@@ -566,7 +566,7 @@
 			permissionsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-permissions"), {
 				title: mollify.ui.texts.get('configAdminUsersPermissionsTitle'),
 				actions: [
-					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editUserGenericPermissions(u) } }
+					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editGenericPermissions(u); } }
 				],
 				table: {
 					id: "config-admin-userpermissions",
@@ -950,7 +950,7 @@
 			permissionsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-groupdetails-permissions"), {
 				title: mollify.ui.texts.get('configAdminGroupsPermissionsTitle'),
 				actions: [
-					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editUserGenericPermissions(g) } }
+					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { mollify.plugins.get('plugin-permissions').editGenericPermissions(g) } }
 				],
 				table: {
 					id: "config-admin-grouppermissions",
