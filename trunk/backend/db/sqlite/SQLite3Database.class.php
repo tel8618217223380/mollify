@@ -12,7 +12,8 @@
 	class MollifySQLite3Database {
 		private $file;		
 		private $db = NULL;
-		
+		private $transaction = FALSE;
+				
 		public static function createFromConf($conf) {
 			if (!isset($conf["file"])) throw new ServiceException("INVALID_CONFIGURATION", "No SQLite database file defined");
 			
@@ -92,21 +93,31 @@
 		}
 		
 		public function startTransaction() {
+			if ($this->transaction) return;
 			$result = $this->db->exec("BEGIN;");
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".$this->db->lastErrorMsg());
+			$this->transaction = TRUE;
 		}
 
 		public function commit() {
+			if (!$this->transaction) return;
 			$result = $this->db->exec("COMMIT;");
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".$this->db->lastErrorMsg());
+			$this->transaction = FALSE;
 		}
 		
 		public function rollback() {
+			if (!$this->transaction) return;
 			$result = $this->db->exec("ROLLBACK;");
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".$this->db->lastErrorMsg());
+			$this->transaction = FALSE;
+		}
+		
+		public function isTransaction() {
+			return $this->transaction;
 		}
 		
 		public function string($s, $quote = FALSE) {

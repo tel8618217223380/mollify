@@ -71,14 +71,15 @@
 		}
 		
 		public function storeUserAuth($id, $username, $type, $pw) {
-			$this->db->startTransaction();
+			$transaction = $this->db->isTransaction();
+			if (!$transaction) $this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_auth")." WHERE user_id=%s", $this->db->string($id, TRUE)));
 			
 			$hash = $this->env->passwordHash()->createHash($pw);
 			$a1hash = md5($username.":".$this->env->authentication()->realm().":".$pw);
 			
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_auth")." (user_id, type, hash, salt, a1hash) VALUES (%s, %s, %s, %s, %s)", $this->db->string($id, TRUE), $this->db->string($type, TRUE), $this->db->string($hash["hash"], TRUE), $this->db->string($hash["salt"], TRUE), $this->db->string($a1hash, TRUE)));
-			$this->db->commit();
+			if (!$transaction) $this->db->commit();
 		}
 		
 		public function updateUserAuth($id, $username, $pw, $type=FALSE) {
@@ -214,7 +215,8 @@
 			return TRUE;
 		}
 		
-		public function removeUser($userId, $transaction = FALSE) {
+		public function removeUser($userId) {
+			$transaction = $this->db->isTransaction();
 			$id = $this->db->string($userId);
 
 			if (!$transaction) $this->db->startTransaction();
@@ -231,7 +233,7 @@
 		
 		public function removeUsers($ids) {
 			$this->db->startTransaction();
-			foreach($ids as $id) $this->removeUser($id, TRUE);
+			foreach($ids as $id) $this->removeUser($id);
 			$this->db->commit();
 			return TRUE;
 		}

@@ -20,6 +20,7 @@
 		private $socket;
 		
 		private $db = NULL;
+		private $transaction = FALSE;
 		
 		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket) {
 			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.") port=".$port." socket=".$socket);
@@ -113,17 +114,24 @@
 		}
 		
 		public function startTransaction() {
+			if ($this->transaction) return;
 			$result = @mysql_query("START TRANSACTION;", $this->db);
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".mysql_error($this->db));
+			$this->transaction = TRUE;
 		}
 
 		public function commit() {
 			$result = @mysql_query("COMMIT;", $this->db);
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysql_error($this->db));
+			$this->transaction = FALSE;
 		}
-		
+
+		public function isTransaction() {
+			return $this->transaction;
+		}
+
 		public function string($s, $quote = FALSE) {
 			if ($s === NULL) return 'NULL';
 			$r = mysql_real_escape_string($s, $this->db);
