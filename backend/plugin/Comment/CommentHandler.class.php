@@ -44,10 +44,12 @@
 		}
 		
 		public function addComment($user, $item, $comment) {
+			if (!$this->env->permissions()->hasFilesystemPermission("comment_item", $item)) throw new ServiceException("UNAUTHORIZED");
 			$this->getDao()->addComment($user, $item, time(), $comment);
 		}
 		
 		public function removeComment($item, $commentId) {
+			if (!$this->env->permissions()->hasFilesystemPermission("comment_item", $item)) throw new ServiceException("UNAUTHORIZED");
 			$user = $this->env->session()->userId();
 			if ($this->env->authentication()->isAdmin()) $user = NULL;
 			$this->getDao()->removeComment($item, $commentId, $user);

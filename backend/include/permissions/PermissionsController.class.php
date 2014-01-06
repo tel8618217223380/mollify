@@ -31,6 +31,10 @@
 		public function registerFilesystemPermission($name, $values = NULL) {
 			$this->filesystemPermissions[$name] = $values;
 		}
+
+		public function registerGenericPermission($name, $values = NULL) {
+			$this->genericPermissions[$name] = $values;
+		}
 		
 		public function getTypes() {
 			return array("generic" => $this->genericPermissions, "filesystem" => $this->filesystemPermissions);
@@ -252,7 +256,7 @@
 		
 		public function getSessionInfo() {
 			$result = array();
-			$result["permissions"] = $this->getGenericPermissions(NULL, $this->env->session()->userId());
+			$result["permissions"] = $this->dao->getEffectiveGenericPermissions(array_keys($this->genericPermissions), $this->env->session()->userId(), $this->getGroupIds());
 			if ($this->env->authentication()->isAdmin()) {
 				$types = $this->getTypes();
 				$t = array(					
