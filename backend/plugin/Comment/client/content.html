@@ -1,8 +1,9 @@
 <script id="comments-template" type="text/x-jquery-tmpl">
-	<div id="comments-content-${id}" class="comments-context-content">
+	<div id="comments-content-${item.id}" class="comments-context-content">
+		{{if canAdd}}
 		<div id='new-comment-container' class="input-append pull-right">
-			<input id="comments-dialog-add-text" class="hintbox" type="text" hint-key="commentsDialogNewComment">
-			<button id="comments-dialog-add" class="btn" type="button"><i class="icon-comment"></i></button>
+			<input class="comments-dialog-add-text hintbox" type="text" hint-key="commentsDialogNewComment">
+			<button class="comments-dialog-add btn" type="button"><i class="icon-comment"></i></button>
 			<!--div id='new-comment'>
 				<div id='new-comment-text'>
 					<textarea rows="1" id='comments-dialog-add-text' />
@@ -10,7 +11,8 @@
 				<a id='comments-dialog-add' class='link localized' text-key="commentsDialogAddButton"></a>
 			</div-->
 		</div>
-		<div id='comments-list'></div>
+		{{/if}}
+		<div class='comments-list'></div>
 	</div>
 </script>
 

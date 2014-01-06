@@ -851,30 +851,32 @@
 			return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
 		};
 		
-		this.renderItemContextDetails = function(el, item, $content, data) {
+		this.renderItemContextDetails = function(el, item, ctx, $content, data) {
 			$content.addClass("loading");
 			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html"))).done(function() {
 				$content.removeClass("loading");
 				if (data.count === 0) {
-					that.renderItemContextComments(el, item, [], {element: $content.empty(), contentTemplate: 'comments-template'});
+					that.renderItemContextComments(el, item, ctx, [], {element: $content.empty(), contentTemplate: 'comments-template'});
 				} else {
 					that.loadComments(item, function(item, comments) {
-						that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
+						that.renderItemContextComments(el, item, ctx, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
 					});
 				}
 			});
 		};
 		
-		this.renderItemContextComments = function(el, item, comments, o) {
-			mollify.dom.template(o.contentTemplate, item).appendTo(o.element);
+		this.renderItemContextComments = function(el, item, ctx, comments, o) {
+			var canAdd = (mollify.session.admin || ctx.details.permissions.comment_item == '1');
+			var $c = mollify.dom.template(o.contentTemplate, {item: item, canAdd: canAdd}).appendTo(o.element);
+
+			if (canAdd)			
+				$c.find(".comments-dialog-add").click(function() {
+					var comment = $c.find(".comments-dialog-add-text").val();
+					if (!comment || comment.length === 0) return;
+					that.onAddComment(item, comment, el.close);
+				});
 			
-			$("#comments-dialog-add").click(function() {
-				var comment = $("#comments-dialog-add-text").val();
-				if (!comment || comment.length === 0) return;
-				that.onAddComment(item, comment, el.close);
-			} );
-			
-			that.updateComments($("#comments-list"), item, comments);
+			that.updateComments($c.find(".comments-list"), item, comments);
 		};
 		
 		this.showCommentsBubble = function(item, e) {
@@ -981,7 +983,7 @@
 				return {
 					details: {
 						"title-key": "pluginCommentContextTitle",
-						"on-render": function(el, $content) { that.renderItemContextDetails(el, item, $content, data); }
+						"on-render": function(el, $content, ctx) { that.renderItemContextDetails(el, item, ctx, $content, data); }
 					}
 				};
 			}
