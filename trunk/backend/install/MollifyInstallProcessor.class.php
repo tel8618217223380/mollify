@@ -125,6 +125,10 @@
 			return $this;
 		}
 		
+		public function permissions() {
+			return $this;
+		}
+		
 		public function passwordHash() {
 			return $this->passwordHash;
 		}
@@ -201,9 +205,11 @@
 		
 		public function registerDetailsPlugin($p) {}
 		
+		public function registerFilesystemPermission($p, $v = NULL) {}
+		
 		public function createAdminUser($name, $pw) {			
-			$id = $this->configuration()->addUser($name, NULL, NULL, Authentication::PERMISSION_VALUE_ADMIN, NULL);
-			$this->configuration()->storeUserAuth($id, $name, NULL, $pw);
+			$id = $this->configuration()->addUser($name, NULL, NULL, Authentication::USER_TYPE_ADMIN, NULL);
+			$this->configuration()->storeUserAuth($id, $name, NULL, $pw, TRUE);
 		}
 		
 		public function __toString() {

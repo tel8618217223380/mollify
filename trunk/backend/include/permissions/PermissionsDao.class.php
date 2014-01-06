@@ -54,7 +54,7 @@
 			$nameQuery = is_array($name) ? "in (".$this->db->arrayString($name, TRUE).")" : "=".$this->db->string($name, TRUE);
 
 			// item permissions
-			$query = sprintf("SELECT value, name, user_id, (case when subject = '' then 2 else 1 end) as cat1, %s as cat2, 0 as cat3 FROM ".$table." WHERE name %s AND (subject = '' OR subject = '%s') AND %s", $subcategoryQuery, $nameQuery, $id, $userQuery);
+			$query = sprintf("SELECT value, name, user_id, subject, (case when subject = '' then 2 else 1 end) as cat1, %s as cat2, 0 as cat3 FROM ".$table." WHERE name %s AND (subject = '' OR subject = '%s') AND %s", $subcategoryQuery, $nameQuery, $id, $userQuery);
 					
 			if ($item->isFile() or !$item->isRoot()) {
 				$parentLocation = $item->parent()->location();

@@ -39,16 +39,10 @@ CREATE TABLE item_id (
   path char(255) NOT NULL,
   PRIMARY KEY (id)
 );
-CREATE TABLE item_permission (
-  user_id int(11) NULL DEFAULT 0,
-  item_id char(255) NOT NULL,
-  permission char(2) NOT NULL,
-  PRIMARY KEY (user_id,item_id)
-);
 CREATE TABLE permission (
   name char(64) NOT NULL,
   user_id int(11) NULL DEFAULT 0,
-  subject char(255) NULL,
+  subject char(255) NOT NULL DEFAULT '',
   value char(32) NOT NULL,
   PRIMARY KEY (name,user_id,subject)
 );
