@@ -415,7 +415,7 @@
 					var $c = contents[id] ? contents[id] : false;
 					if (!$c) {
 						$c = $('<div class="mollify-itemcontext-plugin-content"></div>');
-						plugins[id].details["on-render"](cApi, $c);
+						plugins[id].details["on-render"](cApi, $c, ctx);
 						contents[id] = $c;
 						$content.append($c);
 					}
