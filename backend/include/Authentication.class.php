@@ -10,19 +10,7 @@
 	 */
 
 	class Authentication {
-		const USER_TYPE_ADMIN = "A";
-		
-		/*const PERMISSION_VALUE_ADMIN = "A";
-		const PERMISSION_VALUE_READWRITE = "RW";
-		const PERMISSION_VALUE_READWRITE_NODELETE = "WD";
-		const PERMISSION_VALUE_READONLY = "RO";
-		const PERMISSION_VALUE_NO_RIGHTS = 'NO';
-		
-		const RIGHTS_NONE = "NO";
-		const RIGHTS_READ = "R";
-		const RIGHTS_WRITE = "W";
-		const RIGHTS_DELETE = "D";
-		const RIGHTS_ADMIN = "A";*/
+		const USER_TYPE_ADMIN = "a";
 	
 		protected $env;
 		
@@ -170,44 +158,6 @@
 		public function isAuthenticated() {
 			return $this->env->session()->isActive();
 		}
-		
-		/*public function getDefaultPermission() {
-			if (!$this->cachedDefaultPermission) {
-				if (!$this->isAuthenticated()) $this->cachedDefaultPermission = self::PERMISSION_VALUE_NO_RIGHTS;
-				else $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission($this->env->session()->userId());
-			}
-			return $this->cachedDefaultPermission;
-		}
-		
-		public function assertRights($permissions, $required, $desc = "Unknown item/action") {
-			if ($this->isAdmin() or strcasecmp($required, self::RIGHTS_NONE) === 0) return;
-
-			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE_NODELETE) === 0) {
-				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE) return;
-			}					
-			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE) === 0) {
-				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE or $required === self::RIGHTS_DELETE) return;
-			}
-			if (strcasecmp($permissions, self::PERMISSION_VALUE_READONLY) === 0) {
-				if ($required === self::RIGHTS_READ) return;
-			}
-			
-			throw new ServiceException("INSUFFICIENT_RIGHTS", $desc.", required:".$required.", permissions:".$permissions);
-		}
-		
-		public function hasReadRights($permission) {
-			return strcasecmp($permission, self::PERMISSION_VALUE_ADMIN) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE_NODELETE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READONLY) === 0;
-		}
-		
-		function hasModifyRights() {
-			$base = $this->getDefaultPermission();
-			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_READWRITE || $base === self::PERMISSION_VALUE_READWRITE_NODELETE);
-		}
-
-		function hasDeleteRights() {
-			$base = $this->getDefaultPermission();
-			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_READWRITE);
-		}*/
 
 		function assertAdmin() {
 			if (!$this->isAdmin()) throw new ServiceException("NOT_AN_ADMIN");
