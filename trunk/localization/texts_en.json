@@ -186,6 +186,7 @@
 		"pluginPermissionsContextEditAction": "Edit...",
 		
 		"pluginPermissionsEditDialogTitle": "Permissions for {0}",
+		"pluginPermissionsEditDefaultDialogTitle": "Default permissions",
 		"pluginPermissionsEditDialogPermissionName": "Permission:",
 		"pluginPermissionsEditDialogItemPermissions": "Item permissions",
 		"pluginPermissionsEditDialogUserPermissions": "User permission",
