@@ -1300,6 +1300,7 @@
 						id: "user_id",
 						title: mollify.ui.texts.get('pluginPermissionsEditColUser'),
 						renderer: function(i, v, $c) {
+							if (v == 0 && i.subject == '') return;
 							if (v == 0) {
 								$c.html("<em>"+mollify.ui.texts.get('pluginPermissionsEditDefaultPermission')+"</em>");
 								return;
@@ -1449,7 +1450,7 @@
 			mollify.dom.template("mollify-tmpl-permission-context").appendTo($content);
 			mollify.ui.process($content, ["localize"]);
 						
-			that.loadPermissions(item, false, true).done(function(p) {
+			that.loadPermissions(item, "filesystem_item_access", true).done(function(p) {
 				var userData = that.processUserData(p.users);
 				
 				$("#mollify-pluginpermissions-context-content").removeClass("loading");
@@ -1460,7 +1461,7 @@
 						{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), formatter: function(i, v){
 							return v != 0 ? userData.usersById[v].name : mollify.ui.texts.get('pluginPermissionsEditDefaultPermission');
 						} },
-						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), formatter: function(i, v){
+						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(i, v){
 							return that._formatPermissionValue(i.name, v);
 						}}
 					]
@@ -1650,7 +1651,7 @@
 			mollify.ui.dialogs.custom({
 				resizable: true,
 				initSize: [600, 400],
-				title: user ? mollify.ui.texts.get('pluginPermissionsEditDialogTitle', user.name) : mollify.ui.texts.get('pluginPermissionsEditGenericDialogTitle'),
+				title: user ? mollify.ui.texts.get('pluginPermissionsEditDialogTitle', user.name) : mollify.ui.texts.get('pluginPermissionsEditDefaultDialogTitle'),
 				content: mollify.dom.template("mollify-tmpl-permission-generic-editor", {user: user}),
 				buttons: [
 					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
