@@ -1524,7 +1524,7 @@
 	dh.showError = function(error) {
 		var msg = 'errorDialogMessage_'+error.code;
 		if (!mollify.ui.texts.has(msg)) msg = 'errorDialogUnknownError';
-		if (mollify.session.admin && error.trace) {
+		if (mollify.session.user && mollify.session.user.admin && error.trace) {
 			dh.custom({
 				title: mollify.ui.texts.get('errorDialogTitle'),
 				content: $("#mollify-tmpl-dialog-error-debug").tmpl({
