@@ -43,6 +43,7 @@
 		"errorDialogUnknownError": "Request failed",
 		"errorDialogMessage_204": "File already exists.",
 		"errorDialogMessage_205": "Folder already exists.",
+		"errorDialogMessage_212": "Insufficient permissions",
 
 		"loginDialogTitle": "Login",
 		"loginDialogUsername": "Username",

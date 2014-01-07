@@ -866,7 +866,7 @@
 		};
 		
 		this.renderItemContextComments = function(el, item, ctx, comments, o) {
-			var canAdd = (mollify.session.admin || ctx.details.permissions.comment_item == '1');
+			var canAdd = (mollify.session.user.admin || ctx.details.permissions.comment_item == '1');
 			var $c = mollify.dom.template(o.contentTemplate, {item: item, canAdd: canAdd}).appendTo(o.element);
 
 			if (canAdd)			
@@ -884,7 +884,7 @@
 			
 			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html"))).done(function() {
 				that.loadComments(item, true, function(item, comments, permission) {
-					var canAdd = mollify.session.admin || permission == '1';
+					var canAdd = mollify.session.user.admin || permission == '1';
 					var $c = mollify.dom.template("comments-template", {item: item, canAdd: canAdd});
 					bubble.content($c);
 		
@@ -912,7 +912,7 @@
 			for (var i=0,j=comments.length; i<j; i++) {
 				comments[i].time = that._timestampFormatter.format(mollify.helpers.parseInternalTime(comments[i].time));
 				comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
-				comments[i].remove = mollify.session.admin || (userId == comments[i].user_id);
+				comments[i].remove = mollify.session.user.admin || (userId == comments[i].user_id);
 			}
 			return comments;
 		};
@@ -1753,7 +1753,7 @@
 			id: "plugin-permissions",
 			initialize: that.initialize,
 			itemContextHandler : function(item, ctx, data) {
-				if (!mollify.session.admin) return false;
+				if (!mollify.session.user.admin) return false;
 				
 				return {
 					details: {
