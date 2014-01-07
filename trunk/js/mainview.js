@@ -55,7 +55,6 @@
 			
 			var $mb = $("#mollify-mainview-menu");
 			var $mbitems = mollify.dom.template("mollify-tmpl-main-menubar", menuitems).appendTo($mb);
-			//var $mbitems = $mb.find(".mollify-mainview-menubar-item");
 			$mbitems.click(function() {
 				var i = $mbitems.index($(this));
 				that.activateView(that._views[i]);
@@ -506,7 +505,6 @@
 		this.onActivate = function(h) {
 			mollify.dom.template("mollify-tmpl-fileview").appendTo(h.content);
 			that.showProgress();
-			// TODO default view mode
 			// TODO expose file urls
 			
 			var navBarItems = [];
@@ -799,7 +797,7 @@
 		
 		this._canWrite = function() {
 			if (!that._currentFolderData) return false;
-			return (that._currentFolderData.permission == 'rw' || that._currentFolderData.permission == 'rwd');
+			return (that._currentFolderData.permission.indexOf('rw') >= 0);
 		}
 		
 		this.onRetrieveUrl = function(url) {
@@ -927,27 +925,27 @@
 							}});
 							return false;
 						});
-					
-						// FOLDER
-						var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
-						mollify.ui.controls.dropdown({
-							element: actionsElement,
-							items: false,
-							hideDelay: 0,
-							style: 'submenu',
-							onShow: function(drp, items) {
-								if (items) return;
-							
-								that.getItemActions(that._currentFolder, function(a) {
-									if (!a) {
-										drp.hide();
-										return;
-									}
-									drp.items(a);
-								});
-							}
-						});
 					}
+					
+					// FOLDER
+					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
+					mollify.ui.controls.dropdown({
+						element: actionsElement,
+						items: false,
+						hideDelay: 0,
+						style: 'submenu',
+						onShow: function(drp, items) {
+							if (items) return;
+						
+							that.getItemActions(that._currentFolder, function(a) {
+								if (!a) {
+									drp.hide();
+									return;
+								}
+								drp.items(a);
+							});
+						}
+					});
 				
 					that.setupHierarchy(that._currentFolderData.hierarchy, $tb);
 				
