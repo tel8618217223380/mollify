@@ -858,7 +858,7 @@
 				if (data.count === 0) {
 					that.renderItemContextComments(el, item, ctx, [], {element: $content.empty(), contentTemplate: 'comments-template'});
 				} else {
-					that.loadComments(item, function(item, comments) {
+					that.loadComments(item, false, function(item, comments) {
 						that.renderItemContextComments(el, item, ctx, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
 					});
 				}
@@ -879,37 +879,40 @@
 			that.updateComments($c.find(".comments-list"), item, comments);
 		};
 		
-		this.showCommentsBubble = function(item, e) {
-			var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name, container: $("#mollify-filelist-main-items")});
+		this.showCommentsBubble = function(item, e, ctx) {
+			var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name, container: ctx.container});
 			
 			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html"))).done(function() {
-				bubble.content(mollify.dom.template("comments-template", item));
+				that.loadComments(item, true, function(item, comments, permission) {
+					var canAdd = mollify.session.admin || permission == '1';
+					var $c = mollify.dom.template("comments-template", {item: item, canAdd: canAdd});
+					bubble.content($c);
 		
-				$("#comments-dialog-add").click(function() { 
-					var comment = $("#comments-dialog-add-text").val();
-					if (!comment || comment.length === 0) return;
-					that.onAddComment(item, comment, bubble.close);
-				});
-				that.loadComments(item, function(item, comments) {
-					that.updateComments($("#comments-list"), item, comments);
+					if (canAdd)
+						$c.find(".comments-dialog-add").click(function() { 
+							var comment = $c.find(".comments-dialog-add-text").val();
+							if (!comment || comment.length === 0) return;
+							that.onAddComment(item, comment, bubble.close);
+						});
+
+					that.updateComments($c.find(".comments-list"), item, comments);
 				});
 			});
 		};
 		
-		this.loadComments = function(item, cb) {
-			mollify.service.get("comment/"+item.id).done(function(comments) {
-				cb(item, that.processComments(comments));
+		this.loadComments = function(item, permission, cb) {
+			mollify.service.get("comment/"+item.id+(permission ? '?p=1' : '')).done(function(r) {
+				cb(item, that.processComments(permission ? r.comments : r), permission ? r.permission : undefined);
 			});
 		};
 		
 		this.processComments = function(comments) {
 			var userId = mollify.session.user_id;
-			var isAdmin = mollify.session.admin;
 			
 			for (var i=0,j=comments.length; i<j; i++) {
 				comments[i].time = that._timestampFormatter.format(mollify.helpers.parseInternalTime(comments[i].time));
 				comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
-				comments[i].remove = isAdmin || (userId == comments[i].user_id);
+				comments[i].remove = mollify.session.admin || (userId == comments[i].user_id);
 			}
 			return comments;
 		};
@@ -973,8 +976,8 @@
 						"width" : 50,
 						"content": that.getListCellContent,
 						"request": function(parent) { return {}; },
-						"on-click": function(item) {
-							that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
+						"on-click": function(item, data, ctx) {
+							that.showCommentsBubble(item, $("#item-comment-count-"+item.id), ctx);
 						}
 					}];
 				}

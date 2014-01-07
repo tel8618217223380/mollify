@@ -1158,10 +1158,21 @@
 				onClick: function(item, t, e) {
 					if (that._handleCustomAction("onClick", item, t)) return;
 					
+					var ctx = {
+						item: item,
+						viewtype: that.isListView() ? "list" : "icon",
+						target: t,
+						element: that.itemWidget.getItemContextElement(item),
+						viewport: that.itemWidget.getContainerElement(),
+						container: $("#mollify-folderview-items"),
+						folder: that._currentFolder,
+						folder_permissions: that._currentFolderData ? that._currentFolderData.permissions : false
+					};
+					
 					if (that.isListView() && t != 'icon') {
 						var col = that._filelist.columns[t];
 						if (col["on-click"]) {
-							col["on-click"](item, that._currentFolderData.data);
+							col["on-click"](item, that._currentFolderData.data, ctx);
 							return;
 						}
 					}
@@ -1179,19 +1190,7 @@
 						else that.changeToFolder(item); 
 					}
 					
-					if (showContext) {
-						var ctx = {
-							item: item,
-							viewtype: that.isListView() ? "list" : "icon",
-							target: t,
-							element: that.itemWidget.getItemContextElement(item),
-							viewport: that.itemWidget.getContainerElement(),
-							container: $("#mollify-folderview-items"),
-							folder: that._currentFolder,
-							folder_permissions: that._currentFolderData ? that._currentFolderData.permissions : false
-						};
-						that.itemContext.open(ctx);
-					}
+					if (showContext) that.itemContext.open(ctx);
 				},
 				onDblClick: function(item) {
 					if (that._handleCustomAction("onDblClick", item)) return;
