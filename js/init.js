@@ -325,7 +325,7 @@ var mollifyDefaults = {
 		var diffMethod = (st._limitedHttpMethods && (t == 'PUT' || t == 'DELETE'));
 		if (diffMethod) t = 'POST';
 		
-		return $.ajax({
+		return (function(sid) { return $.ajax({
 			type: t,
 			url: st.url(url),
 			processData: false,
@@ -338,12 +338,17 @@ var mollifyDefaults = {
 				if (st._limitedHttpMethods || diffMethod)
 					xhr.setRequestHeader("mollify-http-method", type);
 			}
-		}).pipe(function(r) {
+		}).pipe(function(r) {			
 			if (!r) {
 				return $.Deferred().reject({ code: 999 });
 			}
 			return r.result;
 		}, function(xhr) {
+			var df = $.Deferred();
+			
+			// if session has expired since starting request, ignore it
+			if (mollify.session.id != sid) return df;
+
 			var error = false;
 			var data = false;
 
@@ -357,7 +362,6 @@ var mollifyDefaults = {
 				mollify.events.dispatch('session/end');
 				failContext.handled = true;
 			}
-			var df = $.Deferred();
 			// push default handler to end of callback list
 			setTimeout(function(){
 				df.fail(function(err){
@@ -365,7 +369,7 @@ var mollifyDefaults = {
 				});
 			}, 0);
 			return df.rejectWith(failContext, [error]);
-		}).promise();
+		}).promise()}(mollify.session.id));
 	};
 	
 	/* FILESYSTEM */
