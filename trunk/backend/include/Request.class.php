@@ -109,6 +109,10 @@
 			return array_key_exists($param, $this->params);
 		}
 		
+		public function hasParamValue($p, $v) {
+			return ($this->hasParam($p) and (strcmp($this->param($p), $v) == 0));
+		}
+		
 		public function param($param) {
 			return $this->params[$param];
 		}

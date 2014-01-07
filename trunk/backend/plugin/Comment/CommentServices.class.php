@@ -22,7 +22,17 @@
 			if (count($this->path) != 1) throw $this->invalidRequestException();
 			
 			$item = $this->item($this->path[0]);
-			$this->response()->success($this->handler()->getComments($item));
+			$comments = $this->handler()->getComments($item);
+			$permission = $this->env->request()->hasParamValue("p", "1");
+			Logging::logDebug("PERM".($permission?"1":"0"));
+
+			if (!$permission) $this->response()->success($comments);
+			else {
+				$this->response()->success(array(
+					"comments" => $comments,
+					"permission" => $this->env->permissions()->getFilesystemPermission("comment_item", $item)
+				));
+			}
 		}
 		
 		public function processPost() {
