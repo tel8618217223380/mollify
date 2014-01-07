@@ -558,7 +558,7 @@
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
 				if (p.fileViewHandler.onActivate)
-					p.fileViewHandler.onActivate($("#mollify"), h);
+					p.fileViewHandler.onActivate(mollify.App.getElement(), h);
 			});
 			
 			if (mollify.filesystem.roots.length === 0) {
