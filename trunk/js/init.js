@@ -123,7 +123,7 @@ var mollifyDefaults = {
 			data: s
 		};
 		
-		mollify.filesystem.init(mollify.session.data.folders, (mollify.session.user.admin ? mollify.session.data.roots : false));
+		mollify.filesystem.init(mollify.session.data.folders, ((mollify.session.user && mollify.session.user.admin) ? mollify.session.data.roots : false));
 		
 		var onError = function() {
 			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();

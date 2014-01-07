@@ -972,7 +972,7 @@
 				$("#mollify-folder-description").text(that._currentFolderData.data['core-parent-description']);
 			
 			var $dsc = $("#mollify-folder-description");
-			var descriptionEditable = that._currentFolder && !that._currentFolder.type && $dsc.length > 0 && mollify.session.features.descriptions && mollify.session.admin;
+			var descriptionEditable = that._currentFolder && !that._currentFolder.type && $dsc.length > 0 && mollify.session.features.descriptions && mollify.session.user.admin;
 			if (descriptionEditable) {
 				mollify.ui.controls.editableLabel({element: $dsc, hint: mollify.ui.texts.get('mainviewDescriptionHint'), onedit: function(desc) {
 					mollify.service.put("filesystem/"+that._currentFolder.id+"/description/", {description: desc});

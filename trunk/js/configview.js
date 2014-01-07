@@ -83,6 +83,8 @@
 							that._initAdminViews(h);
 						});
 					}
+				} else {
+					that._onInitDone(h);
 				}
 			});
 		}
@@ -116,8 +118,6 @@
 		};
 
 		this._initAdminViews = function(h) {
-			if (!mollify.session.admin || that._adminViews.length === 0) return;
-
 			$.each(that._adminViews, function(i, v) {
 				if (v.init) v.init(that._settings, that);
 			});
@@ -132,11 +132,7 @@
 				items: navBarItems
 			});
 			
-			if (h.id) {
-				var view = that._findView(h.id[0]);
-				if (view) that._activateView(view.view, view.admin);
-			} else
-				that._activateView(that._views[0]);
+			that._onInitDone(h);
 		};
 		
 		this._findView = function(id) {
@@ -157,6 +153,14 @@
 
 			return found;
 		};
+		
+		this._onInitDone = function(h) {
+			if (h.id) {
+				var view = that._findView(h.id[0]);
+				if (view) that._activateView(view.view, view.admin);
+			} else
+				that._activateView(that._views[0]);			
+		}
 
 		this.onRestoreView = function(id) {
 			var view = that._findView(id[0]);
