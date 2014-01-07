@@ -36,9 +36,9 @@
 </script>
 
 <script id="mollify-tmpl-main-username" type="text/x-jquery-tmpl">
-	{{if authenticated}}
+	{{if user}}
 	<li id="mollify-username-dropdown" class="dropdown">
-		<a href="#" class="dropdown-toggle">${username}&nbsp;<b class="caret"></b></a>
+		<a href="#" class="dropdown-toggle">${user.name}&nbsp;<b class="caret"></b></a>
 	</li>
 	{{/if}}
 </script>

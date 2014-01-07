@@ -40,7 +40,7 @@
 			that.onResize();
 
 			mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mollify-mainview-user");
-			if (mollify.session.authenticated) {
+			if (mollify.session.user) {
 				mollify.ui.controls.dropdown({
 					element: $('#mollify-username-dropdown'),
 					items: that.getSessionActions()
@@ -510,7 +510,7 @@
 			// TODO expose file urls
 			
 			var navBarItems = [];
-			$.each(mollify.session.folders, function(i, f) {
+			$.each(mollify.filesystem.roots, function(i, f) {
 				navBarItems.push({title:f.name, obj: f, callback:function(){ that.changeToFolder(f); }})
 			});
 			that.rootNav = h.addNavBar({
@@ -1061,8 +1061,8 @@
 			var rootCb = function(r) {
 				return function() { that.changeToFolder(r); };
 			};
-			for(var i=0,j=mollify.session.folders.length; i<j;i++) {
-				var root = mollify.session.folders[i];
+			for(var i=0,j=mollify.filesystem.roots.length; i<j;i++) {
+				var root = mollify.filesystem.roots[i];
 				rootItems.push({
 					title: root.name,
 					callback: rootCb(root)

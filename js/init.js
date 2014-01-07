@@ -91,7 +91,7 @@ var mollifyDefaults = {
 			if (e.type == 'session/start') {
 				mollify.App._onSessionStart(e.payload);
 			} else if (e.type == 'session/end') {
-				mollify.session = false;
+				mollify.session = {};
 				mollify.filesystem.init([]);
 				start();
 			}
@@ -108,11 +108,22 @@ var mollifyDefaults = {
 	mollify.App.getElement = function() { return $("#"+mollify.settings["app-element-id"]); };
 	
 	mollify.App._onSessionStart = function(s) {
-		mollify.session = s;
-		mollify.session.id = mollify.session.session_id;
-		mollify.session.admin = (mollify.session.user_type == 'a');
+		var user = s.authenticated ? {
+			id : s.user_id,
+			name : s.username,			
+			type: s.user_type,
+			admin: s.user_type == 'a'
+		} : null;
+
+		mollify.session = {
+			id: s.session_id,
+			user: user,
+			lang: s.lang,
+			features: s.features,
+			data: s
+		};
 		
-		mollify.filesystem.init(mollify.session.folders, (mollify.session.admin ? mollify.session.roots : false));
+		mollify.filesystem.init(mollify.session.data.folders, (mollify.session.user.admin ? mollify.session.data.roots : false));
 		
 		var onError = function() {
 			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
@@ -144,7 +155,7 @@ var mollifyDefaults = {
 				mollify.App.activeView = v;
 				mollify.App.activeViewId = id[0];
 			} else {
-				if (!mollify.session || !mollify.session.authenticated) {
+				if (!mollify.session.user) {
 					mollify.App.activeView = new mollify.view.LoginView();
 					mollify.App.activeViewId = "login";
 				} else {
@@ -180,7 +191,7 @@ var mollifyDefaults = {
 		// if no view active, app is not loaded -> don't restore
 		if (!mollify.App.activeView) return;
 		
-		if (!mollify.session.user_id || mollify.session.user_id != o.user_id) return;
+		if (!o || !o.user_id || !mollify.session.user || mollify.session.user.id != o.user_id) return;
 		
 		//baseUrl = mollify.request.getBaseUrl(url);
 		var params = mollify.request.getParams(url);
@@ -191,7 +202,7 @@ var mollifyDefaults = {
 	mollify.App.storeView = function(viewId) {
 		if (!mollify.settings["view-url"]) return;
 		var obj = {
-			user_id : mollify.session.user_id
+			user_id : mollify.session.user ? mollify.session.user.id : null
 		};
 		if (window.history) window.history.pushState(obj, "", "?v="+viewId);	
 	};
@@ -342,7 +353,7 @@ var mollifyDefaults = {
 			var failContext = {
 				handled: false
 			}
-			if (error.code == 100 && mollify.session && mollify.session.authenticated) {
+			if (error.code == 100 && mollify.session.user) {
 				mollify.events.dispatch('session/end');
 				failContext.handled = true;
 			}
@@ -366,7 +377,7 @@ var mollifyDefaults = {
 		mollify.filesystem.allRoots = false;
 		mollify.filesystem.rootsById = {};
 		
-		if (f && mollify.session.authenticated) {
+		if (f && mollify.session.user) {
 			mollify.filesystem.roots = f;
 			for (var i=0,j=f.length; i<j; i++)
 				mollify.filesystem.rootsById[f[i].id] = f[i];

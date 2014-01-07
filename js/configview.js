@@ -32,7 +32,7 @@
 				if (!views) return;
 				
 				$.each(views, function(i, v) {
-					if (v.admin && mollify.session.admin)
+					if (v.admin)
 						that._adminViews.push(v);
 					else
 						that._views.push(v);
@@ -60,7 +60,7 @@
 
 				that.onResize();
 
-				if (mollify.session.admin) {
+				if (mollify.session.user.admin) {
 					if (that._adminViewsLoaded) {
 						that._initAdminViews(h);
 					} else {
