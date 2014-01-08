@@ -112,7 +112,8 @@ var mollifyDefaults = {
 			id : s.user_id,
 			name : s.username,			
 			type: s.user_type,
-			admin: s.user_type == 'a'
+			admin: s.user_type == 'a',
+			permissions: s.permissions
 		} : null;
 
 		mollify.session = {

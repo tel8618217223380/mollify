@@ -41,6 +41,8 @@
 			
 			UserEvent::register($this->environment->events());
 			
+			$this->environment->permissions()->registerPermission("change_password");
+			
 			$this->environment->plugins()->setup();
 		}
 		

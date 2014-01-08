@@ -1646,7 +1646,7 @@
 			});
 		};
 		
-		this.editGenericPermissions = function(user) {
+		this.editGenericPermissions = function(user, changeCallback) {
 			var permissionData = {
 				"new": [],
 				"modified": [],
@@ -1672,31 +1672,30 @@
 						return;
 					
 					$content.addClass("loading");
-					mollify.service.put("permissions/list", permissionData).done(d.close).fail(d.close);
+					mollify.service.put("permissions/list", permissionData).done(function() { d.close(); if (changeCallback) changeCallback(); }).fail(d.close);
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-generic-content");
 					h.center();
 					var $list = false;
-					var url = user ? "permissions/user/"+user.id+"/generic/" : "permissions/list/generic?user_id=0";
 					
-					mollify.service.get(url).done(function(r) {
-						$content.removeClass("loading");
-						
-						var allTypeKeys = that._permissionTypes.keys.all;
-						var values = mollify.helpers.mapByKey(r.permissions, "name", "value");
-												
-						var permissions = [];
-						
-						$.each(allTypeKeys, function(i, t) {
-							var p = { name: t, value: values[t], subject: '', user_id: user ? user.id : '0' };
-							if (!values[t]) p.isnew = true;
-							permissions.push(p);
-						});
-						
-						$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-generic-permission-list", {
-							key: "name",
-							columns: [
+					mollify.service.get("permissions/user/"+(user ? user.id : '0')+"/generic/").done(function(r) {
+						var done = function(dp) {
+							$content.removeClass("loading");
+							
+							var allTypeKeys = that._permissionTypes.keys.all;
+							var values = mollify.helpers.mapByKey(r.permissions, "name", "value");
+							var defaultPermissions = dp ? mollify.helpers.mapByKey(dp.permissions, "name", "value") : {};
+													
+							var permissions = [];
+							
+							$.each(allTypeKeys, function(i, t) {
+								var p = { name: t, value: values[t], subject: '', user_id: user ? user.id : '0' };
+								if (!values[t]) p.isnew = true;
+								permissions.push(p);
+							});
+							
+							var cols = [
 								{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(item, name) {
 									if (that._permissionTypes.keys.filesystem.indexOf(name) >= 0) {
 										if (!user) return that._formatPermissionName(item) + " (" + mollify.ui.texts.get('permission_system_default') + ")";
@@ -1713,17 +1712,7 @@
 										if (itemValues) return itemValues;
 										return ["0", "1"];
 									},
-									none: function(item) {
-										var itemValues = that._permissionTypes.values[item.name];
-										var fallback = "";
-										if (itemValues) {
-											fallback = mollify.ui.texts.get('permission_'+item.name+'_value_'+itemValues[0]);
-										} else {
-											fallback = mollify.ui.texts.get('permission_value_0');
-										}
-										var text = mollify.ui.texts.get('permission_value_undefined', fallback);
-										return text;
-									},
+									none:  mollify.ui.texts.get('permission_value_undefined'),
 									formatter: function(item, k) {
 										return that._formatPermissionValue(item.name, k);
 									},
@@ -1742,12 +1731,81 @@
 										}
 									}
 								}
-							]
-						});
-						$list.add(permissions);						
+							];
+							if (user) {
+								cols.push({
+									id: "default",
+									title: mollify.ui.texts.get('permission_system_default'),
+									formatter: function(p) {
+										if (!p.name in defaultPermissions || defaultPermissions[p.name] === undefined) return "";
+										return that._formatPermissionValue(p.name, defaultPermissions[p.name]);								
+									}
+								});
+							}
+							
+							$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-generic-permission-list", {
+								key: "name",
+								columns: cols
+							});
+							$list.add(permissions);
+						};
+						if (user) mollify.service.get("permissions/user/0/generic/").done(done);
+						else done();
 					}).fail(h.close);
 				}
 			});
+		};
+		
+		this.getUserConfigPermissionsListView = function($c, title, u) {
+			var permissions = false;
+			var defaultPermissions = false;
+			var permissionsView = false;
+			
+			var refresh = function() {
+				$c.addClass("loading");
+				mollify.service.get("permissions/user/"+u.id+"/generic/").done(function(l) {
+					mollify.service.get("permissions/user/0/generic/").done(function(d){
+						$c.removeClass("loading");
+						permissions = l.permissions;
+						defaultPermissions = mollify.helpers.mapByKey(d.permissions, "name", "value");
+						permissionsView.table.set(permissions);						
+					});
+				});
+			};
+
+			permissionsView = new mollify.view.ConfigListView($c, {
+				title: title,
+				actions: [
+					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { that.editGenericPermissions(u, refresh); } },
+					{ id: "action-edit-defaults", content:'<i class="icon-legal"></i>', callback: function() { that.editGenericPermissions(false, refresh); } }
+				],
+				table: {
+					id: "config-admin-userpermissions",
+					key: "id",
+					narrow: true,
+					columns: [
+						{ id: "name", title: mollify.ui.texts.get('pluginPermissionsPermissionName'), formatter: function(p, v) {
+							if (v in that._permissionTypes.keys.filesystem)
+								return mollify.ui.texts.get('permission_default_'+v);
+							return mollify.ui.texts.get('permission_'+v);
+						} },
+						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(p, v) {
+							return that._formatPermissionValue(p.name, v);
+						} },
+						{ id: "default", title: mollify.ui.texts.get('permission_system_default'), formatter: function(p) {
+							if (!p.name in defaultPermissions || defaultPermissions[p.name] === undefined) return "";
+							return that._formatPermissionValue(p.name, defaultPermissions[p.name]);
+						} }
+					]
+				}
+			});
+			
+			refresh();
+			
+			return {
+				refresh : refresh,
+				view: permissionsView
+			};
 		};
 
 		return {
@@ -1778,7 +1836,8 @@
 					}];
 				}
 			},
-			editGenericPermissions: that.editGenericPermissions
+			editGenericPermissions: that.editGenericPermissions,
+			getUserConfigPermissionsListView : that.getUserConfigPermissionsListView
 		};
 	}
 

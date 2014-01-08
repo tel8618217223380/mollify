@@ -212,6 +212,7 @@
 		"pluginPermissionsEditNoUser": "Select user",
 		"pluginPermissionsEditNoPermission": "Select permission",
 		
+		"permission_change_password": "Change password",
 		"permission_filesystem_item_access": "Filesystem access",
 		"permission_default": "{0} (default)",
 		"permission_item_default": "Item default",
@@ -230,7 +231,7 @@
 		
 		"permission_value_0": "No",
 		"permission_value_1": "Yes",
-		"permission_value_undefined": "Undefined ({0})",
+		"permission_value_undefined": "Undefined",
 		
 		"pluginPermissionsConfigViewNavTitle": "Permissions",
 		"pluginPermissionsAdminOptionsTitle": "Filter",

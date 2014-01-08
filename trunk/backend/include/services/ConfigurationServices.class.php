@@ -288,6 +288,8 @@
 					// users/xx/password
 					case 'password':
 						$this->env->features()->assertFeature("change_password");
+						if (!$this->env->permissions()->hasPermission("change_password")) throw new ServiceException("INSUFFICIENT_PERMISSIONS");
+						
 						$username = NULL;
 						
 						$pw = $this->request->data;
