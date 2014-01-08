@@ -204,7 +204,7 @@
 		
 		this.getSessionActions = function() {
 			var actions = [];		
-			if (mollify.features.hasFeature('change_password')) {
+			if (mollify.features.hasFeature('change_password') && mollify.session.user.permissions.change_password == '1') {
 				actions.push({"title-key" : "mainViewChangePasswordTitle", callback: that.changePassword});
 				actions.push({"title" : "-"});
 			}

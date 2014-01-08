@@ -32,7 +32,7 @@
 			$this->filesystemPermissions[$name] = $values;
 		}
 
-		public function registerGenericPermission($name, $values = NULL) {
+		public function registerPermission($name, $values = NULL) {
 			$this->genericPermissions[$name] = $values;
 		}
 		
@@ -53,6 +53,52 @@
 			if (!array_key_exists($name, $this->permissionCaches)) $this->permissionCaches[$name] = array();			
 			$this->permissionCaches[$name][$subject] = $value;
 			Logging::logDebug("Permission cache put [".$name."/".$subject."]=".$value);
+		}
+		
+		public function getAllPermissions() {
+			return $this->getPermission(NULL);
+		}
+		
+		public function getPermission($name) {
+			if ($name != NULL and !array_key_exists($name, $this->genericPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
+			
+			$nameKeys = ($name != NULL ? array($name) : array_keys($this->genericPermissions));
+
+			$result = array();
+			$queryResult = NULL;
+			
+			foreach($nameKeys as $nk) {
+				if ($this->env->authentication()->isAdmin()) {
+					$values = $this->genericPermissions[$nk];
+					
+					if ($values != NULL) $result[$nk] = $values[count($values)-1];
+					else $result[$nk] = "1";
+					
+					continue;
+				}
+
+				$permission = $this->getFromCache($nk, "");
+				if ($permission !== FALSE) {
+					$result[$nk] = $permission;
+					continue;
+				}
+	
+				if ($queryResult == NULL)
+					$queryResult = $this->dao->getEffectiveGenericPermissions(($name != NULL ? $name : $nameKeys), $this->env->session()->userId(), $this->getGroupIds());
+
+				$permission = array_key_exists($nk, $queryResult) ? $queryResult[$nk] : NULL;
+				
+				if ($permission == NULL) {
+					$values = $this->genericPermissions[$nk];
+					if ($values != NULL) $permission = $values[0];	//fallback to first
+				}
+				$this->putToCache($nk, "", $permission);
+				
+				$result[$nk] = $permission;
+			}
+
+			if ($name != NULL) return $result[$nk];
+			return $result;
 		}
 		
 		public function getAllFilesystemPermissions($item) {
@@ -139,6 +185,31 @@
 			if ($this->env->authentication()->isAdmin()) return TRUE;
 			
 			$userValue = $this->getFilesystemPermission($name, $item);
+			if (!$userValue) return FALSE;
+			
+			// on/off permission is found
+			if ($values == NULL) return ($userValue == "1");
+			
+			$userValueIndex = array_search($userValue, $values);
+			if ($userValueIndex === FALSE)
+				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission value: ".$userValue);
+				
+			// check permission level by index
+			return $userValueIndex >= $requiredIndex;
+		}
+		
+		public function hasPermission($name, $required = NULL) {
+			if (!array_key_exists($name, $this->genericPermissions)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission key: ".$name);
+			$values = $this->genericPermissions[$name];
+			if ($required != NULL and $values != NULL) {
+				$requiredIndex = array_search($required, $values);
+				if ($requiredIndex === FALSE)
+					throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission value: ".$required);
+			}
+			
+			if ($this->env->authentication()->isAdmin()) return TRUE;
+			
+			$userValue = $this->getPermission($name);
 			if (!$userValue) return FALSE;
 			
 			// on/off permission is found
@@ -256,7 +327,7 @@
 		
 		public function getSessionInfo() {
 			$result = array();
-			$result["permissions"] = $this->dao->getEffectiveGenericPermissions(array_keys($this->genericPermissions), $this->env->session()->userId(), $this->getGroupIds());
+			$result["permissions"] = $this->getAllPermissions();
 			if ($this->env->authentication()->isAdmin()) {
 				$types = $this->getTypes();
 				$t = array(					
