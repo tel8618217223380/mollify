@@ -31,9 +31,8 @@
 			"NO_UPLOAD_DATA" => array(209, "No upload data available", 403),
 			"UPLOAD_FAILED" => array(210, "File upload failed", 403),
 			"SAVING_FAILED" => array(211, "Saving file failed", 403),
-			"INSUFFICIENT_RIGHTS" => array(212, "User does not have sufficient rights", 403),
+			"INSUFFICIENT_PERMISSIONS" => array(212, "User does not have sufficient permissions", 403),
 			"ZIP_FAILED" => array(213, "Creating a zip package failed", 403),
-			"NO_GENERAL_WRITE_PERMISSION" => array(214, "User has no general read/write permission", 403),
 			"NOT_AN_ADMIN" => array(215, "User is not an administrator", 403),
 			"UPLOAD_FILE_NOT_ALLOWED" => array(216, "File upload not allowed", 403),
 			
