@@ -1766,8 +1766,18 @@
 				mollify.service.get("permissions/user/"+u.id+"/generic/").done(function(l) {
 					mollify.service.get("permissions/user/0/generic/").done(function(d){
 						$c.removeClass("loading");
-						permissions = l.permissions;
+						
 						defaultPermissions = mollify.helpers.mapByKey(d.permissions, "name", "value");
+						
+						var values = mollify.helpers.mapByKey(l.permissions, "name");												
+						permissions = [];
+						
+						$.each(that._permissionTypes.keys.all, function(i, t) {
+							var op = values[t];
+							var p =  op ? op : { name: t, value: undefined, subject: '', user_id: u.id };
+							permissions.push(p);
+						});
+						
 						permissionsView.table.set(permissions);						
 					});
 				});
@@ -1776,8 +1786,8 @@
 			permissionsView = new mollify.view.ConfigListView($c, {
 				title: title,
 				actions: [
-					{ id: "action-edit", content:'<i class="icon-edit"></i>', callback: function() { that.editGenericPermissions(u, refresh); } },
-					{ id: "action-edit-defaults", content:'<i class="icon-legal"></i>', callback: function() { that.editGenericPermissions(false, refresh); } }
+					{ id: "action-edit", content:'<i class="icon-user"></i>', callback: function() { that.editGenericPermissions(u, refresh); } },
+					{ id: "action-edit-defaults", content:'<i class="icon-globe"></i>', callback: function() { that.editGenericPermissions(false, refresh); } }
 				],
 				table: {
 					id: "config-admin-userpermissions",
@@ -1790,6 +1800,7 @@
 							return mollify.ui.texts.get('permission_'+v);
 						} },
 						{ id: "value", title: mollify.ui.texts.get('pluginPermissionsPermissionValue'), formatter: function(p, v) {
+							if (v === undefined) return "";
 							return that._formatPermissionValue(p.name, v);
 						} },
 						{ id: "default", title: mollify.ui.texts.get('permission_system_default'), formatter: function(p) {
