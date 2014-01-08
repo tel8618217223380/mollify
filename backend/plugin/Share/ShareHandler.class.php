@@ -97,14 +97,21 @@
 			return $this->dao()->getShareUsers($i);
 		}
 		
-		public function addShare($item, $name, $expirationTs, $active, $restriction) {
-			if (!$this->env->permissions()->hasFilesystemPermission("share_item", $item)) throw new ServiceException("UNAUTHORIZED");
+		public function addShare($itemId, $name, $expirationTs, $active, $restriction) {
+			$item = $this->env->filesystem()->item($itemId);
+			if (!$this->env->permissions()->hasFilesystemPermission("share_item", $item)) throw new ServiceException("INSUFFICIENT_PERMISSIONS");
+			
 			$created = $this->env->configuration()->formatTimestampInternal(time());
-			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->session()->userId(), $expirationTs, $created, $active, $restriction);
+			$this->dao()->addShare($this->GUID(), $itemId, $name, $this->env->session()->userId(), $expirationTs, $created, $active, $restriction);
 		}
 
 		public function editShare($id, $name, $expirationTs, $active, $restriction) {
-			//TODO if (!$this->env->permissions()->hasFilesystemPermission("share_item", $item)) throw new ServiceException("UNAUTHORIZED");
+			$share = $this->dao()->getShare($id);
+			if ($share == NULL) return;
+			
+			$item = $this->env->filesystem()->item($share["item_id"]);
+			if (!$this->env->permissions()->hasFilesystemPermission("share_item", $item)) throw new ServiceException("INSUFFICIENT_PERMISSIONS");
+			
 			$this->dao()->editShare($id, $name, $expirationTs, $active, $restriction);
 		}
 		

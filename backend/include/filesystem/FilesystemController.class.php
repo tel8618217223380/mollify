@@ -199,7 +199,7 @@
 		
 		public function assertRights($item, $required, $desc = "Unknown action") {
 			if (!$this->hasRights($item, $required))
-				throw new ServiceException("INSUFFICIENT_RIGHTS", $desc.", required: ".$required);
+				throw new ServiceException("INSUFFICIENT_PERMISSIONS", $desc.", required: ".$required);
 		}
 		
 		private function isFolderValid($folderDef, $mustExist = TRUE) {
@@ -308,7 +308,7 @@
 				}
 				if (!$this->isFolderValid($folderDef)) {
 					Logging::logDebug("No permissions for root folder: ".$location." (".$id.")");
-					throw new ServiceException("INSUFFICIENT_RIGHTS");
+					throw new ServiceException("INSUFFICIENT_PERMISSIONS");
 				}
 				
 				$this->folderCache[$filesystemId] = $folderDef;
@@ -392,12 +392,12 @@
 		}
 
 		public function setDescription($item, $desc) {
-			if (!$this->env->permissions()->hasFilesystemPermission("edit_description", $item)) throw new ServiceException("UNAUTHORIZED");
+			if (!$this->env->permissions()->hasFilesystemPermission("edit_description", $item)) throw new ServiceException("INSUFFICIENT_PERMISSIONS");
 			return $this->env->configuration()->setItemDescription($item, $desc);
 		}
 
 		public function removeDescription($item) {
-			if (!$this->env->permissions()->hasFilesystemPermission("edit_description", $item)) throw new ServiceException("UNAUTHORIZED");
+			if (!$this->env->permissions()->hasFilesystemPermission("edit_description", $item)) throw new ServiceException("INSUFFICIENT_PERMISSIONS");
 			return $this->env->configuration()->removeItemDescription($item);
 		}
 		
