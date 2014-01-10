@@ -34,13 +34,14 @@
 			<p>
 				Installer needs the database connection information defined in the configuration file "<code>configuration.php</code>":
 				<ul>
-					<li>Host name (optional, by default "localhost")</li>
-					<li>Database name (optional, by default "mollify")</li>
 					<li>User</li>
 					<li>Password</li>
+					<li>Host name (optional, by default "localhost")</li>
+					<li>Database name (optional, by default "mollify")</li>
 					<li>Port (for remote MySQL servers, optional)</li>
 					<li>Socket (for local MySQL servers, optional)</li>
 					<li>Table prefix (optional)</li>
+					<li>Charset (optional)</li>
 				</ul>
 				
 				For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation">Installation instructions</a>.
@@ -52,11 +53,12 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION = array(<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;db&quot; => array(<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; => &quot;mysql&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;user&quot; => &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;password&quot; => &quot;<span class="value">[MYSQL_PASSWORD]</span>&quot;,<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;host&quot; => &quot;<span class="value">localhost</span>&quot;,<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;database&quot; => &quot;<span class="value">mollify</span>&quot;,<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;user&quot; => &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;,<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;password&quot; => &quot;<span class="value">MYSQL_PASSWORD</span>&quot;,<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;table_prefix&quot; => &quot;<span class="value">mollify_</span>&quot;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;table_prefix&quot; => &quot;<span class="value">mollify_</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;charset&quot; => &quot;<span class="value">utf8</span>&quot;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;);<br/>
 					?&gt;
