@@ -796,7 +796,7 @@
 		};
 		
 		this._canWrite = function() {
-			if (!that._currentFolderData) return false;
+			if (!that._currentFolderData || !that._currentFolderData.permission) return false;
 			return (that._currentFolderData.permission.indexOf('rw') >= 0);
 		}
 		
