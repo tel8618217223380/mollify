@@ -23,7 +23,7 @@ Before installing Mollify, you have to create MySQL user and database for Mollif
 			"host" => "localhost", // optional
 			"database" => "mollify", // optional
 			"table_prefix" => "mollify_", // optional
-			"charset" => "utf8" // optional,
+			"charset" => "utf8", // optional
 			"engine" => "innodb" // optional, used only in installation
 		),
 		...
