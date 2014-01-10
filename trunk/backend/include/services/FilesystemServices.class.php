@@ -25,12 +25,6 @@
 		}
 
 		public function processPut() {
-			/*if ($this->path[0] === 'permissions') {
-				$this->env->authentication()->assertAdmin();
-				$this->response()->success($this->env->configuration()->updateItemPermissions($this->request->data));
-				return;
-			}*/
-			
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())
 				$this->processPutFile($item);
@@ -147,15 +141,6 @@
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
-				/*case 'permissions':
-					$this->env->authentication()->assertAdmin();
-					
-					$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
-					$result = array("permissions" => $this->env->filesystem()->allPermissions($item));
-					if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
-					
-					$this->response()->success($result);
-					break;*/
 				default:
 					throw $this->invalidRequestException();
 			}
@@ -253,15 +238,6 @@
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
-				/*case 'permissions':
-					$this->env->authentication()->assertAdmin();
-					
-					$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
-					$result = array("permissions" => $this->env->filesystem()->allPermissions($item));
-					if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
-					
-					$this->response()->success($result);
-					break;*/
 				default:
 					throw $this->invalidRequestException();
 			}
@@ -278,7 +254,7 @@
 			$result["folder"] = ($item != NULL) ? $item->data() : NULL;
 			$result["files"] = $files;
 			$result["folders"] = $folders;
-			$result["permission"] = ($item != NULL) ? $this->env->permissions()->getFilesystemPermission("filesystem_item_access", $item) : NULL;
+			$result["permissions"] = ($item != NULL) ? $this->env->permissions()->getAllFilesystemPermissions($item) : array();
 			$result["data"] = $this->env->filesystem()->getRequestData($item, $items, $data);
 			
 			if ($includeHierarchy) {
