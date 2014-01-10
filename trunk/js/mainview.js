@@ -900,7 +900,7 @@
 							}});
 							return false;
 						});
-						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($tb).click(function() {
+						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-upload-alt' }, opt).appendTo($tb).click(function() {
 							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
 								onRenderBubble: function(b) {
 									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), {
@@ -913,7 +913,7 @@
 									}
 									var onRetrieve = function() {
 										var val = $("#mollify-mainview-addfile-retrieve-url-input").val();
-										if (!val || val.length < 1 || val.substring(0,4).toLowerCase().localeCompare('http') !== 0) return false;
+										if (!val || val.length < 4 || val.substring(0,4).toLowerCase().localeCompare('http') !== 0) return false;
 										b.close();
 										that.onRetrieveUrl(val);
 									};
