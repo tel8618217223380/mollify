@@ -121,6 +121,7 @@ var mollifyDefaults = {
 			user: user,
 			lang: s.lang,
 			features: s.features,
+			plugins: s.plugins,
 			data: s
 		};
 		
