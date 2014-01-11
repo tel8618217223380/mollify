@@ -204,7 +204,7 @@
 		
 		this.getSessionActions = function() {
 			var actions = [];		
-			if (mollify.features.hasFeature('change_password') && mollify.session.user.permissions.change_password == '1') {
+			if (mollify.features.hasFeature('change_password') && mollify.session.user.hasPermission("change_password")) {
 				actions.push({"title-key" : "mainViewChangePasswordTitle", callback: that.changePassword});
 				actions.push({"title" : "-"});
 			}
@@ -796,8 +796,7 @@
 		};
 		
 		this._canWrite = function() {
-			if (!that._currentFolderData || !that._currentFolderData.permissions.filesystem_item_access) return false;
-			return (that._currentFolderData.permissions.filesystem_item_access.indexOf('rw') >= 0);
+			return mollify.filesystem.hasPermission(that._currentFolder, "filesystem_item_access", "rw");
 		}
 		
 		this.onRetrieveUrl = function(url) {
@@ -972,7 +971,7 @@
 				$("#mollify-folder-description").text(that._currentFolderData.data['core-parent-description']);
 			
 			var $dsc = $("#mollify-folder-description");
-			var descriptionEditable = that._currentFolder && !that._currentFolder.type && $dsc.length > 0 && mollify.session.features.descriptions && (that._currentFolderData.permissions.comment_item == '1');
+			var descriptionEditable = that._currentFolder && !that._currentFolder.type && $dsc.length > 0 && mollify.session.features.descriptions && mollify.filesystem.hasPermission(that._currentFolder, "edit_description");
 			if (descriptionEditable) {
 				mollify.ui.controls.editableLabel({element: $dsc, hint: mollify.ui.texts.get('mainviewDescriptionHint'), onedit: function(desc) {
 					mollify.service.put("filesystem/"+that._currentFolder.id+"/description/", {description: desc});
@@ -1116,17 +1115,7 @@
 			var actions = mollify.settings["file-view"].actions;
 			if (!actions[action] || (typeof(actions[action]) !== "function")) return false;
 			
-			var ctx = {
-				item: item,
-				viewtype: that.isListView() ? "list" : "icon",
-				target: t,
-				element: that.itemWidget.getItemContextElement(item),
-				viewport: that.itemWidget.getContainerElement(),
-				container: $("#mollify-folderview-items"),
-				folder: that._currentFolder,
-				folder_permissions: that._currentFolderData ? that._currentFolderData.permissions : false
-			};
-
+			var ctx = that._getCtxObj(item, t);
 			var response = actions[action](item, ctx);
 			if (!response) return false;
 
@@ -1137,6 +1126,19 @@
 			}
 			return true;
 		};
+		
+		this._getCtxObj = function(item, target) {
+			return {
+				item: item,
+				viewtype: that.isListView() ? "list" : "icon",
+				target: target,
+				element: that.itemWidget.getItemContextElement(item),
+				viewport: that.itemWidget.getContainerElement(),
+				container: $("#mollify-folderview-items"),
+				folder: that._currentFolder,
+				folder_writable: that._currentFolder ? mollify.filesystem.hasPermission(that._currentFolder, "filesystem_item_access", "rw") : false
+			};	
+		}
 		
 		this.initList = function() {
 			var $h = $("#mollify-folderview-header-items").empty();
@@ -1156,17 +1158,7 @@
 				onClick: function(item, t, e) {
 					if (that._handleCustomAction("onClick", item, t)) return;
 					
-					var ctx = {
-						item: item,
-						viewtype: that.isListView() ? "list" : "icon",
-						target: t,
-						element: that.itemWidget.getItemContextElement(item),
-						viewport: that.itemWidget.getContainerElement(),
-						container: $("#mollify-folderview-items"),
-						folder: that._currentFolder,
-						folder_permissions: that._currentFolderData ? that._currentFolderData.permissions : false
-					};
-					
+					var ctx = that._getCtxObj(item, t);					
 					if (that.isListView() && t != 'icon') {
 						var col = that._filelist.columns[t];
 						if (col["on-click"]) {
@@ -1261,7 +1253,7 @@
 				var ctx = {
 					details: d,
 					folder: that._currentFolder,
-					folder_permissions: d.parent_permissions
+					folder_writable: that._currentFolder ? mollify.filesystem.hasPermission(that._currentFolder, "filesystem_item_access", "rw") : false
 				};
 				cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(mollify.plugins.getItemContextPlugins(item, ctx))));
 			});

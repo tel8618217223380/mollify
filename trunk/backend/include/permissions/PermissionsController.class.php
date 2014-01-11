@@ -328,19 +328,19 @@
 		public function getSessionInfo() {
 			$result = array();
 			$result["permissions"] = $this->getAllPermissions();
-			if ($this->env->authentication()->isAdmin()) {
-				$types = $this->getTypes();
-				$t = array(					
-					"keys" => array(
-						"generic" => array_keys($types["generic"]),
-						"filesystem" => array_keys($types["filesystem"])
-					),
-					"values" => array_merge($types["generic"], $types["filesystem"])
-				);
-				$t["keys"]["all"] = array_merge($t["keys"]["generic"], $t["keys"]["filesystem"]);
-				
-				$result["permission_types"] = $t;
-			}
+
+			$types = $this->getTypes();
+			$t = array(					
+				"keys" => array(
+					"generic" => array_keys($types["generic"]),
+					"filesystem" => array_keys($types["filesystem"])
+				),
+				"values" => array_merge($types["generic"], $types["filesystem"])
+			);
+			$t["keys"]["all"] = array_merge($t["keys"]["generic"], $t["keys"]["filesystem"]);
+			
+			$result["permission_types"] = $t;
+
 			return $result;
 		}
 	}

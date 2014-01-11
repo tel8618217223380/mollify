@@ -20,9 +20,9 @@
 			id: "plugin-core",
 			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
-				var writable = !root && (ctx.details.permissions.filesystem_item_access.indexOf("rw") >=0);
-				var deletable = !root && (ctx.details.permissions.filesystem_item_access == "rwd");
-				var parentWritable = !root && (ctx.details.parent_access_permission.indexOf("rw") >= 0);
+				var writable = !root && mollify.filesystem.hasPermission(item, "filesystem_item_access", "rw");
+				var deletable = !root && mollify.filesystem.hasPermission(item, "filesystem_item_access", "rwd");
+				var parentWritable = !root && mollify.filesystem.hasPermission(item.parent_id, "filesystem_item_access", "rw");
 
 				var actions = [];				
 				if (item.is_file ) {
@@ -590,9 +590,9 @@
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 
-				var writable = !root && (ctx.details.permissions.filesystem_item_access.indexOf("rw") >=0);
-				var parentWritable = !root && (ctx.details.parent_access_permission.indexOf("rw") >= 0);
-				var folderWritable = !root && ctx.folder_permissions && (ctx.folder_permissions.filesystem_item_access.indexOf("rw") >=0);
+				var writable = !root && mollify.filesystem.hasPermission(item, "filesystem_item_access", "rw");
+				var parentWritable = !root && mollify.filesystem.hasPermission(item.parent_id, "filesystem_item_access", "rw");
+				var folderWritable = !root && ctx.folder_writable;
 
 				if (parentWritable && that._isArchive(item)) {
 					return {
@@ -866,7 +866,7 @@
 		};
 		
 		this.renderItemContextComments = function(el, item, ctx, comments, o) {
-			var canAdd = (mollify.session.user.admin || ctx.details.permissions.comment_item == '1');
+			var canAdd = (mollify.session.user.admin || mollify.filesystem.hasPermission(item, "comment_item"));
 			var $c = mollify.dom.template(o.contentTemplate, {item: item, canAdd: canAdd}).appendTo(o.element);
 
 			if (canAdd)			
