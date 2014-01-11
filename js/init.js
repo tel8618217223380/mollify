@@ -113,7 +113,8 @@ var mollifyDefaults = {
 			name : s.username,			
 			type: s.user_type,
 			admin: s.user_type == 'a',
-			permissions: s.permissions
+			permissions: s.permissions,
+			hasPermission : function(name, required) { return mollify.helpers.hasPermission(s.permissions, name, required); }
 		} : null;
 
 		mollify.session = {
@@ -379,6 +380,7 @@ var mollifyDefaults = {
 	var mfs = mollify.filesystem;
 	
 	mfs.init = function(f, allRoots) {
+		mollify.filesystem.permissionCache = {};
 		mollify.filesystem.roots = [];
 		mollify.filesystem.allRoots = false;
 		mollify.filesystem.rootsById = {};
@@ -411,7 +413,10 @@ var mollifyDefaults = {
 	};
 	
 	mfs.itemDetails = function(item, data) {
-		return mollify.service.post("filesystem/"+item.id+"/details/", { data : data });
+		return mollify.service.post("filesystem/"+item.id+"/details/", { data : data }).done(function(r) {
+			mollify.filesystem.permissionCache[item.id] = r.permissions;
+			if (item.parent_id && r.parent_permissions) mollify.filesystem.permissionCache[item.parent_id] = r.parent_permissions;
+		});
 	};
 	
 	mfs.folderInfo = function(id, hierarchy, data) {
@@ -420,6 +425,10 @@ var mollifyDefaults = {
 
 	mfs.findFolder = function(d, data) {
 		return mollify.service.post("filesystem/find/", { folder: d, data : data });
+	};
+	
+	mfs.hasPermission = function(item, name, required) {
+		return mollify.helpers.hasPermission(mollify.filesystem.permissionCache[((typeof(item) === "string") ? item : item.id)], name, required);
 	};
 		
 	mfs.items = function(parent, files) {
@@ -1062,6 +1071,18 @@ var mollifyDefaults = {
 		
 		noncachedUrl : function(url) {
 			return mollify.helpers.urlWithParam(url, "_="+mollify._time);
+		},
+		
+		hasPermission : function(list, name, required) {
+			if (!list || list[name] === undefined) return false;
+			var v = list[name];
+			
+			var options = mollify.session.data.permission_types.values[name];
+			if (!required || !options) return v == "1";
+			
+			var ui = options.indexOf(v);
+			var ri = options.indexOf(required);
+			return (ui >= ri);
 		},
 	
 		formatDateTime : function(time, fmt) {
