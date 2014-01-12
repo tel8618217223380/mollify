@@ -434,14 +434,27 @@
 			mollify.events.addEventHandler(that.onEvent);
 			
 			that.addCustomFolderType("search", {
-				getFolderInfo : function(f) {
+				onSelectFolder : function(f) {					
 					var df = $.Deferred();
-					mollify.service.post("filesystem/search", {text:f.value, rq_data: that.getDataRequest()}).done(function(r) {
+					if (!f) return df.resolve({type:"search", id:""}, {items:[], info:[]});
+					
+					var text = decodeURIComponent(f);
+					mollify.service.post("filesystem/search", {text: text, rq_data: that.getDataRequest()}).done(function(r) {
                         var items = [];
                         for (var id in r.matches) {
                             items.push(r.matches[id].item);
                         }
-						df.resolve({items: items, data: r.data, info: r});
+                        var fo = {
+	                        id: f,
+	                        type: "search"
+                        };
+                        var data = {
+                        	text: text,
+                        	items: items,
+                        	data: r.data,
+                        	info: r
+                        };
+						df.resolve(fo, data);
 					});
 					return df.promise();
 				},
@@ -449,7 +462,7 @@
 				onRenderFolderView : function(f, fi, $h, $tb) {
 					mollify.dom.template("mollify-tmpl-main-searchresults", { folder: f, info: fi }).appendTo($h);
 					$("#mollify-searchresults-title-text").text(mollify.ui.texts.get('mainViewSearchResultsTitle', [""+fi.info.count]));
-					$("#mollify-searchresults-desc-text").text(mollify.ui.texts.get('mainViewSearchResultsDesc', [f.value]));
+					$("#mollify-searchresults-desc-text").text(mollify.ui.texts.get('mainViewSearchResultsDesc', [fi.text]));
 					
 					var $fa = $("#mollify-fileview-folder-actions");
 					that.addCommonFileviewActions($fa);
@@ -682,7 +695,7 @@
 				var val = $("#mollify-fileview-search-input").val();
 				if (!val || val.length === 0) return;
 				$("#mollify-fileview-search-input").val("");
-				that.changeToFolder({ type: "search", value: val });
+				that.changeToFolder({ type: "search", id: encodeURIComponent(val) });
 			};
 			$("#mollify-fileview-search-input").keyup(function(e){
 				if (e.which == 13) onSearch();

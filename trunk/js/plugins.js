@@ -592,7 +592,8 @@
 
 				var writable = !root && mollify.filesystem.hasPermission(item, "filesystem_item_access", "rw");
 				var parentWritable = !root && mollify.filesystem.hasPermission(item.parent_id, "filesystem_item_access", "rw");
-				var folderWritable = !root && ctx.folder_writable;
+				//TODO folder? is this ever something else than parent?
+				var folderWritable = !root && ctx.folder && ctx.folder_writable;
 
 				if (parentWritable && that._isArchive(item)) {
 					return {
