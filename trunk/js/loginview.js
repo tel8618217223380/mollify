@@ -65,7 +65,7 @@
 				return;
 			}
 			that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
-			mollify.service.post("session/authenticate", {protocol_version: 3, username: username, password: window.Base64.encode(password), remember: remember}).done(function(s) {
+			mollify.service.post("session/authenticate", {username: username, password: window.Base64.encode(password), remember: remember}).done(function(s) {
 				mollify.events.dispatch('session/start', s);
 			}).fail(function(e) {
 				if (e.code == 107) this.handled = true;

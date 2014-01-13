@@ -70,6 +70,9 @@ var mollifyDefaults = {
 		mollify.App.pageParams = mollify.request.getParams(window.location.href);
 		mollify.App.mobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 		
+		mollify.settings = $.extend(true, {}, mollifyDefaults, s);
+		mollify.service.init(mollify.settings["limited-http-methods"]);
+		
 		mollify.plugins.register(new mollify.plugin.Core());
 		mollify.plugins.register(new mollify.plugin.PermissionsPlugin());
 		if (p) {
@@ -77,16 +80,6 @@ var mollifyDefaults = {
 				mollify.plugins.register(p[i]);
 		}
 		
-		mollify.settings = $.extend(true, {}, mollifyDefaults, s);
-		mollify.service.init(mollify.settings["limited-http-methods"]);
-		
-		var start = function() {
-			mollify.service.get("session/info/").fail(function() {
-				new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
-			}).done(function(s) {
-				mollify.events.dispatch('session/start', s);
-			});
-		};
 		mollify.events.addEventHandler(function(e) {
 			if (e.type == 'session/start') {
 				mollify.App._onSessionStart(e.payload);
@@ -97,12 +90,26 @@ var mollifyDefaults = {
 			}
 		});
 		
+		var start = function() {
+			mollify.service.get("session/info/").fail(function() {
+				new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
+			}).done(function(s) {
+				mollify.events.dispatch('session/start', s);
+			});
+		};
+		
+		var onError = function() { new mollify.ui.FullErrorView('Failed to initialize Mollify').show(); };
+		mollify.ui.initialize().done(function() {
+			mollify.plugins.initialize().done(function() {
+				mollify.App._initialized = true;
+				start();
+			}).fail(onError);
+		}).fail(onError);
+		
 		if (mollify.settings["view-url"])
 			window.onpopstate = function(event) {
 				mollify.App.onRestoreState(document.location.href, event.state);
 			};
-
-		start();
 	};
 	
 	mollify.App.getElement = function() { return $("#"+mollify.settings["app-element-id"]); };
@@ -112,6 +119,7 @@ var mollifyDefaults = {
 			id : s.user_id,
 			name : s.username,			
 			type: s.user_type,
+			lang: s.lang,
 			admin: s.user_type == 'a',
 			permissions: s.permissions,
 			hasPermission : function(name, required) { return mollify.helpers.hasPermission(s.permissions, name, required); }
@@ -120,15 +128,14 @@ var mollifyDefaults = {
 		mollify.session = {
 			id: s.session_id,
 			user: user,
-			lang: s.lang,
 			features: s.features,
 			plugins: s.plugins,
 			data: s
 		};
 		
 		mollify.filesystem.init(mollify.session.data.folders, ((mollify.session.user && mollify.session.user.admin) ? mollify.session.data.roots : false));
-		
-		var onError = function() {
+		mollify.ui.initializeLang().done(mollify.App._doStart).fail(function() { new mollify.ui.FullErrorView('Failed to initialize Mollify').show(); });
+		/*var onError = function() {
 			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
 		}
 		
@@ -141,10 +148,10 @@ var mollifyDefaults = {
 			}).fail(onError);
 		else {
 			mollify.ui.initializeLang().done(mollify.App._start).fail(onError);
-		}
+		}*/
 	};
 	
-	mollify.App._start = function() {
+	mollify.App._doStart = function() {
 		mollify.App.activeView = false;
 		mollify.App.activeViewId = null;	
 		mollify.App.openView(mollify.App.pageParams.v || "/files/");
@@ -281,15 +288,18 @@ var mollifyDefaults = {
 	/* EVENTS */
 	var et = mollify.events;
 	et._handlers = [];
+	et._handlerTypes = {};
 		
-	et.addEventHandler = function(h) {
+	et.addEventHandler = function(h, t) {
 		et._handlers.push(h);
+		if (t) et._handlerTypes[h] = t;
 	};
 	
 	et.dispatch = function(type, payload) {
 		var e = { type: type, payload: payload };
 		$.each(et._handlers, function(i, h) {
-			h(e);
+			if (!et._handlerTypes[h] || type == et._handlerTypes[h])
+				h(e);
 		});
 	};
 	
@@ -392,9 +402,9 @@ var mollifyDefaults = {
 			
 			if (allRoots) {
 				mollify.filesystem.allRoots = allRoots;
-				for (var i=0,j=allRoots.length; i<j; i++)
-					if (!mollify.filesystem.rootsById[allRoots[i].id])
-						mollify.filesystem.rootsById[allRoots[i].id] = allRoots[i];
+				for (var k=0,l=allRoots.length; k<l; k++)
+					if (!mollify.filesystem.rootsById[allRoots[k].id])
+						mollify.filesystem.rootsById[allRoots[k].id] = allRoots[k];
 			}
 		}
 	};
@@ -1196,8 +1206,8 @@ var mollifyDefaults = {
 
 	if(typeof String.prototype.count !== 'function') {	
 		String.prototype.count = function(search) {
-		    var m = this.match(new RegExp(search.toString().replace(/(?=[.\\+*?[^\]$(){}\|])/g, "\\"), "g"));
-		    return m ? m.length:0;
+			var m = this.match(new RegExp(search.toString().replace(/(?=[.\\+*?\[\^\]$(){}\|])/g, "\\"), "g"));
+			return m ? m.length:0;
 		}
 	}
 	

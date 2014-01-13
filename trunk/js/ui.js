@@ -96,7 +96,7 @@
 		if (!id) return "";
 		var t = tt._dict[id];
 		if (!t) return "!"+tt.locale+":"+id;
-		if (p != undefined) {
+		if (p !== undefined) {
 			if (!window.isArray(p)) p = [p];
 			for (var i=0,j=p.length; i<j; i++)
 				t = t.replace("{" + i + "}", p[i]);
@@ -202,7 +202,7 @@
 	
 	mollify.ui.initializeLang = function() {
 		var df = $.Deferred();
-		var lang = mollify.session.lang || mollify.settings.language["default"] || 'en';
+		var lang = (mollify.session.user && mollify.session.user.lang) ? mollify.session.user.lang : (mollify.settings.language["default"] || 'en');
 		
 		if (mollify.ui.texts.locale && mollify.ui.texts.locale == lang) return df.resolve();
 		
@@ -1054,13 +1054,13 @@
 						if (typeof(col.options) == "function") selOptions = col.options(item);
 						else if (window.isArray(col.options)) selOptions = col.options;
 						
-						var noneOption = undefined;
+						var noneOption;
 						if (col.none) {
 							if (typeof(col.none) == "function") noneOption = col.none(item);
 							else noneOption = col.none;
 						}
 						
-						var formatter = undefined;
+						var formatter;
 						if (col.formatter) {
 							formatter = function(sv) {
 								return col.formatter(item, sv);

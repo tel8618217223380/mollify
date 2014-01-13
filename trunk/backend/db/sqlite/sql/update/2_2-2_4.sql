@@ -18,6 +18,7 @@ UPDATE permission SET value = 'n' WHERE value = 'NO';
 UPDATE permission SET value = 'r' WHERE value = 'RO';
 UPDATE permission SET value = 'rwd' WHERE value = 'RW';
 UPDATE permission SET value = 'rw' WHERE value = 'WD';
+INSERT INTO permission (name, user_id, subject, value) values ('filesystem_item_access', 0, '', 'r');
 
 ALTER TABLE user DROP COLUMN permission_mode;
 
