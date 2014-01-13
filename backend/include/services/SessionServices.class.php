@@ -51,7 +51,7 @@
 		}
 		
 		private function authenticate() {
-			if (!$this->request->hasData("username") or !$this->request->hasData("password") or !$this->request->hasData("protocol_version"))
+			if (!$this->request->hasData("username") or !$this->request->hasData("password"))
 				throw new ServiceException("INVALID_REQUEST", "Missing parameters");
 			
 			$pw = base64_decode($this->request->data("password"));

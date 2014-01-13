@@ -445,15 +445,15 @@
                             items.push(r.matches[id].item);
                         }
                         var fo = {
-	                        id: f,
-	                        type: "search"
-                        };
-                        var data = {
-                        	text: text,
-                        	items: items,
-                        	data: r.data,
-                        	info: r
-                        };
+							id: f,
+							type: "search"
+						};
+						var data = {
+							text: text,
+							items: items,
+							data: r.data,
+							info: r
+						};
 						df.resolve(fo, data);
 					});
 					return df.promise();

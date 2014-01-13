@@ -18,6 +18,7 @@ UPDATE `{TABLE_PREFIX}permission` SET value = 'n' WHERE value = 'NO';
 UPDATE `{TABLE_PREFIX}permission` SET value = 'r' WHERE value = 'RO';
 UPDATE `{TABLE_PREFIX}permission` SET value = 'rwd' WHERE value = 'RW';
 UPDATE `{TABLE_PREFIX}permission` SET value = 'rw' WHERE value = 'WD';
+INSERT INTO `{TABLE_PREFIX}permission` (name, user_id, subject, value) values ('filesystem_item_access', 0, '', 'r');
 
 ALTER TABLE `{TABLE_PREFIX}user` DROP `permission_mode`;
 
