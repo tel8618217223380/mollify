@@ -457,7 +457,8 @@
 		
 		public function move($item, $to) {
 			Logging::logDebug('moving '.$item->id()."[".$item->path().'] to ['.$to.']');
-
+			if ($item->isRoot()) throw new ServiceException("INSUFFICIENT_PERMISSIONS", "Cannot move root folders");
+			
 			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
 			$this->assertRights($item, self::PERMISSION_LEVEL_READ, "move");
 			$this->assertRights($to, self::PERMISSION_LEVEL_READWRITE, "move");
@@ -470,6 +471,9 @@
 		
 		public function moveItems($items, $to) {
 			Logging::logDebug('moving '.count($items).' items');
+			foreach($items as $item)
+				if ($item->isRoot()) throw new ServiceException("INSUFFICIENT_PERMISSIONS", "Cannot move root folder:".$item->id());
+				
 			$this->assertRights($items, self::PERMISSION_LEVEL_READWRITE, "move");
 			
 			foreach($items as $item)
@@ -478,6 +482,7 @@
 		
 		public function delete($item) {
 			Logging::logDebug('deleting ['.$item->id().']');
+			if ($item->isRoot()) throw new ServiceException("INSUFFICIENT_PERMISSIONS", "Cannot delete root folders");
 			
 			$this->assertRights($item, self::PERMISSION_LEVEL_READWRITEDELETE, "delete");
 			$this->validateAction(FileEvent::DELETE, $item);
@@ -495,6 +500,9 @@
 		
 		public function deleteItems($items) {
 			Logging::logDebug('deleting '.count($items).' items');
+			foreach($items as $item)
+				if ($item->isRoot()) throw new ServiceException("INSUFFICIENT_PERMISSIONS", "Cannot delete root folder:".$item->id());
+
 			$this->validateAction(FileEvent::DELETE, $items);
 			$this->assertRights($items, self::PERMISSION_LEVEL_READWRITEDELETE, "delete");
 			
