@@ -50,12 +50,23 @@
 				};
 			},
 			itemCollectionHandler : function(items) {
+				var roots = false;
+				$.each(items, function(i, itm) {
+					var root = (itm.id == itm.root_id);
+					if (root) {
+						roots = true;
+						return false;
+					}
+				});
+				var actions = [ { 'title-key': 'actionCopyMultiple', icon: 'copy', callback: function() { return mollify.filesystem.copy(items); } } ];
+
+				if (!roots) {
+					actions.push({ 'title-key': 'actionMoveMultiple', icon: 'mail-forward', callback: function() { return mollify.filesystem.move(items); } });
+					actions.push({ 'title-key': 'actionDeleteMultiple', icon: 'trash', callback: function() { return mollify.filesystem.del(items); } });
+				};
+				
 				return {
-					actions: [
-						{ 'title-key': 'actionCopyMultiple', icon: 'copy', callback: function() { return mollify.filesystem.copy(items); } },
-						{ 'title-key': 'actionMoveMultiple', icon: 'mail-forward', callback: function() { return mollify.filesystem.move(items); } },
-						{ 'title-key': 'actionDeleteMultiple', icon: 'trash', callback: function() { return mollify.filesystem.del(items); } }
-					]
+					actions: actions
 				};
 			}
 		};
@@ -1790,8 +1801,8 @@
 			permissionsView = new mollify.view.ConfigListView($c, {
 				title: title,
 				actions: [
-					{ id: "action-edit", content:'<i class="icon-user"></i>', callback: function() { that.editGenericPermissions(u, refresh); } },
-					{ id: "action-edit-defaults", content:'<i class="icon-globe"></i>', callback: function() { that.editGenericPermissions(false, refresh); } }
+					{ id: "action-edit", content:'<i class="icon-user" title="' + mollify.ui.texts.get(u.is_group == '1' ? 'pluginPermissionsEditGroupPermissionsAction' : 'pluginPermissionsEditUserPermissionsAction') + '"></i>', callback: function() { that.editGenericPermissions(u, refresh); } },
+					{ id: "action-edit-defaults", content:'<i class="icon-globe" title="' + mollify.ui.texts.get('pluginPermissionsEditDefaultPermissionsAction') + '"></i>', callback: function() { that.editGenericPermissions(false, refresh); } }
 				],
 				table: {
 					id: "config-admin-userpermissions",
