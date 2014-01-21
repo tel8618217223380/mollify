@@ -60,6 +60,10 @@
 			return $r."}";
 		}
 		
+		static function isArrayKey($a, $k) {
+			return $a != NULL and isset($a[$k]) and $a[$k] != NULL;
+		}
+		
 		static function convertArrayCharset($a) {
 			$result = array();
 			foreach($a as $k=>$v) {

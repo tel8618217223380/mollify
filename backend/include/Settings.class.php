@@ -79,7 +79,14 @@
 		}
 		
 		function log() {
-			Logging::logDebug("SETTINGS: ".Util::array2str($this->settings));
+			if (!Logging::isDebug()) return;
+			$logged = array_merge(array(), $this->settings);
+			// remove db password
+			if (Util::isArrayKey($logged, "db") and is_array($logged["db"])) {
+				if (Util::isArrayKey($logged["db"], "pw")) $logged["db"]["pw"] = "";
+				if (Util::isArrayKey($logged["db"], "password")) $logged["db"]["password"] = "";
+			} 
+			Logging::logDebug("SETTINGS: ".Util::array2str($logged));
 		}
 		
 		public function __toString() {
