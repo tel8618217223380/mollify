@@ -209,6 +209,11 @@
 				$e.find("#mollify-configlistview-action-"+id).addClass("disabled");
 		};
 		if (o.actions) {
+			$.each(o.actions, function(i, a) {
+				if (a.depends) enableAction(a.id, false);
+				if (a.tooltip) mollify.ui.controls.tooltip($("#mollify-configlistview-action-" + a.id), { title: a.tooltip });
+			});
+			
 			table.onSelectionChanged(function() {
 				var sel = table.getSelected();
 				var any = sel.length > 0;

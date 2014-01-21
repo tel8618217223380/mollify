@@ -2,7 +2,7 @@ VERSION=2.4
 DATE=$(shell date +%I:%M%p)
 CHECK=\033[32m✔\033[39m
 VERSIONF=$(shell echo ${VERSION} | sed 's/\./_/g')
-REVISION=2377#$(shell svnversion | cut -s -d: -f2 | tr -d MS)
+REVISION=2378#$(shell svnversion | cut -s -d: -f2 | tr -d MS)
 HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 
