@@ -1449,6 +1449,17 @@
 			};
 			$p.find(".close").click(api.hide);
 			return api;
+		},
+		
+		tooltip: function($c, o) {
+			if (!$c) return;
+			
+			$c.tooltip($.extend({}, {
+				placement: "bottom",
+				title: "",
+				trigger: "hover"
+			}, o));
+
 		}
 	};
 	

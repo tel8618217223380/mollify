@@ -486,11 +486,7 @@
 						var item = $i.tmplItem().data;
 						var title = mollify.filesystem.rootsById[item.root_id].name + '/' + item.path + ', ' + matchesTitle + matchList(fi.info.matches[item.id].matches);
 
-						$i.tooltip({
-							placement: "bottom",
-							title: title,
-							trigger: "hover"
-						});
+						mollify.ui.controls.tooltip($i, { title: title });
 					});
 				}
 			});

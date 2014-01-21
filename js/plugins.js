@@ -1801,8 +1801,8 @@
 			permissionsView = new mollify.view.ConfigListView($c, {
 				title: title,
 				actions: [
-					{ id: "action-edit", content:'<i class="icon-user" title="' + mollify.ui.texts.get(u.is_group == '1' ? 'pluginPermissionsEditGroupPermissionsAction' : 'pluginPermissionsEditUserPermissionsAction') + '"></i>', callback: function() { that.editGenericPermissions(u, refresh); } },
-					{ id: "action-edit-defaults", content:'<i class="icon-globe" title="' + mollify.ui.texts.get('pluginPermissionsEditDefaultPermissionsAction') + '"></i>', callback: function() { that.editGenericPermissions(false, refresh); } }
+					{ id: "action-edit", content:'<i class="icon-user"></i>', tooltip: mollify.ui.texts.get(u.is_group == '1' ? 'pluginPermissionsEditGroupPermissionsAction' : 'pluginPermissionsEditUserPermissionsAction'), callback: function() { that.editGenericPermissions(u, refresh); } },
+					{ id: "action-edit-defaults", content:'<i class="icon-globe"></i>', tooltip: mollify.ui.texts.get('pluginPermissionsEditDefaultPermissionsAction'), callback: function() { that.editGenericPermissions(false, refresh); } }
 				],
 				table: {
 					id: "config-admin-userpermissions",
