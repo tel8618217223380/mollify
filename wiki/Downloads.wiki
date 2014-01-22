@@ -1,5 +1,5 @@
-#summary One-sentence summary of this page.
+#summary Mollify downloads
 
-Mollify downloads are at [https://bintray.com/samuli-jarvela/mollify/Mollify]
+Due to changes in Google Code policy for hosting downloads, current Mollify downloads are available at [https://bintray.com/samuli-jarvela/mollify/Mollify]
 
-Download archive is at [https://code.google.com/p/mollify/downloads/list]
+Old downloads can be found from download archive at [https://code.google.com/p/mollify/downloads/list]
