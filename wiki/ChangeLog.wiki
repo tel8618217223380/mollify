@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.4 ===
+Released 2014/1/22
+  * Rewritten permission management
+  * WebDAV plugin actions are made via controller (same permission/event handling as with web client)
+
 === Version 2.3.1 ===
 Released 2013/12/29
   * Improved uploader support for multiple file uploading
