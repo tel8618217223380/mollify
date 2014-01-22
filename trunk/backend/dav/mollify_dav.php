@@ -187,10 +187,13 @@
 		$settings = new Settings($CONFIGURATION);
 		$db = getDB($settings);
 		$conf = new ConfigurationDao($db);
+		
 		$env = new ServiceEnvironment($db, new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
+		$env->plugins()->setup();
+		
 		$env->initialize(new Mollify_DAV_Request());
 		
-		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
+		if (isset($BASIC_AUTH) and $BASIC_AUTH == TRUE) {
 			$auth = new Sabre_HTTP_BasicAuth();
 			$result = $auth->getUserPass();
 		
@@ -210,7 +213,7 @@
 			}
 			
 			$userAuth = $env->configuration()->getUserAuth($user["id"]);
-			if ($env->passwordHash()->isEqual($pw, $userAuth["hash"], $userAuth["salt"])) {
+			if (!$env->passwordHash()->isEqual($result[1], $userAuth["hash"], $userAuth["salt"])) {
 				Logging::logDebug("DAV authentication failure");
 				$auth->requireLogin();
 				echo "Authentication required\n";
