@@ -187,6 +187,7 @@
 		"pluginPermissionsContextEditAction": "Edit...",
 		
 		"pluginPermissionsEditUserPermissionsAction": "Edit user permissions",
+		"pluginPermissionsEditGroupPermissionsAction": "Edit group permissions",
 		"pluginPermissionsEditDefaultPermissionsAction": "Edit system default permissions",
 		
 		"pluginPermissionsEditDialogTitle": "Permissions for {0}",
