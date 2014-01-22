@@ -3,7 +3,7 @@
 
 === Version 2.4 ===
 Released 2014/1/22
-  * Rewritten permission management
+  * Rewritten permission management ([https://code.google.com/p/mollify/wiki/Permissions])
   * WebDAV plugin actions are made via controller (same permission/event handling as with web client)
 
 === Version 2.3.1 ===
