@@ -566,6 +566,13 @@
 			$this->env->response()->send($file->name(), $file->extension(), $file->read(), $file->size());
 		}
 		
+		public function read($file) {
+			Logging::logDebug('read ['.$file->id().']');
+			$this->assertRights($file, self::PERMISSION_LEVEL_READ, "read");
+			$this->env->events()->onEvent(FileEvent::view($file));
+			return $file->read();
+		}
+		
 		public function updateFileContents($item, $content) {
 			if (!$item->isFile()) throw new ServiceException("NOT_A_FILE", $item->path());
 			Logging::logDebug('update file contents ['.$item->id().']');

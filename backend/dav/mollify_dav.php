@@ -111,23 +111,20 @@
 		}
 
 		public function createFile($name, $data = null) {
-			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "create file");
 			$file = $this->folder->createFile($name);
 			if ($data != NULL) {
 				checkUploadSize();
-				$file->put($data);
+				$this->controller->updateFileContents($file, $data);
 			}
 			return $file;
 		}
 
 		public function createDirectory($name) {
-			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "create folder");
-			return $this->folder->createFolder($name);
+			return $this->controller->createFolder($this->folder, $name);
 		}
 
 		public function delete() {
-			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "delete");
-	        $this->folder->delete();
+			$this->controller->delete($this->folder);
 		}
 
 		public function getName() {
@@ -135,8 +132,7 @@
 		}
 		
 		public function setName($name) {
-			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "rename");
-			$this->folder->rename($name);
+			$this->controller->rename($this->folder, $name);
 		}
 		
 		public function getLastModified() {
@@ -158,24 +154,20 @@
 		}
 		
 		public function setName($name) {
-			$this->controller->assertRights($this->file, Authentication::RIGHTS_WRITE, "rename");
-			$this->file->rename($name);
+			$this->controller->rename($this->file, $name);
 		}
 
 		public function get() {
-			$this->controller->assertRights($this->file, Authentication::RIGHTS_READ, "get");
-			return $this->file->read();
+			return $this->controller->read($this->file);
 		}
 		
 		public function put($data) {
 			if ($data != NULL) checkUploadSize();
-			$this->controller->assertRights($this->file, Authentication::RIGHTS_WRITE, "put");
-	        $this->file->put($data);
+			$this->controller->updateFileContents($this->file, $data);
 		}
 		
 		public function delete() {
-			$this->controller->assertRights($this->file, Authentication::RIGHTS_WRITE, "delete");
-	        $this->file->delete();
+			$this->controller->delete($this->file);
 		}
 
 		public function getSize() {
@@ -196,7 +188,6 @@
 		$db = getDB($settings);
 		$conf = new ConfigurationDao($db);
 		$env = new ServiceEnvironment($db, new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
-		//$env = new ServiceEnvironment(new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
 		$env->initialize(new Mollify_DAV_Request());
 		
 		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
