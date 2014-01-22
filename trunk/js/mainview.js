@@ -742,7 +742,10 @@
 	
 		this.changeToFolder = function(f, noStore) {
 			var id = f;
-			if (f && (typeof(f) != "string")) id = that._getFolderPublicId(f);
+			if (!id) {
+				if (mollify.filesystem.roots)
+					id = mollify.filesystem.roots[0].id;
+			} else if (typeof(id) != "string") id = that._getFolderPublicId(id);	
 		
 			if (!noStore) mollify.App.storeView("files/"+ (id ? id : ""));
 			
@@ -756,6 +759,7 @@
 			that._currentFolderData = false;
 			that.rootNav.setActive(false);
 
+			if (!id) return $.Deferred().resolve();
 			return that._onSelectFolder(id);
 		};
 		

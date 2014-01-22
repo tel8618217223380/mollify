@@ -1547,7 +1547,7 @@
 								callback: function() { removePermissions(sel).done(refresh); }
 							});
 						}},
-						{ id: "action-edit-generic", content:'<i class="icon-plus"></i>', callback: function() { that.editGenericPermissions(); } },
+						{ id: "action-edit-generic", content:'<i class="icon-globe"></i>', tooltip: mollify.ui.texts.get('pluginPermissionsEditDefaultPermissionsAction'), callback: function() { that.editGenericPermissions(); } },
 						{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: refresh }
 					],
 					table: {
@@ -1577,7 +1577,7 @@
 								return that._formatPermissionValue(item.name, k);
 							} },
 							{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsPermissionUser'), sortable: true, formatter: function(item, u) {
-								if (!u || u === 0)
+								if (!u || u == "0")
 									return "";
 								return users.usersById[u].name;
 							} },

@@ -1316,7 +1316,7 @@ a.mollify-tableaction {
 	cursor: pointer;
 }
 
-.mollify-config-admin-userdetails-section, .mollify-notificator-notificationdetails-section {
+.mollify-config-admin-userdetails-section, .mollify-notificator-notificationdetails-section, .mollify-config-admin-groupdetails-section {
 	float: left;
 	width: 45%;
 	overflow: hidden;
