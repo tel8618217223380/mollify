@@ -164,7 +164,9 @@
 		}
 		
 		function isAdmin() {
-			return ($this->isAuthenticated() and (strcasecmp($this->env->session()->user()["user_type"], self::USER_TYPE_ADMIN) === 0));
+			if (!$this->isAuthenticated()) return FALSE;
+			$user = $this->env->session()->user();
+			return (strcasecmp($user["user_type"], self::USER_TYPE_ADMIN) === 0);
 		}
 		
 		public function log() {
