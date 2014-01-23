@@ -63,7 +63,7 @@
 				if (!roots) {
 					actions.push({ 'title-key': 'actionMoveMultiple', icon: 'mail-forward', callback: function() { return mollify.filesystem.move(items); } });
 					actions.push({ 'title-key': 'actionDeleteMultiple', icon: 'trash', callback: function() { return mollify.filesystem.del(items); } });
-				};
+				}
 				
 				return {
 					actions: actions

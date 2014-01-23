@@ -135,20 +135,6 @@ var mollifyDefaults = {
 		
 		mollify.filesystem.init(mollify.session.data.folders, ((mollify.session.user && mollify.session.user.admin) ? mollify.session.data.roots : false));
 		mollify.ui.initializeLang().done(mollify.App._doStart).fail(function() { new mollify.ui.FullErrorView('Failed to initialize Mollify').show(); });
-		/*var onError = function() {
-			new mollify.ui.FullErrorView('Failed to initialize Mollify').show();
-		}
-		
-		if (!mollify.App._initialized)
-			mollify.ui.initialize().done(function() {
-				mollify.plugins.initialize().done(function() {
-					mollify.App._initialized = true;
-					mollify.App._start();
-				}).fail(onError);
-			}).fail(onError);
-		else {
-			mollify.ui.initializeLang().done(mollify.App._start).fail(onError);
-		}*/
 	};
 	
 	mollify.App._doStart = function() {
@@ -365,7 +351,7 @@ var mollifyDefaults = {
 			var error = false;
 			var data = false;
 
-			if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
+			if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse($.trim(xhr.responseText));
 			if (!error) error = { code: 999 };	//unknown
 			
 			var failContext = {
