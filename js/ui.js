@@ -340,7 +340,7 @@
 		};
 		
 		ict.renderItemContext = function(cApi, $e, item, ctx) {
-			var descriptionEditable = mollify.features.hasFeature("descriptions") && ctx.hasItemPermission("edit_description");
+			var descriptionEditable = mollify.features.hasFeature("descriptions") && ctx.hasPermission("edit_description");
 			var showDescription = descriptionEditable || !!ctx.details.description;
 			
 			var plugins = mollify.plugins.getItemContextPlugins(item, ctx);
