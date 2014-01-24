@@ -2614,7 +2614,7 @@
 				cv.showLoading(true);
 				
 				that.loadShares().done(function(l) {
-					shares = l.shares[mollify.session.user_id];
+					shares = l.shares[mollify.session.user.id];
 					items = l.items;
 					invalid = l.invalid;
 					listView.table.set(items);
@@ -2635,10 +2635,10 @@
 							return isValid(item) ? '<i class="icon-file"></i>' : '<i class="icon-exclamation"></i>';
 						} },
 						{ id: "name", title: mollify.ui.texts.get('fileListColumnTitleName') },
-						{ id: "count", title: mollify.ui.texts.get('pluginShareConfigViewCountTitle'), valueMapper: function(item) {
+						{ id: "count", title: mollify.ui.texts.get('pluginShareConfigViewCountTitle'), formatter: function(item) {
 							return shares[item.id].length;
 						} },
-						{ id: "edit", title: "", type: "action", valueMapper: function(item) {
+						{ id: "edit", title: "", type: "action", formatter: function(item) {
 							return isValid(item) ? '<i class="icon-edit"></i>' : '';
 						} },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
