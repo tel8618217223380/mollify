@@ -416,7 +416,9 @@ var mollifyDefaults = {
 	};
 	
 	mfs.folderInfo = function(id, hierarchy, data) {
-		return mollify.service.post("filesystem/"+ (id ? id : "roots") + "/info/" + (hierarchy ? "?h=1" : ""), { data : data });
+		return mollify.service.post("filesystem/"+ (id ? id : "roots") + "/info/" + (hierarchy ? "?h=1" : ""), { data : data }).done(function(r) {
+			mollify.filesystem.permissionCache[id] = r.permissions;
+		});
 	};
 
 	mfs.findFolder = function(d, data) {
@@ -424,6 +426,8 @@ var mollifyDefaults = {
 	};
 	
 	mfs.hasPermission = function(item, name, required) {
+		if (!mollify.session.user) return false;
+		if (mollify.session.user.admin) return true;
 		return mollify.helpers.hasPermission(mollify.filesystem.permissionCache[((typeof(item) === "string") ? item : item.id)], name, required);
 	};
 		
