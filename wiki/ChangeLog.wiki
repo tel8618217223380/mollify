@@ -2,7 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 2.4.1 & 2.4.2 & 2.4.3 ===
-Released 2014/1/24
+Released 2014/1/28
   * Small fixes
 
 === Version 2.4 ===
