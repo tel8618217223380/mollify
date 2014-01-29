@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.4.4 ===
+Released 2014/1/29
+  * Small fixes
+  * Version control moved into GitHub (https://github.com/sjarvela/mollify)
+  * Moved into Grunt build tool
+ 
+*BREAKING CHANGES* Released CSS file now named "mollify.min.css", when upgrading remember to update index.html accordingly
+
 === Version 2.4.1 & 2.4.2 & 2.4.3 ===
 Released 2014/1/28
   * Small fixes
