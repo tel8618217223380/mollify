@@ -3,7 +3,7 @@
 
 === Version 2.4.4 ===
 Released 2014/1/29
-  * Small fixes
+  * Small fixes in Mollify and WebDAV plugin
   * Version control moved into GitHub (https://github.com/sjarvela/mollify)
   * Moved into Grunt build tool
  
