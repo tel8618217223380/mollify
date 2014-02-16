@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.4.5 ===
+Released 2014/2/16
+  * Archiver plugin fix (constants were moved in permission plugin rewrite)
+
 === Version 2.4.4 ===
 Released 2014/1/29
   * Small fixes in Mollify and WebDAV plugin
