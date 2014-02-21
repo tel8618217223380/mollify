@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.1 ===
+Released 2014/2/21
+  * Fixed CSS packaging issue
+  * File editor permission checking
+ 
 === Version 2.5 (& 2.4.7) ===
 Released 2014/2/21
   * Fixed issue #507
