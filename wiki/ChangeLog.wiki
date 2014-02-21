@@ -6,7 +6,6 @@ Released 2014/2/21
   * Fixed issue #507
   * Fixed issue #514
   * Updated spanish, german and french translations
-  * Fixed WebDAV plugin package issue (issue #507)
 
 === Version 2.4.6 ===
 Released 2014/2/19
