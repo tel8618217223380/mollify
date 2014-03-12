@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.3 ===
+Released 2014/3/12
+  * Fixed registration plugin, created user had incorrect type and permission not set properly
+
 === Version 2.5.2 ===
 Released 2014/3/8
   * Fixed issue #523
