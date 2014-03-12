@@ -15,7 +15,7 @@ Registration has following settings:
 
 If approval is required, confirmed registration will not create user yet. Instead, confirmed registrations are listed in admin view, where admin user can approve. Using notificator plugin, admins can get email notifications for confirmed registrations.
 
-Permission is the permission mode for the created user, possible values "ro" (read only), "rw" (read and write) and "a" (admin). If not given, users are added with read only permission.
+Permission is the permission level value (filesystem access) for the created user default permission, see Permissions for possible values. If not given, no default permission is added, and system default is applied.
 
 Groups is a list of user group ids for the created user. If not set, user is not assigned to any groups.
 
