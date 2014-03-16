@@ -74,6 +74,6 @@ Register client plugin with following client settings:
 
 = Registration =
 
-Once registration plugin is installed, registration page is at "http://host/backend/plugin/Registration". Users can fill out the form presented, and they will receive a notification mail. Mail provides a link that will confirm the registration.
+Once registration plugin is installed, registration page is at "http://[PATH_TO_MOLLIFY]/?v=registration/new". Users can fill out the form presented, and they will receive a notification mail. Mail provides a link that will confirm the registration.
 
-Optionally confirmation can be done at "http://host/backend/plugin/Registration?confirm=[EMAIL]", where [EMAIL] is the email address (in url encoded format) given in registration. This opens a form where the registration key is required.
+Optionally confirmation can be done at "http://[PATH_TO_MOLLIFY]/?v=registration/confirm&email=[EMAIL]", where [EMAIL] is the email address (in url encoded format) given in registration. This opens a form where the registration key is required.
