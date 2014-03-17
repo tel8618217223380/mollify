@@ -67,9 +67,3 @@ See [ItemCollectionPlugin]
 == Comments ==
 
 See [CommentsPlugin]
-
-= Separately Downloaded Plugins =
-
-== Plupload uploader plugin ==
-
-See [PluploadPlugin]
