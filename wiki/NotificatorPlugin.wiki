@@ -69,3 +69,10 @@ Following applies only to rename, copy and move events:
 For session events (login, logout and failed login):
   * %ip% IP address
   * %user% (only for failed login) user name
+
+For registration creation and registration confirmation events:
+  * %registration_id% ID of the registration
+  * %registration_approve_link% Link for admin approval
+
+For registration creation event also (in addition to previous):
+  * %registration_key% Registration key
