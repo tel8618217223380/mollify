@@ -41,6 +41,8 @@ Filesystem permissions:
   * comment item (Comments plugin)
   * share item (Share plugin)
 
+== Filesystem permission rules ==
+
 Filesystem permissions can be set in following levels:
   * user specific filesystem item (in item permission editor)
   * group specific filesystem item (in item permission editor)
@@ -74,3 +76,11 @@ Example 3, if user U1 belongs to group G1, user U2 does not, and following permi
   * file "example.txt" permission for user group G1: rwd (read&write&delete)
 
 Effective permission for "example.txt" for user U1 is "read&write/delete", and for user U2 "read only".
+
+== Permission: Filesystem item access ==
+
+Filesystem item access permission has following values:
+  * no (None)
+  * r (Read only)
+  * rw (Read/write)
+  * rwd (Read/write/delete)
