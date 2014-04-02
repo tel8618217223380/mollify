@@ -40,7 +40,7 @@ Mollify can reflect the current view in the browser url (if browser supports his
 
 == Icon view thumbnails (`icon-view-thumbnails`) ==
 
-With this option, icon view can display supported images (gif, png, jpg, jpeg) with thumbnail.
+With this option, icon view can display supported images (gif, png, jpg, jpeg) with thumbnail. Requires thumbnail feature enabled in backend [https://code.google.com/p/mollify/wiki/BackendSettings#Enable_thumbnails_(_enable_thumbnails_)]
 
 == Default view mode (`default-view-mode`) ==
 
