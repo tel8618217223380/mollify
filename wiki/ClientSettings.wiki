@@ -38,6 +38,10 @@ Mollify can reflect the current view in the browser url (if browser supports his
 
 = File view options =
 
+== Icon view thumbnails (`icon-view-thumbnails`) ==
+
+With this option, icon view can display supported images (gif, png, jpg, jpeg) with thumbnail.
+
 == Default view mode (`default-view-mode`) ==
 
 View mode selected when Mollify is launched, options are "`list`" (default), "`small-icon`" and "`large-icon`".
