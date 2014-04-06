@@ -40,6 +40,31 @@ For example:
 	);
 }}}
 
+Registration plugin requires installation via Mollify update util.
+
+To enable mail notifications, add following settings:
+{{{
+	$CONFIGURATION = array(
+		...,
+		"enable_mail_notification" => TRUE,
+		"mail_notification_from" => "admin@your.host"
+	);
+}}}
+
+The setting "mail_notification_from" defines the address which the mail is sent from.
+
+Register client plugin with following client settings:
+
+{{{
+<script type="text/javascript">
+	mollify.App.init({
+		...
+		}, [
+			new mollify.plugin.RegistrationPlugin()
+		]
+	});
+}}}
+
 == Folders ==
 
 It is possible to list only folder ids that are added to the new user.
@@ -105,31 +130,6 @@ For user folders, the parameters are:
   * "`folder_name`" is a name for the folder. Leave it out if you want to name it after the user.
   *  "`add_to_users`" is a list of user ids that also see this folder. Useful for listing admins who need to 
 control these folders.
-
-Registration plugin requires installation via Mollify update util.
-
-To enable mail notifications, add following settings:
-{{{
-	$CONFIGURATION = array(
-		...,
-		"enable_mail_notification" => TRUE,
-		"mail_notification_from" => "admin@your.host"
-	);
-}}}
-
-The setting "mail_notification_from" defines the address which the mail is sent from.
-
-Register client plugin with following client settings:
-
-{{{
-<script type="text/javascript">
-	mollify.App.init({
-		...
-		}, [
-			new mollify.plugin.RegistrationPlugin()
-		]
-	});
-}}}
 
 = Registration =
 
