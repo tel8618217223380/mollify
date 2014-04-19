@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.7 ===
+Released 2014/4/19
+  * Fixed external interface user creation
+  * Added registration plugin support for permission that allows non-admins manage registrations
+
 === Version 2.5.6 ===
 Released 2014/4/6
   * Added registration plugin support for defining folder permissions
