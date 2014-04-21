@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.8 ===
+Released 2014/4/21
+  * Fixed installer issue
+  * Fixed issue 536
+
 === Version 2.5.7 ===
 Released 2014/4/19
   * Fixed external interface user creation
