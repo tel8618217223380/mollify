@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.9 ===
+Released 2014/4/24
+  * Fixed issue 534
+  * Fixed issue 537
+  * Fixed issue 538
+
 === Version 2.5.8 ===
 Released 2014/4/21
   * Fixed installer issue
