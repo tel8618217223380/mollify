@@ -86,7 +86,7 @@ Effective permission for user U1 default permission is "read&write&delete", beca
 
 == Permission: Filesystem item access ==
 
-Filesystem item access permission has following values:
+Filesystem item access permission has following values (in permissiveness order):
   * no (None)
   * r (Read only)
   * rw (Read/write)
