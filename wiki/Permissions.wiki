@@ -75,7 +75,14 @@ Example 3, if user U1 belongs to group G1, user U2 does not, and following permi
   * file "example.txt" default: r (read only)
   * file "example.txt" permission for user group G1: rwd (read&write&delete)
 
-Effective permission for "example.txt" for user U1 is "read&write/delete", and for user U2 "read only".
+Effective permission for "example.txt" for user U1 is "read&write&delete", and for user U2 "read only".
+
+Example 4, if user U1 belongs to group G1 and G2, and following permissions are set (filesystem item access)
+  * system default: n (no right)
+  * group G1 default: rw (read/write, no delete)
+  * group G2 default: rwd (read&write&delete)
+
+Effective permission for user U1 default permission is "read&write&delete", because group rights are with same priority and greater wins (read&write&delete).
 
 == Permission: Filesystem item access ==
 
