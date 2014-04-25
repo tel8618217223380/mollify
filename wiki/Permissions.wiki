@@ -31,7 +31,7 @@ Example 2, if user U1 belongs to group G1 and G2, and following permissions are 
   * group G1: no
   * group G2: yes
 
-Effective permission is "yes". Group permissions are with same priority, but in this case greater permission (the one that allows more) is chosen.
+Effective permission is "yes". Group permissions are with same priority, but in this case greater permission (the more permissive option) is chosen.
 
 = Filesystem permissions =
 
