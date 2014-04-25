@@ -31,7 +31,7 @@ Example 2, if user U1 belongs to group G1 and G2, and following permissions are 
   * group G1: no
   * group G2: yes
 
-Effective permission is "yes". Group permissions are with same priority, but in this case greater permission is chosen.
+Effective permission is "yes". Group permissions are with same priority, but in this case greater permission (the one that allows more) is chosen.
 
 = Filesystem permissions =
 
@@ -82,7 +82,7 @@ Example 4, if user U1 belongs to group G1 and G2, and following permissions are 
   * group G1 default: rw (read/write, no delete)
   * group G2 default: rwd (read&write&delete)
 
-Effective permission for user U1 default permission is "read&write&delete", because group rights are with same priority and greater wins (read&write&delete).
+Effective permission for user U1 default permission is "read&write&delete", because group rights are with same priority and greater applies (read&write&delete, see [https://code.google.com/p/mollify/wiki/Permissions?#Permission:_Filesystem_item_access permission list]).
 
 == Permission: Filesystem item access ==
 
