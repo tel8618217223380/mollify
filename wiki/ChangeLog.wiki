@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.10 ===
+Released 2014/5/3
+  * Fixed issue 544
+  * Fixed user folder name not shown
+  * Added new notificator variable: user_email
+
 === Version 2.5.9 ===
 Released 2014/4/24
   * Fixed issue 534
