@@ -46,7 +46,8 @@ Notificator plugin requires database, so run Mollify updater after adding config
 Following variables are available in the title and message for all event types:
 
   * %user_id% User id
-  * %username% User name
+  * %user_name% User name
+  * %user_email% User email
   * %event_time% Time of the event
   * %event_type% Type of the event, for example "filesystem/rename"
   * %event_main_type% Main type of the event, for example "filesystem"
