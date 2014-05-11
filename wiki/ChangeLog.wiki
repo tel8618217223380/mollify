@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.11 ===
+Released 2014/5/12
+  * Fixed issue 545
+  * Fixed issue 546
+  * Fixed issue 547
+  * Installer now installs also plugins if configured
+  * Registration view improvements
+
 === Version 2.5.10 ===
 Released 2014/5/3
   * Fixed issue 544
