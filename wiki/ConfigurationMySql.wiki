@@ -67,25 +67,10 @@ Alternatively you can use PDO database interface, for example:
 
 = 4. Installation =
 
-== 4.1. Installation with Installer ==
 Start installation by opening following page into your browser: "`http://[URL_TO_MOLLIFY_BACKEND_DIR]/install/`", where `[URL_TO_MOLLIFY_BACKEND_DIR]` is the mollify backend folder where, for example, configuration.php and r.php are located.
 
 Installer will check your configuration and system, and guide you through the installation.
 
-== 4.2. Manual Installation ==
-
-Database tables can be created manually by running script "`/include/mysql/sql/create_tables_[VERSION].sql`". For required parameters, run "`/include/mysql/sql/params_[VERSION].sql`" as well.
-
-Before running these scripts, replace text `{TABLE_PREFIX}` with the prefix defined in configuration, or remove them if no prefix is used.
-
-To be able to log into Mollify, you must create first admin user manually with following SQL:
-
-{{{
-	INSERT INTO [PREFIX_]user (name, password, permission_mode) VALUES ('[USER_NAME]','[PASSWORD]','A')
-}}}
-
-where `[USER_NAME]` is freely selectable user name, and `[PASSWORD]` an MD5 hashed password.
-
 = 5. Finishing Installation =
 
-After Mollify installation is over, open administration utility to configure users and published folders at `http://[URL_TO_MOLLIFY_BACKEND_DIR]/admin`
+After Mollify installation is over, open Mollify with admin account and select "Configuration" tab to configure users and published folders.
