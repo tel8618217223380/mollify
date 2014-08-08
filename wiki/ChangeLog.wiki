@@ -3,6 +3,7 @@
 
 === Version 2.5.13 ===
 Released 2014/8/8
+  * Fixed "remember me" option in login
   * Updated translations
   * Fixed issue 559
   * Fixed issue 560
