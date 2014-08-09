@@ -7,6 +7,7 @@ Released 2014/8/8
   * Updated translations
   * Fixed issue 559
   * Fixed issue 560
+  * Fixed JPlayer viewer resource problem: http://dl.bintray.com/samuli-jarvela/mollify/viewer-jplayer-1.3.zip
 
 === Version 2.5.12 ===
 Released 2014/5/13
