@@ -188,6 +188,8 @@ For example, if user "john.doe" is logging in
 	);
 }}}
 
+Note that using LDAP authentication requires php5-ldap module installed in the server.
+
 == Upload temporary directory (`upload_temp_dir`) ==
 
 Define the temporary directory used for custom file uploaders. By default the OS temp dir is used.
