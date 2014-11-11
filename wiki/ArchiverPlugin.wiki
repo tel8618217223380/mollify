@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Archiver plugin is built-in plugin that provides possibility to extract zip archives (later on also tar archives etc) and compress files.
+Archiver plugin is built-in plugin that provides possibility to extract zip archives (later on also tar archives etc) and compress files, as well as download files/folders compressed.
 
 = Configuration =
 
