@@ -14,7 +14,6 @@ $CONFIGURATION = array(
 	"enable_limited_http_methods" => FALSE,				// limited HTTP methods
 	"support_output_buffer" => FALSE,				// support for output buffer
 	"mime_types" => array(),					// MIME types
-	"enable_folder_actions" => TRUE,				// enable folder actions
 	"enable_change_password" => TRUE,				// enable change password
 	"enable_descriptions" => FALSE,					// enable descriptions
 	"enable_mail_notification" => FALSE,				// enable email notification
@@ -22,7 +21,6 @@ $CONFIGURATION = array(
 	"mail_notification_from" => "Admin",				// mail notification sender
 	"enable_retrieve_url" => FALSE,					// enable URL retrieve
 	"url_retriever_class" => "UrlRetriever.class.php",		// URL retriever implementation
-	"enable_zip_download" => FALSE,					// enable zip downloads
 	"allowed_file_upload_types" => array(),				// allowed file upload types
 	"forbidden_file_upload_types" => array(),				// forbidden file upload types
 	"new_folder_permission_mask" => 0755,				// new folder permission mask
@@ -71,10 +69,6 @@ Mime types are defined by the file extension, for example:
 	);
 }}}
 
-== Enable folder actions (`enable_folder_actions`) ==
-
-By default, folder actions (copy, move, delete) are enabled, but setting this to FALSE you can disable folder actions.
-
 == Enable change password (`enable_change_password`) ==
 
 By default, changing password is enabled, but setting this to FALSE you can prevent users from changing passwords.
@@ -102,10 +96,6 @@ Enable url retrieve, which allows adding remote file directly to Mollify (by def
 == URL retriever class (`url_retriever_class`) ==
 
 Define the URL retriever implementation. If default implementation is not sufficient, custom retriever can be defined with this setting.
-
-== Enable zip downloads (`enable_zip_downloads`) ==
-
-Enable zip downloads, which allows downloading entire folders or file collections (by default disabled).
 
 == Allowed and forbidden file upload types (`allowed_file_upload_types`, `forbidden_file_upload_types`) ==
 
