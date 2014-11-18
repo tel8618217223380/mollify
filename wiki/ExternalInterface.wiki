@@ -12,7 +12,7 @@ Mollify external interface is utility script for controlling Mollify outside, fo
   * `getUsername()`: get authenticated user name
   * `getAllUsers()`: get list of all users configured
   * `getUser($id)`: get user with given id
-  * `addUser($name, $pw, $email, $defaultPermission)`: add new Mollify user, permission is optional (read-only if not given)
+  * `addUser($name, $pw, $email, $userType, $expiration)`: add new Mollify user, user type and expiration are optional
   * `removeUser($id)`: remove user with given id
   * `addFolder($name, $path)`: add new published folder. Return value is id of the published folder.
   * `addUserFolder($userId, $folderId, $name)`: assign published folder (with id) for a user (with id). Name is optional (default name used if not given)
