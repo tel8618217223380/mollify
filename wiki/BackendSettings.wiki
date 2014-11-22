@@ -188,6 +188,8 @@ Define the temporary directory used for custom file uploaders. By default the OS
 
 Enable thumbnails support. This feature is used by, for example, icon view and image preview to show smaller image preview.
 
+This feature requires GD library installed (http://php.net/manual/en/image.installation.php)
+
 == Published folders root (`published_folders_root`) ==
 
 With this setting, all the published folders can be restricted into specified filesystem location. For example value "/data/folders" would mean that all folders must be under this folder, and for example publishing folder with path "Test" would mean path "/data/folders/Test"
