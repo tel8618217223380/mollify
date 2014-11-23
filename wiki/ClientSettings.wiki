@@ -81,6 +81,8 @@ Following plugins provide more column data:
 Column settings accepts following settings:
  * 'title': Text key (in localization file) shown in the column title. If not provided, default title used
  * 'sortable': Is column sortable
+ * 'width': Column width in pixels
+ * 'min-width': Column minimum width in pixels
 
 Example configuration (the default):
 
@@ -88,7 +90,7 @@ Example configuration (the default):
 <script type="text/javascript">
 	mollify.App.init({
 		"list-view-columns": {
-			"name": {title:"fileListColumnTitleName"},
+			"name": {title:"fileListColumnTitleName", width: 250 },
 			"type": {title:"fileListColumnTitleType"},
 			"size": {title:"fileListColumnTitleSize"}
 		}
