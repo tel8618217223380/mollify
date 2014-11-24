@@ -63,7 +63,7 @@ Data key is the id of the data displayed. Mollify provides following built-in da
  * "`last-modified`" : Time of the last modification
  * "`size`" : Size of the file
  * "`image-size`" : Size of the image (in pixels), requires server lib GD (see http://www.php.net/manual/en/image.requirements.php)
- * "`exif`" : Image exif data (see example below on how to register exif renderer)
+ * "`exif`" : Image exif data (only jpg and tiff supported, see example below on how to register exif renderer)
 
 Some plugins may provide more data keys.
 
