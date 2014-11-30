@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.15 ===
+Released 2014/11/30
+  * Added new language: nl
+  * Description column now shows content in search results view
+  * Small improvements and bug fixes
+
 === Version 2.5.14 ===
 Released 2014/8/25
   * Fixed issue 565
