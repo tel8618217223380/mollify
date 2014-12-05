@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.16 ===
+Released 2014/12/4
+  * Small fixes
+
 === Version 2.5.15 ===
 Released 2014/11/30
   * Added new language: nl
