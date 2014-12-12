@@ -14,6 +14,9 @@ Archiver plugin does not have any parameters. Configure plugin by adding followi
 		"plugins" => array(
 			"Archiver" => array(
 				"compressor" => "[COMPRESSOR]"
+				"enable_download" => TRUE/FALSE,
+				"enable_compress" => TRUE/FALSE
+				"enable_extract" => TRUE/FALSE
 			)
 		)
 	);
@@ -23,6 +26,8 @@ Value "COMPRESSOR" is the method used for compressing files, options are:
   * `ziparchive` Default PHP zip library (this is used if setting is not defined)
   * `native` Uses OS native tools to create the package (not available on all platforms)
   * `raw` PHP implementation of zip packaging
+
+Values "enable_download", "enable_compress" and "enable_extract" control whether archiver actions are available. By default, all actions are enabled, but with this option they can be disabled (by settings FALSE).
 
 Add following into client settings:
 
