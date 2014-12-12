@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.17 ===
+Released 2014/12/12
+  * Added archiver plugin actions optional
+  * Small fixes
+
 === Version 2.5.16 ===
 Released 2014/12/4
   * Small fixes
