@@ -3,7 +3,7 @@
 
 === Version 2.5.18 ===
 Released 2014/12/23
-  * Small fixes
+  * Small fixes and improvements
 
 === Version 2.5.17 ===
 Released 2014/12/12
