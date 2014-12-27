@@ -15,7 +15,7 @@ Registration has following settings:
 
 If approval is required, confirmed registration will not create user yet. Instead, confirmed registrations are listed in admin view, where admin user can approve. Using notificator plugin, admins can get email notifications for confirmed registrations.
 
-Permission is the permission level value (filesystem access) for the created user default permission, see [Permissions] for possible values. If not given, no default permission is added, and system default is applied.
+With value "permissions", user default permissions can be defined. String value is considered filesystem access permission, but with array syntax it is possible to define all permissions, see [Permissions] for possible values. If not given, no default permissions are added, and system defaults are applied.
 
 Groups is a list of user group ids for the created user. If not set, user is not assigned to any groups.
 
@@ -31,7 +31,7 @@ For example:
 		"plugins" => array(
 			"Registration" => array(
 				"require_approval" => TRUE,
-				"permission" => "rw",
+				"permissions" => "rwd",
 				"folders" => array("1", "3"),
 				"user_folder" => array("path" => "/foo/users", "folder_name" => "User Folder", "add_to_users" 
 => array("1", "2"))
@@ -128,8 +128,8 @@ To give other permissions (see [Permissions]), use array syntax:
 For user folders, the parameters are:
   *  "`path`" is the place where user folders are created, use a folder that is not published.
   * "`folder_name`" is a name for the folder. Leave it out if you want to name it after the user.
-  *  "`add_to_users`" is a list of user ids that also see this folder. Useful for listing admins who need to 
-control these folders.
+  *  "`add_to_users`" is a list of user ids that also see this folder. Useful for listing admins who need to control these folders.
+  *  "`permissions`" is the list of permissions assigned to the created folder. By default, user will get read/write/delete permission, but with this option all permissions can be defined in the same way as explained in chapter Folders.
 
 = Registration =
 
