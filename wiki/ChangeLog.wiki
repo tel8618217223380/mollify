@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.19 ===
+Released 2014/12/29
+  * Added share plugin admin view
+  * Small fixes and improvements
+  * Fixed issue 582
+
 === Version 2.5.18 ===
 Released 2014/12/23
   * Small fixes and improvements
