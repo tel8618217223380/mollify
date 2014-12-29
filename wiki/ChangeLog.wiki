@@ -4,6 +4,7 @@
 === Version 2.5.18 ===
 Released 2014/12/23
   * Small fixes and improvements
+  * Fixed issue 581
 
 === Version 2.5.17 ===
 Released 2014/12/12
