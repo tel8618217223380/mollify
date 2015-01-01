@@ -3,7 +3,7 @@
 
 === Version 2.5.20 ===
 Released 2015/1/1
-  * Added "Create empty file" action
+  * Added "Create empty file" action (https://code.google.com/p/mollify/wiki/ClientSettings#Create_empty_file_(_create-empty-file-action_))
   * Small fixes and improvements
 
 === Version 2.5.19 ===
