@@ -10,6 +10,7 @@ Following settings are available in client (and their default values), used in i
 			"limited-http-methods" : false,	// limited HTTP methods
 			"view-url": false,		// reflect view in url
 			"file-view": {			// file view options
+				"create-empty-file-action": false,	// create empty file
 				"default-view-mode": "list",	// default view mode
 				"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
 				"list-view-columns": {
@@ -37,6 +38,10 @@ Mollify can reflect the current view in the browser url (if browser supports his
 
 
 = File view options =
+
+== Create empty file (`create-empty-file-action`) ==
+
+Action "create empty file" is not shown by default. With this setting, it can be enabled in folder action menu.
 
 == Icon view thumbnails (`icon-view-thumbnails`) ==
 
