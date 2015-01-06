@@ -159,13 +159,26 @@ LDAP authentication requires configuring LDAP server, see options "ldap_server" 
 
 Single sign on authentication relies on Apache environment variable "REMOTE_USER". When option "remote" is enabled in the list, Mollify automatically logs in with the user found in the "REMOTE_USER" variable.
 
-== LDAP server (`ldap_server`) ==
+== LDAP authentication ==
 
-When LDAP authentication is enabled, this setting is used for finding to LDAP server. For an example, see setting "ldap_conn_string".
+Using LDAP authentication requires php5-ldap module installed in the server.
 
-== LDAP connection string (`ldap_conn_string`) ==
+When LDAP authentication is enabled, following settings can be used:
+  * `ldap_server`: LDAP server address
+  * `ldap_use_starttls`: use TLS in LDAP session
+  * `ldap_conn_string`: connection string for authenticated binding
+  * `ldap_search`: search string for anonymous binding
+  * `ldap_base_dn`: base DN for anonymous binding
+  * `ldap_bind_dn`: bind DN for anonymous binding
+  * `ldap_bind_pw`: password for anonymous binding
 
-When LDAP authentication is enabled, this setting is used for authenticating user. By default, user name is added in the beginning of the given connection string, otherwise the place must be marked with "`[USER]`".
+LDAP can be used with two ways: authenticated and anonymous binding.
+
+=== Authenticated binding ===
+
+With authenticated binding, current user credentials are used for LDAP binding. With this option, define settings `ldap_server` and `ldap_conn_string`
+
+By default, user name is added in the beginning of the given connection string, otherwise the place must be marked with "`[USER]`".
 
 For example, if user "john.doe" is logging in
   * connection string "`@domain.com`" would authenticate with "`john.doe@domain.com`"
@@ -178,7 +191,11 @@ For example, if user "john.doe" is logging in
 	);
 }}}
 
-Note that using LDAP authentication requires php5-ldap module installed in the server.
+=== Anonymous binding ===
+
+With anonymous binding, defined credentials are used for LDAP binding and searching the user. With this option, define settings `ldap_server` and `ldap_search`, `ldap_base_dn`, `ldap_bind_dn` and `ldap_bind_pw`.
+
+LDAP binding is done using `ldap_base_dn`, `ldap_bind_dn` and `ldap_bind_pw`, and user search using `ldap_search`.
 
 == Upload temporary directory (`upload_temp_dir`) ==
 
