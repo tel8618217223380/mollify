@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.22 ===
+Released 2015/1/7
+  * Small improvements
+
 === Version 2.5.21 ===
 Released 2015/1/6
   * Improved LDAP support
