@@ -4,6 +4,7 @@
 === Version 2.5.22 ===
 Released 2015/1/7
   * Small improvements
+  * Released WebDAV plugin version 2.5 (action validation when uploading new file) https://bintray.com/artifact/download/samuli-jarvela/mollify/mollify_webdav_2.5.zip
 
 === Version 2.5.21 ===
 Released 2015/1/6
