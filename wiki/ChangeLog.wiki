@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.5.25 ===
+Released 2015/1/13
+  * Internal improvements
+
 === Version 2.5.24 ===
 Released 2015/1/11
   * Prevent ItemDetails error with zero sized image file
