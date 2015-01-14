@@ -4,6 +4,8 @@
 === Version 2.5.26 ===
 Released 2015/1/14
   * Small improvements
+  * Fixed issue 589
+  * Fixed issue 590
 
 === Version 2.5.25 ===
 Released 2015/1/13
