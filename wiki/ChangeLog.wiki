@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.6 ===
+Released 2015/2/1
+  * Added support for generic file/folder metadata storage, for example description and file creation info now stored as metadata
+  * Search now supports comments
+  * New plugin: Watermarking
+  * New commercial plugins: Quota and History
+  * Added possibility to customize drag&drop operation
+
 === Version 2.5.26 ===
 Released 2015/1/14
   * Small improvements
