@@ -7,6 +7,7 @@ Released 2015/2/1
   * Search now supports comments
   * New plugin: Watermarking
   * New commercial plugins: Quota and History
+  * File copy/move now supports overwriting
   * Added possibility to customize drag&drop operation
 
 === Version 2.5.26 ===
