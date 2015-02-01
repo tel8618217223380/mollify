@@ -1,0 +1,16 @@
+#summary History plugin
+
+= Introduction =
+
+History plugin allows file versioning. When user uploads or copies file that already exists, the older file is versioned. Versioned files are shown in the file listing, where they can be viewed, removed or restored.
+
+In configuration, it is possible to restrict root folders that are under versioning.
+
+Details and configuration options coming soon.
+
+
+= License =
+
+Plugin is released with Commercial Plugin license (http://www.mollify.org/license.php).
+
+License costs 150 EUR, and download link will be provided after successful license payment.
