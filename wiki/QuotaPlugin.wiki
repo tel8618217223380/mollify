@@ -1,0 +1,14 @@
+#summary Folder quota plugin
+
+= Introduction =
+
+Folder quota plugin allows setting quota in (root) folder level.
+
+Details and configuration options coming soon.
+
+
+= License =
+
+Plugin is released with Commercial Plugin license (http://www.mollify.org/license.php).
+
+License costs 150 EUR, and download link will be provided after successful license payment.
