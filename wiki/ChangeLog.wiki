@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.6.1 ===
+Released 2015/2/2
+  * Fixed installer/updater issues
+
 === Version 2.6 ===
 Released 2015/2/1
   * Added support for generic file/folder metadata storage, for example description and file creation info now stored as metadata
