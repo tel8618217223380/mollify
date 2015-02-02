@@ -4,6 +4,10 @@
 
 History plugin allows file versioning. When user uploads or copies file that already exists, the older file is versioned. Versioned files are shown in the file listing, where they can be viewed, removed or restored.
 
+http://www.mollify.org/images/screenshots/history_quota.png
+
+http://www.mollify.org/images/screenshots/history.png
+
 In configuration, it is possible to set
   * maximum number of versions stored
   * root folders that are not under versioning
