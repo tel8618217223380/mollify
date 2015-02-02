@@ -40,7 +40,7 @@ Mollify can reflect the current view in the browser url (if browser supports his
 
 = File view options =
 
-== Drag&drop operation (`drop-type``) ==
+== Drag&drop operation (`drop-type`) ==
 
 By default, drag&drop has following logic:
   * if dragging single item, and it is from same root folder, item is moved
