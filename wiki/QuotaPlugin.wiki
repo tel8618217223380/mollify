@@ -20,7 +20,7 @@ Quota plugin is installed with following steps:
   # Add plugin configuration into "configuration.php" (see configuration options below)
   # Run Mollify updater
 
-Example configuration:
+Example minimum configuration:
 
 {{{
 $CONFIGURATION = array(
@@ -31,8 +31,20 @@ $CONFIGURATION = array(
 	)
 }}}
 
-Quota plugin does not need any configuration, but has following options:
+Quota plugin does not require any configuration, but has following options:
   * `registration_user_folder_quota`: Automatic quota set for user folders when user registers with Registration plugin (value in Mb)
+
+Example full configuration:
+{{{
+$CONFIGURATION = array(
+	...
+	"plugins" => array(
+		"Quota" => array(
+			"registration_user_folder_quota" => 1000	
+		),
+		...
+	)
+}}}
 
 = License =
 
