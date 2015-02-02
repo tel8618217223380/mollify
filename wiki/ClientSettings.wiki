@@ -10,6 +10,7 @@ Following settings are available in client (and their default values), used in i
 			"limited-http-methods" : false,	// limited HTTP methods
 			"view-url": false,		// reflect view in url
 			"file-view": {			// file view options
+				"drop-type": ...,	// customize drag&drop operation
 				"create-empty-file-action": false,	// create empty file
 				"default-view-mode": "list",	// default view mode
 				"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
@@ -38,6 +39,57 @@ Mollify can reflect the current view in the browser url (if browser supports his
 
 
 = File view options =
+
+== Drag&drop operation (`drop-type``) ==
+
+By default, drag&drop has following logic:
+  * if dragging single item, and it is from same root folder, item is moved
+  * if dragging single item, and it is from different root folder, item is copied
+  * if dragging multiple items, items are copied
+
+With this setting it is possible to customize the operation.
+
+Setting can have single constant value that is applied always, for example:
+
+{{{
+	"file-view": {
+                "drop-type": "copy"
+	}
+}}}
+
+Setting can also have different values for dragging&dropping single or multiple items:
+
+{{{
+	"file-view": {
+                "drop-type": {
+			single: "move",
+			multi: "copy"
+		}
+	}
+}}}
+
+Also, value can be a function where custom logic can be defined, for example:
+
+{{{
+	"file-view": {
+		"drop-type": function(to, i) {
+			// "to" is the target folder
+			// "i" is dragged item/items
+
+			if (window.isArray(i)) {
+				//dragging multiple items
+				return "copy";
+			}
+			// dragging single item
+			var copy = (to.root_id != i.root_id);
+			return copy ? "copy" : "move";
+                }
+	}
+}}}
+
+In this example multiple items are always copied, and single item copied when dragged from different root folder.
+
+Values can be "copy" or "move".
 
 == Create empty file (`create-empty-file-action`) ==
 
