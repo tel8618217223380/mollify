@@ -6,21 +6,21 @@ Following settings are available in client (and their default values), used in i
 <script type="text/javascript">
 	$(document).ready(function() {
 		mollify.App.init({
-			"service-path": "backend/",	// service path
-			"limited-http-methods" : false,	// limited HTTP methods
-			"view-url": false,		// reflect view in url
-			"file-view": {			// file view options
-				"drop-type": ...,	// customize drag&drop operation
+			"service-path": "backend/",			// service path
+			"limited-http-methods" : false,			// limited HTTP methods
+			"view-url": false,				// reflect view in url
+			"file-view": {					// file view options
+				"drop-type": ...,			// customize drag&drop operation
 				"create-empty-file-action": false,	// create empty file
-				"default-view-mode": "list",	// default view mode
-				"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
+				"default-view-mode": "list",		// default view mode
+				"icon-view-thumbnails": false,		// show icon thumbnails in icon view mode
 				"list-view-columns": {
-					...			// file list column setup
+					...				// file list column setup
 				},
 				...
 			}},
 			[
-				...			// client plugins
+				...					// client plugins
 			]
 		);
 	});
