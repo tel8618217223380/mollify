@@ -12,13 +12,13 @@ Quota is set by admin in root folder level:
 
 http://www.mollify.org/images/screenshots/quota_admin.png
 
-= Installing & Configuration =
+= Installation & Configuration =
 
 Quota plugin is installed with following steps:
 
-1) Extract plugin zip package into "backend/plugin" folder
-2) Add plugin configuration into "configuration.php" (see configuration options below)
-3) Run Mollify updater
+  # Extract plugin zip package into "backend/plugin" folder
+  # Add plugin configuration into "configuration.php" (see configuration options below)
+  # Run Mollify updater
 
 Example configuration:
 
