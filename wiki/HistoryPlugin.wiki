@@ -20,7 +20,7 @@ History plugin is installed with following steps:
   # Add plugin configuration into "configuration.php" (see configuration options below)
   # Run Mollify updater
 
-Example minimal configuration:
+Example minimum configuration:
 
 {{{
 $CONFIGURATION = array(
@@ -37,6 +37,10 @@ History plugin has following options:
   * `folder`: Server filesystem path to the folder where versions are managed (use absolute path)
   * `max_versions`: The maximum number of versions stored for each file. When number is exceeded, older versions are removed
   * `exclude_folders`: List of root folder IDs that are excluded from version handling
+
+NOTE! Folder used for version storage *should not* be
+  * exposed via web server (ie. use location outside web root), only PHP needs read/write access to it
+  * accessed/modified by other than plugin itself, as any modifications to the internal version data files may corrupt versioning. This includes a) publishing the folder in Mollify itself b) modifying the files directly with FTP  or server filesystem etc
 
 Example full configuration:
 {{{
