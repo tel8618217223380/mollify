@@ -30,40 +30,17 @@ $CONFIGURATION = array(
 
 Whenever plugins are installed or updated, open the Mollify updater util to check if database update is required.
 
+= Commercial Plugins =
+  * [QuotaPlugin Quota]
+  * [HistoryPlugin History]
+
 = Built-in Plugins =
-
-== Event Logging ==
-
-See [EventLoggingPlugin]
-
-== User Registration ==
-
-See [RegistrationPlugin]
-
-== File Viewer and Editor ==
-
-See [FileViewerEditorPlugin]
-
-== Lost Password ==
-
-See [LostPasswordPlugin]
-
-== Notificator ==
-
-See [NotificatorPlugin]
-
-== Archiver ==
-
-See [ArchiverPlugin]
-
-== Share ==
-
-See [SharePlugin]
-
-== Item collection ==
-
-See [ItemCollectionPlugin]
-
-== Comments ==
-
-See [CommentsPlugin]
+  * [EventLoggingPlugin Event logging]
+  * [RegistrationPlugin User registration]
+  * [FileViewerEditorPlugin File viewer and editor]
+  * [LostPasswordPlugin Lost password]
+  * [NotificatorPlugin Notificator]
+  * [ArchiverPlugin Archiver]
+  * [SharePlugin Share]
+  * [ItemCollectionPlugin Item collection]
+  * [CommentsPlugin Comments]
