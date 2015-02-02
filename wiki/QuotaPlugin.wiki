@@ -4,6 +4,10 @@
 
 Folder quota plugin allows setting quota in (root) folder level.
 
+http://www.mollify.org/images/screenshots/history_quota.png
+
+http://www.mollify.org/images/screenshots/quota_admin.png
+
 Details and configuration options coming soon.
 
 
