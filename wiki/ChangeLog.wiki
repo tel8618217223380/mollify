@@ -1,7 +1,7 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Version 2.6.1 ===
+=== Version 2.6.1 & 2.6.2 ===
 Released 2015/2/2
   * Fixed installer/updater issues
 
