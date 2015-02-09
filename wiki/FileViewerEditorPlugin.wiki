@@ -6,6 +6,24 @@ File viewer and editor plugin is built-in plugin that provides file view, previe
 
 = Configuration =
 
+== Client ==
+
+Client side needs the plugin registered in the application initialization:
+
+{{{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            mollify.App.init({
+                ...
+            }, [
+                new mollify.plugin.FileViewerEditorPlugin(),
+                ...
+            ]);
+    });
+    </script>
+}}}
+
+== Server ==
 Plugin is registered with name "`FileViewerEditor`" as instructed in plugins wiki page.
 
 File viewer has following settings:
