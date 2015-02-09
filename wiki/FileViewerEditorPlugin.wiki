@@ -24,7 +24,7 @@ Client side needs the plugin registered in the application initialization:
 }}}
 
 == Server ==
-Plugin is registered with name "`FileViewerEditor`" as instructed in plugins wiki page.
+Plugin is registered with name "`FileViewerEditor`".
 
 File viewer has following settings:
   * "viewers"
