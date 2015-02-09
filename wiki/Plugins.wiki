@@ -15,6 +15,7 @@ $CONFIGURATION = array(
 		[PLUGIN_NAME] => [SETTINGS],
 		...
 	)
+);
 }}}
 
 Plugin name is the same as the folder name in the installation package. Settings are plugin specific options, or empty array.
@@ -28,6 +29,7 @@ $CONFIGURATION = array(
 		"PluginA" => array("some_options" => "foo"),
 		"PluginB" => array()
 	)
+);
 }}}
 
 Some plugins may require client side plugin, see plugin specific instructions for each plugin.
