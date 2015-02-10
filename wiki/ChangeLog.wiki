@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.6.3 ===
+Released 2015/2/10
+  * Improved installer & updater UI
+  * Fixed deleting folder contents
+  * Added system default fileystem permission in new installation
+
 === Version 2.6.1 & 2.6.2 ===
 Released 2015/2/3
   * Fixed installer/updater issues
