@@ -2,4 +2,4 @@
 
 Post new issues to [https://github.com/sjarvela/mollify/issues]
 
-Old issues visible [Issues here]
+Old issues visible [https://code.google.com/p/mollify/issues/list here]
