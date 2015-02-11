@@ -1,0 +1,5 @@
+#summary Issues
+
+Post new issues to [https://github.com/sjarvela/mollify/issues]
+
+Old issues visible [Issues here]
