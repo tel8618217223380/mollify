@@ -1,5 +1,5 @@
 #summary Issues
 
-Project hosting slowly moving into GitHub, post new issues to [https://github.com/sjarvela/mollify/issues GitHub issues list]
+Project hosting slowly moving into `GitHub`, post new issues to [https://github.com/sjarvela/mollify/issues GitHub issues list]
 
 Old issues visible [https://code.google.com/p/mollify/issues/list here]
