@@ -4,7 +4,6 @@
 === Version 2.6.3 ===
 Released 2015/2/10
   * Improved installer & updater UI
-  * Fixed deleting folder contents
   * Added system default filesystem permission in new installation
 
 === Version 2.6.1 & 2.6.2 ===
