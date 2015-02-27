@@ -1,6 +1,9 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+== NOTE! This page has been moved into GitHub ==
+https://github.com/sjarvela/mollify/wiki
+
 === Version 2.6.3 ===
 Released 2015/2/10
   * Improved installer & updater UI
