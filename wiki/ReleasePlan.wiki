@@ -1,5 +1,0 @@
-#summary Items in next release
-
-Items included in release 2.0
-
- * Rewritten UI (with modular structure that allows customizing all parts) and new design
