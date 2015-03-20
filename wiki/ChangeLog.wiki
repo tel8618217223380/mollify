@@ -1,5 +1,5 @@
 #summary Mollify project change log
-#labels Phase-Deploy,Featured
+#labels Phase-Deploy
 
 == NOTE! This page has been moved into GitHub ==
 https://github.com/sjarvela/mollify/wiki
